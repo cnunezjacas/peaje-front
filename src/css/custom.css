@@ -1,0 +1,43 @@
+.small-font {
+  font-size: 11px; /* Ajusta el tamaño según necesites */
+  font-weight: bold;
+}
+
+.my-div-full {
+  min-height: 100vh; /* La altura de la ventana del navegador */
+  display: flex; /* Opcional, si quieres distribuir contenido */
+  flex-direction: column; /* Opcional */
+}
+
+.dialog-md {
+  width: 50% !important;
+}
+
+.small-font-tree {
+  font-size: 11px; /* Ajusta el tamaño según necesites */
+}
+
+.itemsChildrens {
+  padding-left: 50px;
+}
+
+.style-tables {
+  padding-top: 0xp !important;
+  margin-top: 0px !important;
+  background-color: aqua;
+}
+
+.Search {
+  color: white !important;
+}
+.tittle-fotter {
+  font-size: 12px !important;
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.SubTittle-fotter {
+  font-size: 10px !important;
+  padding: 0px !important;
+  margin: 0px !important;
+}
