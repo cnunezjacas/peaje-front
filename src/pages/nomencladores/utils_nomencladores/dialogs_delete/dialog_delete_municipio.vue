@@ -57,19 +57,14 @@
 </q-alert> -->
 
 <script setup>
+//importaciones
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
+import { Notify } from 'quasar'
 
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
 const list = 'blur(4px) saturate(150%)'
-
 const refDialogoDeleteMunicipio = ref(null)
 
 const nombreMunicipioDelete = ref('')
@@ -82,11 +77,26 @@ const emit = defineEmits(['ActualizarTablaMunicipio'])
 const Procesar_DeleteMunicipio = async () => {
   //TODO: Ajax Request DELETE MUNICIPIO
   try {
-    const response = await api.delete(STRINGS.urlApiMunicipio + '/' + IdMunicipioDelete.value) // DELETE /items/:id
-    console.log(response)
+    await api.delete(STRINGS.urlApiMunicipio + '/' + IdMunicipioDelete.value) // DELETE /items/:id
+
+    Notify.create({
+      color: 'positive', // color verde para éxito
+      icon: 'check_circle',
+      message: STRINGS.municipioDeleteSuccess,
+      position: 'top',
+      timeout: 3000,
+    })
+
     emit('ActualizarTablaMunicipio', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.MunicipioDeleteError,
+      position: 'bottom',
+      timeout: 3000,
+    })
     emit('ActualizarTablaMunicipio', false)
   }
   refDialogoDeleteMunicipio.value.hide()
@@ -109,12 +119,7 @@ defineExpose({
 
 const dialogDeleteMunicipio = ref(false)
 
-//const dialogModel = ref(false)
-
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
 const IdMunicipioDelete = ref('')
-
-//const textNombre_prov = ref(null)
-//const textCodigo_prov = ref(null)
 </script>

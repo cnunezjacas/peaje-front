@@ -16,7 +16,7 @@
             <div class="col-5">
               <q-input
                 v-model="TextNombre_mun"
-                ref="textNombre_prov"
+                ref="textNombre_Mun"
                 color="green"
                 :rules="rulesAddNombreMunicipio"
                 type="text"
@@ -26,7 +26,7 @@
             </div>
             <div class="col-5">
               <q-input
-                ref="textCodigo_prov"
+                ref="textCodigo_Mun"
                 v-model="TextCodigo_mun"
                 color="green"
                 type="text"
@@ -90,14 +90,9 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
+import { expRegulares } from 'src/utils/expresiones_regulares.js'
+import { Notify } from 'quasar'
 
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
-
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
 const list = 'blur(4px) saturate(150%)'
 const options = ref([])
 
@@ -105,19 +100,15 @@ const refDialogoEditMunicipio = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreMunicipio = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesAddCodigoMunicipio = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[0-9\s]+$/.test(val) || 'El campo solo puede contener números',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
 ]
-
-const regexCodigoMunicipio = /^[0-9\s]+$/
-const regexNombreMunicipio = /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/
-
-const rulesAddNombreProvincia = [(val) => val != '' || 'El campo no puede estar vacío']
+const rulesAddNombreProvincia = [(val) => val != '' || STRINGS.inputEmpty]
 /*Validaciones*/
 
 const emit = defineEmits(['ActualizarTablaMunicipio'])
@@ -137,7 +128,14 @@ const Procesar_EditMunicipio = async () => {
 
     if (existeCodigo ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
-      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
+      Notify.create({
+        color: 'negative', // color rojo para error
+        icon: 'error',
+        message: STRINGS.codigoRepetido,
+        position: 'bottom',
+        timeout: 3000, // en milisegundos
+      })
+      textCodigo_Mun.value.focus()
       return
     } else {
       const response = await api.get(STRINGS.urlApiProvincia)
@@ -153,14 +151,27 @@ const Procesar_EditMunicipio = async () => {
         provincia: String(aux),
       }
 
-      console.log(newItem)
-
       try {
-        const response = await api.patch(STRINGS.urlApiMunicipio + '/' + IdMunicipio.value, newItem) // POST /items
-        console.log('Petición UPDATE Municipio:', response.data)
+        await api.patch(STRINGS.urlApiMunicipio + '/' + IdMunicipio.value, newItem) // POST /items
+
+        Notify.create({
+          color: 'positive', // color verde para éxito
+          icon: 'check_circle',
+          message: STRINGS.MunicipioEditError,
+          position: 'top',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
+        Notify.create({
+          color: 'negative',
+          icon: 'error',
+          message: STRINGS.MunicipioAddError,
+          position: 'bottom',
+          timeout: 3000,
+        })
         emit('ActualizarTablaMunicipio', false)
       }
       refDialogoEditMunicipio.value.hide()
@@ -206,8 +217,8 @@ const ComprobarEstadoInputsEdit = () => {
   } else if (noHaCambiado) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
   } else if (
-    !regexCodigoMunicipio.test(TextCodigo_mun.value) ||
-    !regexNombreMunicipio.test(TextNombre_mun.value)
+    !expRegulares.onlyNumber.test(TextCodigo_mun.value) ||
+    !expRegulares.FullText.test(TextNombre_mun.value)
   ) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
   } else {
@@ -243,8 +254,8 @@ const IdMunicipio = ref('')
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
 
-const textNombre_prov = ref(null)
-const textCodigo_prov = ref(null)
+const textNombre_Mun = ref(null)
+const textCodigo_Mun = ref(null)
 
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 

@@ -79,7 +79,7 @@
   <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
 
   <!-- Dialogo Edit Municipio -->
-  <DialogEditOrganismo ref="dialogEditOrganismo" />
+  <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
 
   <!-- Dialogo Delete Provincia-->
   <DialogDeleteProvincia
@@ -94,7 +94,10 @@
   />
 
   <!-- Dialogo Delete Municipio-->
-  <DialogDeleteOrganismo ref="dialogDeleteOrganismo" />
+  <DialogDeleteOrganismo
+    ref="dialogDeleteOrganismo"
+    @ActualizarTablaOrganismo="ActualizadorTabla"
+  />
 
   <table_Gest_provincia
     ref="tableProvincia"
@@ -216,6 +219,7 @@ const handleSelection = (row) => {
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
     arrayOrganismoSelected.value['name_min'] = row['siglas']
     arrayOrganismoSelected.value['name'] = row['nombre']
+    arrayOrganismoSelected.value['_id'] = row['_id']
   } else {
     console.log('No hay fila seleccionada')
   }
@@ -340,6 +344,7 @@ const onItemClick = (value) => {
             dialogEditOrganismo.value.LevantarDialogoEditOrganismo(
               arrayOrganismoSelected.value['name_min'],
               arrayOrganismoSelected.value['name'],
+              arrayOrganismoSelected.value['_id'],
             )
         }
       }
@@ -367,7 +372,7 @@ const onItemClick = (value) => {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogDeleteOrganismo.value.LevantarDialogoDeleteOrganismo(
             arrayOrganismoSelected.value['name_min'],
-            null,
+            arrayOrganismoSelected.value['_id'],
           )
         }
       }

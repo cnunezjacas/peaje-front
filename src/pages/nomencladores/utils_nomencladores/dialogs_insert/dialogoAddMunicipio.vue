@@ -85,22 +85,16 @@
 </q-alert> -->
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
+import { expRegulares } from 'src/utils/expresiones_regulares.js'
 
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
-
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
 import { onBeforeMount } from 'vue'
 const list = 'blur(4px) saturate(150%)'
-//var provinciasSelect = ref([])
+
 const options = ref([])
 
 const CargarProvincias = async () => {
@@ -117,19 +111,16 @@ const refDialogoAddMunicipio = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreMunicipio = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesAddCodigoMunicipio = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[0-9\s]+$/.test(val) || 'El campo solo puede contener números',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
 ]
 
-const regexCodigoMunicipio = /^[0-9\s]+$/
-const regexNombreMunicipio = /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/
-
-const rulesAddNombreProvincia = [(val) => val != '' || 'El campo no puede estar vacío']
+const rulesAddNombreProvincia = [(val) => val != '' || STRINGS.inputEmpty]
 /*Validaciones*/
 
 const emit = defineEmits(['ActualizarTablaMunicipio'])
@@ -144,7 +135,7 @@ const Procesar_AddMunicipio = async () => {
     const existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
+      alert(STRINGS.codigoRepetido)
       return
     } else {
       const response = await api.get(STRINGS.urlApiProvincia)
@@ -177,8 +168,8 @@ const Procesar_AddMunicipio = async () => {
 }
 
 const ComprobarEstadoInputs = () => {
-  if (TextCodigo_mun.value != '' && regexCodigoMunicipio.test(TextCodigo_mun.value))
-    if (TextNombre_mun.value != '' && regexNombreMunicipio.test(TextNombre_mun.value))
+  if (TextCodigo_mun.value != '' && expRegulares.onlyNumber.test(TextCodigo_mun.value))
+    if (TextNombre_mun.value != '' && expRegulares.FullText.test(TextNombre_mun.value))
       disabledBtnSave.value = ''
     else disabledBtnSave.value = STRINGS.desabilitar
   else disabledBtnSave.value = STRINGS.desabilitar
@@ -213,10 +204,6 @@ const textNombre_prov = ref(null)
 const textCodigo_prov = ref(null)
 
 const disabledBtnSave = ref(STRINGS.desabilitar)
-
-watch(SelectNombre_prov, (newVal) => {
-  console.log('Valor cambiado:', newVal)
-})
 
 defineExpose({
   LevantarDialogoAddMunicipio,

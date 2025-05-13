@@ -5,12 +5,11 @@ import api from 'src/axios.js'
 const verificarSiglaExistente = async (siglas) => {
   var aux = false
   try {
-    const response = await api.get(`${STRINGS.urlApiProvincia}?/sigla=${siglas}`)
+    const response = await api.get(`${STRINGS.urlApiOrganismo}?/sigla=${siglas}`)
     // Asumiendo que tu API devuelve un array de resultados
     console.log(response.data)
     response.data.forEach((element) => {
       if (element.siglas === siglas) {
-        console.log('Fui verdadero')
         aux = true
       }
     })

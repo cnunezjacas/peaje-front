@@ -57,6 +57,8 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
+import api from 'src/axios.js'
+import { Notify } from 'quasar'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -70,36 +72,53 @@ const list = 'blur(4px) saturate(150%)'
 const refDialogoDeleteOrganismo = ref(null)
 
 const nombreAbrOrganismoDelete = ref('')
-const codigoAbrOrganismoDelete = ref('')
+const idOrganismoDelete = ref('')
 
-//const emit = defineEmits(['oNOrganismoDeleteGestOrganismo'])
+const emit = defineEmits(['ActualizarTablaOrganismo'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_DeleteOrganismo = () => {
+const Procesar_DeleteOrganismo = async () => {
   //TODO: Ajax Request DELETE ORGANISMO
+  try {
+    await api.delete(STRINGS.urlApiOrganismo + '/' + idOrganismoDelete.value) // DELETE /items/:id
+
+    Notify.create({
+      color: 'positive', // color verde para éxito
+      icon: 'check_circle',
+      message: STRINGS.organismoDeleteSuccess,
+      position: 'top',
+      timeout: 3000,
+    })
+
+    emit('ActualizarTablaOrganismo', true)
+  } catch (error) {
+    console.error('Error al eliminar item:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.OrganismoDeleteError,
+      position: 'bottom',
+      timeout: 3000,
+    })
+    emit('ActualizarTablaOrganismo', false)
+  }
   refDialogoDeleteOrganismo.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteOrganismo = (nombreAbr, codigoOrg) => {
+const LevantarDialogoDeleteOrganismo = (nombreAbr, id) => {
   backdropFilter.value = list
   dialogDeleteOrganismo.value = true
   nombreAbrOrganismoDelete.value = nombreAbr
-  codigoAbrOrganismoDelete.value = codigoOrg ? codigoOrg : null
+  idOrganismoDelete.value = id
 }
 
 defineExpose({
   LevantarDialogoDeleteOrganismo,
-  // LevantarDialogoAddModelo,
 })
 
 const dialogDeleteOrganismo = ref(false)
 
-//const dialogModel = ref(false)
-
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
-
-//const textNombre_prov = ref(null)
-//const textCodigo_prov = ref(null)
 </script>

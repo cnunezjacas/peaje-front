@@ -26,7 +26,7 @@
       class="shadow-6"
       bordered
       table-header-class="bg-green-10 text-white"
-      ref="tableAddModelo"
+      ref="tableOrganismo"
       :rows-per-page-label="STRINGS.record_page"
       :rows="filteredRows"
       :columns="columns"

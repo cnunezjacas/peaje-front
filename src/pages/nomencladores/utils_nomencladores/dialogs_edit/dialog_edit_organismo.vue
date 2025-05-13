@@ -77,6 +77,9 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
+import api from 'src/axios.js'
+import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
+import { expRegulares } from 'src/utils/expresiones_regulares.js'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -91,38 +94,73 @@ const refDialogoEditOrganismo = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreOrganismo = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesAddNombreAbrOrganismo = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[A-ZÁÉÍÓÚÜÑ\s]+$/.test(val) || 'El campo solo puede contener letras Mayúsculas',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
 ]
-
-const regexNombreOrganismo = /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü\s]+$/
-const regexNombreAbrOrganismo = /^[A-ZÁÉÍÓÚÑÜ\s]+$/
 
 /*Validaciones*/
 
+//Función para realizar el Capitalize del nombre del organismo
+function capitalizeWords(str) {
+  return str
+    .split(' ')
+    .map((word) => {
+      if (word.length === 0) return word // Por si hay cadenas vacías
+      return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
+const emit = defineEmits(['ActualizarTablaOrganismo'])
+
 /*Funcion de procesado de Datos*/
-const Procesar_EditOrganismo = () => {
+const Procesar_EditOrganismo = async () => {
   if (ComprobarEstadoInputsEdit() != STRINGS.desabilitar) {
     //TODO: Ajax Request EDIT_ORGANISMO
 
-    refDialogoEditOrganismo.value.hide()
-    Reset()
-  } else {
-    refDialogoEditOrganismo.value.show()
+    var existeSigla = false
+
+    // Verificar si el código ya existe
+    existeSigla = await verificarSiglaExistente(TextNombreAbrOrg.value)
+    if (existeSigla ? true : false) {
+      // Mostrar mensaje de error o alertar al usuario
+      alert(STRINGS.siglasRepetidas)
+      return
+    } else {
+      const newItem = {
+        nombre: capitalizeWords(TextNombreOrg.value),
+        siglas: TextNombreAbrOrg.value,
+      }
+
+      try {
+        const response = await api.patch(
+          STRINGS.urlApiOrganismo + '/' + IdMunicipioEdit.value,
+          newItem,
+        ) // POST /items
+        console.log('Petición UPDATE ORGANISMO:', response.data)
+        emit('ActualizarTablaOrganismo', true)
+      } catch (error) {
+        console.error('Error al crear item:', error)
+        emit('ActualizarTablaOrganismo', false)
+      }
+      refDialogoEditOrganismo.value.hide()
+      Reset()
+    }
   }
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditOrganismo = (nameAbrOrg, nombreOrg) => {
+const LevantarDialogoEditOrganismo = (nameAbrOrg, nombreOrg, id) => {
   backdropFilter.value = list
   dialogEditMunicipio.value = true
   TextNombreAbrOrg.value = nameAbrOrg
   TextNombreOrg.value = nombreOrg
+  IdMunicipioEdit.value = id
 
   TextNombreOrg_copy.value = nombreOrg
   TextNombreAbrOrg_copy.value = nameAbrOrg
@@ -138,8 +176,8 @@ const ComprobarEstadoInputsEdit = () => {
   } else if (noHaCambiado) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
   } else if (
-    !regexNombreAbrOrganismo.test(TextNombreAbrOrg.value) ||
-    !regexNombreOrganismo.test(TextNombreOrg.value)
+    !expRegulares.onlyUppercase.test(TextNombreAbrOrg.value) ||
+    !expRegulares.FullText.test(TextNombreOrg.value)
   ) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
   } else {
@@ -175,6 +213,7 @@ const dialogEditMunicipio = ref(false)
 //Campos Originales
 const TextNombreOrg = ref('')
 const TextNombreAbrOrg = ref('')
+const IdMunicipioEdit = ref('')
 
 //Campos Copias
 const TextNombreOrg_copy = ref('')

@@ -54,18 +54,13 @@
 </q-alert> -->
 
 <script setup>
+//importaciones
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
+import { Notify } from 'quasar'
 
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
-
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
 const list = 'blur(4px) saturate(150%)'
 
 const refDialogoDeleteProvincia = ref(null)
@@ -81,11 +76,24 @@ const Procesar_DeleteProvincia = async () => {
   //TODO: Ajax Request DELETE PROVINCIA
 
   try {
-    const response = await api.delete(STRINGS.urlApiProvincia + '/' + idProvinciaDelete.value) // DELETE /items/:id
-    console.log(response)
+    await api.delete(STRINGS.urlApiProvincia + '/' + idProvinciaDelete.value) // DELETE /items/:id
+    Notify.create({
+      color: 'positive', // color verde para éxito
+      icon: 'check_circle',
+      message: STRINGS.provinciaDeleteSuccess,
+      position: 'top',
+      timeout: 3000,
+    })
     emit('ActualizarTablaProvincia', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.provinciaDeleteError,
+      position: 'bottom',
+      timeout: 3000,
+    })
     emit('ActualizarTablaProvincia', false)
   }
   refDialogoDeleteProvincia.value.hide()

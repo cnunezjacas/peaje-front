@@ -79,31 +79,23 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
+import { expRegulares } from 'src/utils/expresiones_regulares.js'
+import { Notify } from 'quasar'
 
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
-
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
 const list = 'blur(4px) saturate(150%)'
 
 const refDialogoAddProvincia = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreProvincia = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZáééíóúüñÁÉÍÓÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesAddCodigoProvincia = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[0-9\s]+$/.test(val) || 'El campo solo puede contener números',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
 ]
-
-const regexCodigoProvincia = /^[0-9\s]+$/
-const regexNombreProvincia = /^[a-zA-ZáééíóúüñÁÉÍÓÚÑÜ\s]+$/
 /*Validaciones*/
 
 const emit = defineEmits(['ActualizarTablaProvincia'])
@@ -117,17 +109,43 @@ const Procesar_AddProvincia = async () => {
     const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
+      Notify.create({
+        color: 'negative', // color rojo para error
+        icon: 'error',
+        message: STRINGS.codigoRepetido,
+        position: 'bottom',
+        timeout: 3000, // en milisegundos
+      })
+
+      textCodigo_prov.value.focus()
       return
     } else {
       const newItem = { nombre: TextNombre_prov.value, codigo: Number(TextCodigo_prov.value) }
 
       try {
-        const response = await api.post(STRINGS.urlApiProvincia, newItem) // POST /items
-        console.log('Petición ADD PROVINCIA:', response.data)
+        await api.post(STRINGS.urlApiProvincia, newItem) // POST /items
+
+        // Mostrar alerta positiva de éxito
+        Notify.create({
+          color: 'positive', // color verde para éxito
+          icon: 'check_circle',
+          message: STRINGS.provinciaAddSuccess,
+          position: 'top',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaProvincia', true)
       } catch (error) {
         console.error('Error al crear item:', error)
+
+        Notify.create({
+          color: 'negative',
+          icon: 'error',
+          message: STRINGS.provinciaAddError,
+          position: 'bottom',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaProvincia', false)
       }
       refDialogoAddProvincia.value.hide()
@@ -154,8 +172,8 @@ const LevantarDialogoAddModelo = () => {
 }
 
 const ComprobarEstadoInputs = () => {
-  if (TextCodigo_prov.value != '' && regexCodigoProvincia.test(TextCodigo_prov.value))
-    if (TextNombre_prov.value != '' && regexNombreProvincia.test(TextNombre_prov.value))
+  if (TextCodigo_prov.value != '' && expRegulares.onlyNumber.test(TextCodigo_prov.value))
+    if (TextNombre_prov.value != '' && expRegulares.FullText.test(TextNombre_prov.value))
       disabledBtnSaveEdit.value = ''
     else disabledBtnSaveEdit.value = STRINGS.desabilitar
   else disabledBtnSaveEdit.value = STRINGS.desabilitar

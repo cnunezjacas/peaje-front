@@ -1,13 +1,6 @@
 <template>
   <div class="">
     <q-toolbar class="bg-green-10 text-white shadow-2">
-      <!-- <q-btn flat label="Homepage" /> -->
-
-      <!--
-        notice shrink property since we are placing it
-        as child of QToolbar
-      -->
-
       <q-tabs v-model="tab" shrink bordered>
         <q-tab name="tab1" icon="add" class="small-font" @click="onItemClick('Add')"
           >Adicionar</q-tab

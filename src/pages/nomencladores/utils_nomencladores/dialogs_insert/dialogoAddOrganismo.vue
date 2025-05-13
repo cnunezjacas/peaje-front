@@ -16,7 +16,7 @@
             <div class="col-4">
               <q-input
                 v-model="TextNombreAbrOrg"
-                ref="textNombre_prov"
+                ref="textNombre_AbrOrg"
                 color="green"
                 :rules="rulesAddNombreAbrOrganismo"
                 type="text"
@@ -79,8 +79,8 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
+import { expRegulares } from 'src/utils/expresiones_regulares.js'
+import { Notify } from 'quasar'
 
 /**
  * Values for backdrop-filter are the same as in the CSS specs.
@@ -92,17 +92,14 @@ const refDialogoAddOrganismo = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreOrganismo = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesAddNombreAbrOrganismo = [
-  (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[A-ZÁÉÍÓÚÜÑ\s]+$/.test(val) || 'El campo solo puede contener letras Mayúsculas',
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
 ]
-
-const regexNombreOrganismo = /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü\s]+$/
-const regexNombreAbrOrganismo = /^[A-ZÁÉÍÓÚÑÜ\s]+$/
 
 /*Validaciones*/
 
@@ -127,7 +124,16 @@ const Procesar_AddOrganismo = async () => {
     const existeCodigo = await verificarSiglaExistente(TextNombreAbrOrg.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      alert('Existe un organismo con esas siglas en la base de datos. Por favor, usa otro código.')
+      Notify.create({
+        color: 'negative', // color rojo para error
+        icon: 'error',
+        message: STRINGS.siglasRepetidas,
+        position: 'bottom',
+        timeout: 3000, // en milisegundos
+      })
+
+      textNombre_AbrOrg.value.focus()
+
       return
     } else {
       const newItem = {
@@ -136,11 +142,26 @@ const Procesar_AddOrganismo = async () => {
       }
 
       try {
-        const response = await api.post(STRINGS.urlApiOrganismo, newItem) // POST /items
-        console.log('Petición ADD ORGANISMO:', response.data)
+        await api.post(STRINGS.urlApiOrganismo, newItem) // POST /items
+
+        Notify.create({
+          color: 'positive', // color verde para éxito
+          icon: 'check_circle',
+          message: STRINGS.organismoAddSuccess,
+          position: 'top',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
         console.error('Error al crear item:', error)
+        Notify.create({
+          color: 'negative',
+          icon: 'error',
+          message: STRINGS.OrganismoAddError,
+          position: 'bottom',
+          timeout: 3000,
+        })
         emit('ActualizarTablaOrganismo', false)
       }
       refDialogoAddOrganismo.value.hide()
@@ -150,8 +171,8 @@ const Procesar_AddOrganismo = async () => {
 }
 
 const ComprobarEstadoInputsEdit = () => {
-  if (TextNombreOrg.value != '' && regexNombreOrganismo.test(TextNombreOrg.value))
-    if (TextNombreAbrOrg.value != '' && regexNombreAbrOrganismo.test(TextNombreAbrOrg.value))
+  if (TextNombreOrg.value != '' && expRegulares.FullText.test(TextNombreOrg.value))
+    if (TextNombreAbrOrg.value != '' && expRegulares.onlyUppercase.test(TextNombreAbrOrg.value))
       disabledBtnSave.value = ''
     else disabledBtnSave.value = STRINGS.desabilitar
   else disabledBtnSave.value = STRINGS.desabilitar
@@ -172,6 +193,7 @@ const Reset = () => {
 }
 
 const dialogOrganismo = ref(false)
+const textNombre_AbrOrg = ref(null)
 
 const TextNombreOrg = ref('')
 const TextNombreAbrOrg = ref('')
