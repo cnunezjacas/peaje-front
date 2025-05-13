@@ -64,34 +64,40 @@
   </div>
 
   <!-- Dialogo Add Provincia-->
-  <DialogoAddProvincia ref="dialogoAddProvincia" />
+  <DialogoAddProvincia ref="dialogoAddProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
 
   <!-- Dialogo Add Municipio-->
-  <DialogoAddMunicipio ref="dialogoAddMunicipio" />
+  <DialogoAddMunicipio ref="dialogoAddMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
 
   <!-- Dialogo Add Organismo-->
-  <DialogoAddOrganismo ref="dialogoAddOrganismo" />
+  <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
 
   <!-- Dialogo Edit Provincia -->
-  <DialogEditProvincia ref="dialogoEditProvincia" />
+  <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
 
   <!-- Dialogo Edit Municipio -->
-  <DialogEditMunicipio ref="dialogoEditMunicipio" />
+  <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
 
   <!-- Dialogo Edit Municipio -->
   <DialogEditOrganismo ref="dialogEditOrganismo" />
 
   <!-- Dialogo Delete Provincia-->
-  <DialogDeleteProvincia ref="dialogoDeleteProvincia" />
+  <DialogDeleteProvincia
+    ref="dialogoDeleteProvincia"
+    @ActualizarTablaProvincia="ActualizadorTabla"
+  />
 
   <!-- Dialogo Delete Municipio-->
-  <DialogDeleteMunicipio ref="dialogoDeleteMunicipio" />
+  <DialogDeleteMunicipio
+    ref="dialogoDeleteMunicipio"
+    @ActualizarTablaMunicipio="ActualizadorTabla"
+  />
 
   <!-- Dialogo Delete Municipio-->
   <DialogDeleteOrganismo ref="dialogDeleteOrganismo" />
 
   <table_Gest_provincia
-    ref="tableAddProvincia"
+    ref="tableProvincia"
     @seleccionado="handleSelection"
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
@@ -106,7 +112,7 @@
   ></table_Gest_provincia>
 
   <table_Gest_municipio
-    ref="tableAddMunicipio"
+    ref="tableMunicipio"
     @seleccionado="handleSelection"
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
@@ -118,7 +124,7 @@
   />
 
   <table_Gest_organismo
-    ref="tableAddOrganismo"
+    ref="tableOrganismo"
     @seleccionado="handleSelection"
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
@@ -180,12 +186,9 @@ const dialogoAddOrganismo = ref(null)
 const dialogEditOrganismo = ref(null)
 const dialogDeleteOrganismo = ref(null)
 
-const nameProvinciaDelete = ref('')
-const codigoProvinciaDelete = ref('')
-
-const tableAddProvincia = ref(null)
-const tableAddMunicipio = ref(null)
-const tableAddOrganismo = ref(null)
+const tableProvincia = ref(null)
+const tableMunicipio = ref(null)
+const tableOrganismo = ref(null)
 
 var arrayProvinceSelected = ref([])
 var arrayMunicipioSelected = ref([])
@@ -201,17 +204,40 @@ const handleSelection = (row) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
   if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
-    arrayProvinceSelected.value['name'] = row['name']
+    console.log(row['nombre'] + '/' + row['codigo'])
+    arrayProvinceSelected.value['nombre'] = row['nombre']
     arrayProvinceSelected.value['codigo'] = row['codigo']
+    arrayProvinceSelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase) && row) {
-    arrayMunicipioSelected.value['name'] = row['name']
+    arrayMunicipioSelected.value['nombre'] = row['nombre']
     arrayMunicipioSelected.value['codigo'] = row['codigo']
-    arrayMunicipioSelected.value['provincia'] = row['provincia']
+    arrayMunicipioSelected.value['provincia'] = row['Texto_provincia']
+    arrayMunicipioSelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
-    arrayOrganismoSelected.value['name_min'] = row['name_min']
-    arrayOrganismoSelected.value['name'] = row['name']
+    arrayOrganismoSelected.value['name_min'] = row['siglas']
+    arrayOrganismoSelected.value['name'] = row['nombre']
   } else {
     console.log('No hay fila seleccionada')
+  }
+}
+
+const ActualizadorTabla = (value) => {
+  var ruta = route.fullPath
+  var nuevaRuta = ruta.split('_')
+  console.log('ActualizadorTabla llamada con valor:', value)
+  console.log('Con Ruta:', nuevaRuta)
+  if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
+    if (value) tableProvincia.value.UpdateTable()
+    else console.log('Operación Fallida')
+  } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
+    if (value) tableMunicipio.value.UpdateTable()
+    else console.log('Operación Fallida')
+  } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
+    console.log('Soy un organismo')
+    if (value) tableOrganismo.value.UpdateTable()
+    else console.log('Operación Fallida')
+  } else {
+    console.log('Evento mal ejecutado')
   }
 }
 
@@ -244,18 +270,6 @@ const BloquearGuardar = (variable) => {
     disabledGuardar.value = 'small-font disabled'
   } else {
     disabledGuardar.value = 'small-font'
-  }
-}
-
-const CapturanameProvinciaDelete = (nombre) => {
-  if (nombre != '') {
-    nameProvinciaDelete.value = nombre
-  }
-}
-
-const CapturaCodigoProvinciaDelete = (codigo) => {
-  if (codigo != '') {
-    codigoProvinciaDelete.value = codigo
   }
 }
 
@@ -305,17 +319,19 @@ const onItemClick = (value) => {
           if (arrayProvinceSelected.value != null)
             //console.log('Antes de enviar arrayProvinceSelected: ' + arrayProvinceSelected.value)
             dialogoEditProvincia.value.LevantarDialogoEditProvincia(
-              arrayProvinceSelected.value['name'],
+              arrayProvinceSelected.value['nombre'],
               arrayProvinceSelected.value['codigo'],
+              arrayProvinceSelected.value['_id'],
             )
         }
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arrayMunicipioSelected.value != null)
             dialogoEditMunicipio.value.LevantarDialogoEditMunicipio(
-              arrayMunicipioSelected.value['name'],
+              arrayMunicipioSelected.value['nombre'],
               arrayMunicipioSelected.value['codigo'],
               arrayMunicipioSelected.value['provincia'],
+              arrayMunicipioSelected.value['_id'],
             )
         }
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
@@ -333,16 +349,18 @@ const onItemClick = (value) => {
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogoDeleteProvincia.value.LevantarDialogoDeleteProvincia(
-            nameProvinciaDelete.value,
-            codigoProvinciaDelete.value,
+            arrayProvinceSelected.value['nombre'],
+            arrayProvinceSelected.value['codigo'],
+            arrayProvinceSelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogoDeleteMunicipio.value.LevantarDialogoDeleteMunicipio(
-            arrayMunicipioSelected.value['name'],
+            arrayMunicipioSelected.value['nombre'],
             arrayMunicipioSelected.value['codigo'],
             arrayMunicipioSelected.value['provincia'],
+            arrayMunicipioSelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {

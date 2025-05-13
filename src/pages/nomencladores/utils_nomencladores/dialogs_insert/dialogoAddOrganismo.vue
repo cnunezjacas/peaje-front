@@ -43,7 +43,7 @@
             <div class="col-5">
               <q-btn
                 icon="check"
-                @click="Procesar_AddOrganismo()"
+                @click="Procesar_AddOrganismo"
                 :label="STRINGS.save"
                 color="green"
                 :class="disabledBtnSave"
@@ -77,7 +77,8 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
-
+import api from 'src/axios.js'
+import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
 
@@ -105,12 +106,46 @@ const regexNombreAbrOrganismo = /^[A-ZÁÉÍÓÚÑÜ\s]+$/
 
 /*Validaciones*/
 
+//Función para realizar el Capitalize del nombre del organismo
+function capitalizeWords(str) {
+  return str
+    .split(' ')
+    .map((word) => {
+      if (word.length === 0) return word // Por si hay cadenas vacías
+      return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
+const emit = defineEmits(['ActualizarTablaOrganismo'])
+
 /*Funcion de procesado de Datos*/
-const Procesar_AddOrganismo = () => {
+const Procesar_AddOrganismo = async () => {
   if (ComprobarEstadoInputsEdit() != STRINGS.desabilitar) {
     //TODO: Ajax Request ADD_ORGANISMO
-    refDialogoAddOrganismo.value.hide()
-    Reset()
+    // Verificar si el código ya existe
+    const existeCodigo = await verificarSiglaExistente(TextNombreAbrOrg.value)
+    if (existeCodigo) {
+      // Mostrar mensaje de error o alertar al usuario
+      alert('Existe un organismo con esas siglas en la base de datos. Por favor, usa otro código.')
+      return
+    } else {
+      const newItem = {
+        nombre: capitalizeWords(TextNombreOrg.value),
+        siglas: TextNombreAbrOrg.value,
+      }
+
+      try {
+        const response = await api.post(STRINGS.urlApiOrganismo, newItem) // POST /items
+        console.log('Petición ADD ORGANISMO:', response.data)
+        emit('ActualizarTablaOrganismo', true)
+      } catch (error) {
+        console.error('Error al crear item:', error)
+        emit('ActualizarTablaOrganismo', false)
+      }
+      refDialogoAddOrganismo.value.hide()
+      Reset()
+    }
   }
 }
 

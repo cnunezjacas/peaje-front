@@ -1,6 +1,28 @@
 <template>
   <div class="q-px-md">
+    <div class="flex justify-between padding_minimo">
+      <div class="text-center bg-green-10 rounded-borders my-cell">
+        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.municipioLowercase }}</p>
+      </div>
+
+      <div>
+        <q-breadcrumbs>
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
+
+          <q-breadcrumbs-el :label="STRINGS.municipioLowercase" icon="post_add" />
+        </q-breadcrumbs>
+      </div>
+    </div>
+
+    <!-- Mostrar spinner cuando está cargando -->
+    <div v-if="isLoading" class="flex justify-center items-center" style="height: 300px">
+      <q-spinner size="50px" color="green" />
+    </div>
+    <!-- Mostrar la tabla cuando no está cargando -->
+
     <q-table
+      v-else
       class="shadow-6"
       bordered
       table-header-class="bg-green-10 text-white"
@@ -9,7 +31,7 @@
       :rows="filteredRows"
       :columns="columns"
       :rows-per-page-options="numberForPage"
-      row-key="name"
+      row-key="codigo"
       :separator="separator"
       selection="single"
       v-model:selected="selectedRows"
@@ -21,61 +43,67 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
+import api from 'src/axios.js'
 
 var numberForPage = [5, 7, 10, 15, 20, 50, 0]
+const isLoading = ref(true)
 
 const columns = [
   { name: 'codigo', align: 'center', label: STRINGS.codigo_mun, field: 'codigo', sortable: true },
   {
-    name: 'name',
+    name: 'nombre',
     required: true,
     label: STRINGS.nombre_mun,
     align: 'center',
-    field: 'name',
+    field: 'nombre',
     sortable: true,
   },
   {
-    name: 'provincia',
+    name: 'Texto_provincia',
     align: 'center',
     label: STRINGS.name_provincia,
-    field: 'provincia',
+    field: 'Texto_provincia',
     sortable: true,
+  },
+  {
+    name: '_id',
+    field: '_id',
+    label: '_id',
+    visible: false, // Esta propiedad oculta la columna en la vista
+    hidden: true,
   },
 ]
 
-const rows = ref([
-  {
-    name: 'Bayamo',
-    codigo: '45',
-    provincia: 'Granma',
-  },
-  {
-    name: 'Banes',
-    codigo: '23',
-    provincia: 'Holguín',
-  },
-  {
-    name: 'Baracoa',
-    codigo: '10',
-    provincia: 'Guantánamo',
-  },
-  {
-    name: 'Güaimaro',
-    codigo: '21',
-    provincia: 'Camagüey',
-  },
-  {
-    name: 'Colón',
-    codigo: '32',
-    provincia: 'Matanzas',
-  },
-  {
-    name: 'Santa Clara',
-    codigo: '26',
-    provincia: 'Villa Clara',
-  },
-])
+import { onBeforeMount } from 'vue'
 
+const InicializarDatosTabla = async () => {
+  isLoading.value = true
+  try {
+    const responseMun = await api.get(STRINGS.urlApiMunicipio)
+    const responseProv = await api.get(STRINGS.urlApiProvincia)
+
+    responseMun.data.forEach((element) => {
+      responseProv.data.forEach((item) => {
+        if (item['_id'] === element['provincia']) {
+          element['Texto_provincia'] = item['nombre']
+        }
+      })
+    })
+
+    rows.value = responseMun.data
+  } catch (error) {
+    console.error('Error cargando datos:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onBeforeMount(() => {
+  InicializarDatosTabla()
+})
+
+//const rows = ref(InicializarDatosTabla())
+const rows = ref([])
 const separator = ref('vertical')
 // Para manejar la fila seleccionada
 
@@ -88,8 +116,8 @@ var BloquearDetalle = ref(true)
 var BloquearGuardar = ref(true)
 
 //Provincia a Eliminar
-var ProvinciaDelete = ref('')
-var ProvinciaCodigoDelete = ref('')
+//var ProvinciaDelete = ref('')
+//var ProvinciaCodigoDelete = ref('')
 
 // Para emitir eventos
 const emit = defineEmits(['seleccionado'])
@@ -103,8 +131,8 @@ const onSelectedRowsChange = (newSelected) => {
     emit('onBloquearDelete', (BloquearDelete.value = false))
     emit('onBloquearDetalle', (BloquearDetalle.value = false))
     emit('onBloquearGuardar', (BloquearGuardar.value = false))
-    emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['name']))
-    emit('oNcodigoProvinciaDelete', (ProvinciaCodigoDelete.value = newSelected[0]['codigo']))
+    //emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['name']))
+    //emit('oNcodigoProvinciaDelete', (ProvinciaCodigoDelete.value = newSelected[0]['codigo']))
   } else {
     // console.log('Nada seleccionado')
     emit('onBloquearEdit', (BloquearEdit.value = true))
@@ -129,14 +157,19 @@ const filteredRows = computed(() => {
   const searchTerm = props.TextSearch.toLowerCase()
   return rows.value.filter((row) => {
     return (
-      row.name.toLowerCase().includes(searchTerm) ||
-      row.codigo.toLowerCase().includes(searchTerm) ||
-      row.provincia.toLowerCase().includes(searchTerm)
+      row.nombre.toLowerCase().includes(searchTerm) ||
+      String(row.codigo).toLowerCase().includes(searchTerm) ||
+      row.Texto_provincia.toLowerCase().includes(searchTerm)
     )
   })
 })
 
+const UpdateTable = async () => {
+  InicializarDatosTabla()
+}
+
 defineExpose({
   filteredRows,
+  UpdateTable,
 })
 </script>

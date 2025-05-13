@@ -104,6 +104,11 @@ const linksNavLeft = [
       { id: 'gest_provincia', label: STRINGS.name_provincia, icon: 'post_add' },
       { id: 'gest_municipio', label: STRINGS.name_municipio, icon: 'post_add' },
       { id: 'gest_organismo', label: STRINGS.name_organismo, icon: 'post_add' },
+      { id: 'gest_organismox', label: STRINGS.name_bancos, icon: 'post_add' },
+      { id: 'gest_organismox', label: STRINGS.name_monedas, icon: 'post_add' },
+      { id: 'gest_organismox', label: STRINGS.name_vehiculos, icon: 'post_add' },
+      { id: 'gest_organismox', label: STRINGS.name_exento, icon: 'post_add' },
+      { id: 'gest_organismox', label: STRINGS.name_comprobantes, icon: 'post_add' },
     ],
   },
   {
@@ -113,8 +118,13 @@ const linksNavLeft = [
   },
   {
     id: 'pageAyuda',
-    label: 'Ayuda',
+    label: STRINGS.help,
     icon: 'help',
+  },
+  {
+    id: 'pageAyuda',
+    label: STRINGS.close_seccion,
+    icon: 'door_back',
   },
 ]
 

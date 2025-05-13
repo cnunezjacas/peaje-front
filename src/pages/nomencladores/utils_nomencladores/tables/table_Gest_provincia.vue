@@ -1,6 +1,27 @@
 <template>
   <div class="q-px-md">
+    <div class="flex justify-between padding_minimo">
+      <div class="text-center bg-green-10 rounded-borders my-cell">
+        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.provinciaLowercase }}</p>
+      </div>
+
+      <div>
+        <q-breadcrumbs>
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
+
+          <q-breadcrumbs-el :label="STRINGS.provinciaLowercase" icon="post_add" />
+        </q-breadcrumbs>
+      </div>
+    </div>
+    <!-- Mostrar spinner cuando está cargando -->
+    <div v-if="isLoading" class="flex justify-center items-center" style="height: 300px">
+      <q-spinner size="50px" color="green" />
+    </div>
+    <!-- Mostrar la tabla cuando no está cargando -->
+
     <q-table
+      v-else
       class="shadow-6"
       bordered
       table-header-class="bg-green-10 text-white"
@@ -9,7 +30,7 @@
       :rows="filteredRows"
       :columns="columns"
       :rows-per-page-options="nomberForPage"
-      row-key="name"
+      row-key="codigo"
       :separator="separator"
       selection="single"
       v-model:selected="selectedRows"
@@ -22,9 +43,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
+import api from 'src/axios.js'
 
 // Datos
 const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
+//Spinner Carga Datos
+const isLoading = ref(true)
 
 const columns = [
   {
@@ -35,22 +59,48 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'name',
+    name: 'nombre',
     required: true,
     label: STRINGS.nombre,
     align: 'center',
-    field: (rows) => rows.name,
+    field: (rows) => rows.nombre,
     format: (val) => `${val}`,
     sortable: true,
   },
+  {
+    name: '_id',
+    field: '_id',
+    label: '_id',
+    visible: false, // Esta propiedad oculta la columna en la vista
+    hidden: true,
+  },
 ]
 
-const rows = ref([
+/*const rows = ref([
   { name: 'Granma', codigo: '33' },
   { name: 'Las Tunas', codigo: '31' },
   { name: 'La Habana', codigo: '24' },
-])
+])*/
 
+import { onBeforeMount } from 'vue'
+
+const InicializarDatosTabla = async () => {
+  isLoading.value = true
+  try {
+    const response = await api.get(STRINGS.urlApiProvincia)
+    rows.value = response.data
+  } catch (error) {
+    console.error('Error cargando datos:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onBeforeMount(() => {
+  InicializarDatosTabla()
+})
+
+const rows = ref(InicializarDatosTabla())
 const separator = ref('vertical')
 const selectedRows = ref([])
 
@@ -67,7 +117,8 @@ const filteredRows = computed(() => {
   const searchTerm = props.TextSearch.toLowerCase()
   return rows.value.filter((row) => {
     return (
-      row.name.toLowerCase().includes(searchTerm) || row.codigo.toLowerCase().includes(searchTerm)
+      row.nombre.toLowerCase().includes(searchTerm) ||
+      String(row.codigo).toLowerCase().includes(searchTerm)
     )
   })
 })
@@ -87,16 +138,14 @@ var ProvinciaCodigoDelete = ref('')
 // Manejador de selección
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {
-    console.log('newSelected:' + newSelected.length)
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
     emit('onBloquearEdit', (BloquearEdit.value = false))
     emit('onBloquearDelete', (BloquearDelete.value = false))
     emit('onBloquearDetalle', (BloquearDetalle.value = false))
     emit('onBloquearGuardar', (BloquearGuardar.value = false))
-    emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['name']))
+    emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['nombre']))
     emit('oNcodigoProvinciaDelete', (ProvinciaCodigoDelete.value = newSelected[0]['codigo']))
   } else {
-    // console.log('Nada seleccionado')
     emit('onBloquearEdit', (BloquearEdit.value = true))
     emit('onBloquearDelete', (BloquearDelete.value = true))
     emit('onBloquearDetalle', (BloquearDetalle.value = true))
@@ -104,13 +153,14 @@ const onSelectedRowsChange = (newSelected) => {
   }
 }
 
-// Funciones adicionales
-// const EditarUnaFila = (nombre, codigo) => {
-
-// }
+const UpdateTable = async () => {
+  const response = await api.get(STRINGS.urlApiProvincia)
+  rows.value = response.data
+}
 
 // Exponemos `filteredRows` si el padre necesita acceder directamente
 defineExpose({
   filteredRows,
+  UpdateTable,
 })
 </script>

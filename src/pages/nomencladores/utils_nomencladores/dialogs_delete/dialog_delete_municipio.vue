@@ -60,7 +60,7 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
-
+import api from 'src/axios.js'
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
 
@@ -76,19 +76,30 @@ const nombreMunicipioDelete = ref('')
 const nombreProvinciaMunicipioDelete = ref('')
 const codigoMunicipioDelete = ref('')
 
+const emit = defineEmits(['ActualizarTablaMunicipio'])
+
 /*Funcion de procesado de Datos*/
-const Procesar_DeleteMunicipio = () => {
+const Procesar_DeleteMunicipio = async () => {
   //TODO: Ajax Request DELETE MUNICIPIO
+  try {
+    const response = await api.delete(STRINGS.urlApiMunicipio + '/' + IdMunicipioDelete.value) // DELETE /items/:id
+    console.log(response)
+    emit('ActualizarTablaMunicipio', true)
+  } catch (error) {
+    console.error('Error al eliminar item:', error)
+    emit('ActualizarTablaMunicipio', false)
+  }
   refDialogoDeleteMunicipio.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteMunicipio = (nombre, codigo, provincia) => {
+const LevantarDialogoDeleteMunicipio = (nombre, codigo, provincia, id) => {
   backdropFilter.value = list
   dialogDeleteMunicipio.value = true
   nombreMunicipioDelete.value = nombre
   codigoMunicipioDelete.value = codigo
   nombreProvinciaMunicipioDelete.value = provincia
+  IdMunicipioDelete.value = id
 }
 
 defineExpose({
@@ -102,6 +113,7 @@ const dialogDeleteMunicipio = ref(false)
 
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
+const IdMunicipioDelete = ref('')
 
 //const textNombre_prov = ref(null)
 //const textCodigo_prov = ref(null)

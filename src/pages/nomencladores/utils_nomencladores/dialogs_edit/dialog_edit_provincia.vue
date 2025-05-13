@@ -77,7 +77,8 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
-
+import api from 'src/axios.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
 
@@ -92,7 +93,7 @@ const refDialogoEditProvincia = ref(null)
 /*Validaciones*/
 const rulesAddNombreProvincia = [
   (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZÁÉÍÓÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => /^[a-zA-ZáééíóúñÁÉÍÓÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
 ]
 
 const rulesAddCodigoProvincia = [
@@ -101,29 +102,54 @@ const rulesAddCodigoProvincia = [
 ]
 
 const regexCodigoProvincia = /^[0-9\s]+$/
-const regexNombreProvincia = /^[a-zA-ZÁÉÍÓÚÑÜ\s]+$/
+const regexNombreProvincia = /^[a-zA-ZáééíóúñÁÉÍÓÚÑÜ\s]+$/
 /*Validaciones*/
 
+const emit = defineEmits(['ActualizarTablaProvincia'])
+
 /*Funcion de procesado de Datos*/
-const Procesar_EditProvincia = () => {
+const Procesar_EditProvincia = async () => {
   if (ComprobarEstadoInputsEdit() != STRINGS.desabilitar) {
     //TODO: Ajax Request EDIT_PROVINCIA
-    refDialogoEditProvincia.value.hide()
-    Reset()
+    // Datos enviar, típicamente en formato JSON
+
+    // Verificar si el código ya existe
+    const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
+    if (existeCodigo) {
+      // Mostrar mensaje de error o alertar al usuario
+      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
+      return
+    } else {
+      const newItem = { nombre: TextNombre_prov.value, codigo: Number(TextCodigo_prov.value) }
+      console.log(_id.value)
+      console.log(newItem['codigo'])
+      try {
+        const response = await api.patch(STRINGS.urlApiProvincia + '/' + _id.value, newItem) // POST /items
+        console.log('Petición UPDATE PROVINCIA:', response)
+        emit('ActualizarTablaProvincia', true)
+      } catch (error) {
+        console.error('Error al crear item:', error)
+        emit('ActualizarTablaProvincia', false)
+      }
+      refDialogoEditProvincia.value.hide()
+      Reset()
+    }
   } else {
     refDialogoEditProvincia.value.show()
   }
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditProvincia = (name, codigo) => {
+const LevantarDialogoEditProvincia = (name, codigo, id) => {
   backdropFilter.value = list
   dialogEditProvincia.value = true
-  TextCodigo_prov.value = codigo
+  TextCodigo_prov.value = String(codigo)
   TextNombre_prov.value = name
+  _id.value = id
+  console.log(_id.value)
 
   //Copias de Seguridad
-  TextCodigo_prov_copy.value = codigo
+  TextCodigo_prov_copy.value = String(codigo)
   TextNombre_prov__copy.value = name
 }
 
@@ -181,6 +207,8 @@ const TextNombre_prov = ref('')
 
 const TextCodigo_prov_copy = ref('')
 const TextNombre_prov__copy = ref('')
+
+const _id = ref('')
 
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)

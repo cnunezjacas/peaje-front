@@ -1,6 +1,28 @@
 <template>
   <div class="q-px-md">
+    <div class="flex justify-between padding_minimo">
+      <div class="text-center bg-green-10 rounded-borders my-cell">
+        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.organismoLowercase }}</p>
+      </div>
+
+      <div>
+        <q-breadcrumbs>
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
+
+          <q-breadcrumbs-el :label="STRINGS.organismoLowercase" icon="post_add" />
+        </q-breadcrumbs>
+      </div>
+    </div>
+
+    <!-- Mostrar spinner cuando está cargando -->
+    <div v-if="isLoading" class="flex justify-center items-center" style="height: 300px">
+      <q-spinner size="50px" color="green" />
+    </div>
+    <!-- Mostrar la tabla cuando no está cargando -->
+
     <q-table
+      v-else
       class="shadow-6"
       bordered
       table-header-class="bg-green-10 text-white"
@@ -9,7 +31,7 @@
       :rows="filteredRows"
       :columns="columns"
       :rows-per-page-options="nomberForPage"
-      row-key="name"
+      row-key="siglas"
       :separator="separator"
       selection="single"
       v-model:selected="selectedRows"
@@ -19,39 +41,57 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
+import api from 'src/axios.js'
 
 var nomberForPage = [5, 7, 10, 15, 20, 50, 0]
+const isLoading = ref(true)
 
 const columns = [
   {
-    name: 'name_min',
+    name: 'siglas',
     align: 'center',
     label: STRINGS.nombre_abreviado,
-    field: 'name_min',
+    field: 'siglas',
     sortable: true,
   },
   {
-    name: 'name',
+    name: 'nombre',
     required: true,
     label: STRINGS.nombre_org,
     align: 'center',
-    field: 'name',
+    field: 'nombre',
     sortable: true,
+  },
+  {
+    name: '_id',
+    field: '_id',
+    label: '_id',
+    visible: false, // Esta propiedad oculta la columna en la vista
+    hidden: true,
   },
 ]
 
-const rows = ref([
-  {
-    name: 'Unión de Jóvenes Comunistas',
-    name_min: 'UJC',
-  },
-  {
-    name: 'Partido Comunista de Cuba',
-    name_min: 'PCC',
-  },
-])
+const rows = ref([])
+
+import { onBeforeMount } from 'vue'
+
+const InicializarDatosTabla = async () => {
+  isLoading.value = true
+  try {
+    const response = await api.get(STRINGS.urlApiOrganismo)
+    rows.value = response.data
+  } catch (error) {
+    console.error('Error cargando datos:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onBeforeMount(() => {
+  InicializarDatosTabla()
+})
 
 const separator = ref('vertical')
 const selectedRows = ref([])
@@ -83,8 +123,6 @@ const onSelectedRowsChange = (newSelected) => {
   }
 }
 
-import { watch, computed } from 'vue'
-
 // Props
 const props = defineProps({
   TextSearch: String,
@@ -98,16 +136,18 @@ const filteredRows = computed(() => {
   const searchTerm = props.TextSearch.toLowerCase()
   return rows.value.filter((row) => {
     return (
-      row.name.toLowerCase().includes(searchTerm) || row.name_min.toLowerCase().includes(searchTerm)
+      row.nombre.toLowerCase().includes(searchTerm) || row.siglas.toLowerCase().includes(searchTerm)
     )
   })
 })
 
-watch(rows, (newVal) => {
-  console.log('Rows ha cambiado:', newVal)
-})
+const UpdateTable = async () => {
+  const response = await api.get(STRINGS.urlApiOrganismo)
+  rows.value = response.data
+}
 
 defineExpose({
   filteredRows,
+  UpdateTable,
 })
 </script>

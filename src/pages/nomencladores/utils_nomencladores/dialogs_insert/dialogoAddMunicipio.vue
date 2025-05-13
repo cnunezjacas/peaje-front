@@ -88,6 +88,8 @@
 import { ref, watch } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
+import api from 'src/axios.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -96,16 +98,27 @@ var $q = useQuasar()*/
  * Values for backdrop-filter are the same as in the CSS specs.
  * The following list is not an exhaustive one.
  */
+import { onBeforeMount } from 'vue'
 const list = 'blur(4px) saturate(150%)'
+//var provinciasSelect = ref([])
+const options = ref([])
 
-const options = ['Granma', 'La Habana', 'Holguín']
+const CargarProvincias = async () => {
+  const response = await api.get(STRINGS.urlApiProvincia)
+  options.value = response.data.map((element) => element['nombre'])
+  return options
+}
+
+onBeforeMount(() => {
+  CargarProvincias()
+})
 
 const refDialogoAddMunicipio = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreMunicipio = [
   (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZÁÉÍÓÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
 ]
 
 const rulesAddCodigoMunicipio = [
@@ -114,17 +127,52 @@ const rulesAddCodigoMunicipio = [
 ]
 
 const regexCodigoMunicipio = /^[0-9\s]+$/
-const regexNombreMunicipio = /^[a-zA-ZÁÉÍÓÚÑÜ\s]+$/
+const regexNombreMunicipio = /^[a-zA-ZáéíóúöñÁÉÍÓÖÚÑÜ\s]+$/
 
 const rulesAddNombreProvincia = [(val) => val != '' || 'El campo no puede estar vacío']
 /*Validaciones*/
 
+const emit = defineEmits(['ActualizarTablaMunicipio'])
+
 /*Funcion de procesado de Datos*/
-const Procesar_AddMunicipio = () => {
+const Procesar_AddMunicipio = async () => {
   if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
     //TODO: Ajax Request ADD_MUNICIPIO
-    refDialogoAddMunicipio.value.hide()
-    Reset()
+    var aux = ''
+
+    // Verificar si el código ya existe
+    const existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
+    if (existeCodigo) {
+      // Mostrar mensaje de error o alertar al usuario
+      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
+      return
+    } else {
+      const response = await api.get(STRINGS.urlApiProvincia)
+      response.data.forEach((element) => {
+        if (element['nombre'] === SelectNombre_prov.value) {
+          aux = element['_id']
+        }
+      })
+
+      const newItem = {
+        codigo: Number(TextCodigo_mun.value),
+        nombre: TextNombre_mun.value,
+        provincia: String(aux),
+      }
+
+      console.log(newItem)
+
+      try {
+        const response = await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
+        console.log('Petición ADD Municipio:', response.data)
+        emit('ActualizarTablaMunicipio', true)
+      } catch (error) {
+        console.error('Error al crear item:', error)
+        emit('ActualizarTablaMunicipio', false)
+      }
+      refDialogoAddMunicipio.value.hide()
+      Reset()
+    }
   }
 }
 
@@ -172,5 +220,6 @@ watch(SelectNombre_prov, (newVal) => {
 
 defineExpose({
   LevantarDialogoAddMunicipio,
+  CargarProvincias,
 })
 </script>

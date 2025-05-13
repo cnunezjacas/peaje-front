@@ -41,3 +41,23 @@
   padding: 0px !important;
   margin: 0px !important;
 }
+
+.my-cell {
+  display: table-cell;
+  /*vertical-align: middle;*/
+  height: 26px;
+  /*oeltamañoquenecesites*/
+  width: 200px;
+  margin-bottom: 0px !important;
+  padding: 0px !important;
+}
+
+.text-tittle-table {
+  color: white !important;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.padding_minimo {
+  margin-bottom: 7px !important;
+}

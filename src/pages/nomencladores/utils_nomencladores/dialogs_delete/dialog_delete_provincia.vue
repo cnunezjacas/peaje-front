@@ -57,6 +57,7 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
+import api from 'src/axios.js'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -71,21 +72,35 @@ const refDialogoDeleteProvincia = ref(null)
 
 const nombreProvinciaDelete = ref('')
 const codigoProvinciaDelete = ref('')
+const idProvinciaDelete = ref('')
 
-//const emit = defineEmits(['oNProvinciaDeleteGestProvincia'])
+const emit = defineEmits(['ActualizarTablaProvincia'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_DeleteProvincia = () => {
+const Procesar_DeleteProvincia = async () => {
   //TODO: Ajax Request DELETE PROVINCIA
+
+  try {
+    const response = await api.delete(STRINGS.urlApiProvincia + '/' + idProvinciaDelete.value) // DELETE /items/:id
+    console.log(response)
+    emit('ActualizarTablaProvincia', true)
+  } catch (error) {
+    console.error('Error al eliminar item:', error)
+    emit('ActualizarTablaProvincia', false)
+  }
   refDialogoDeleteProvincia.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteProvincia = (nombre, codigo) => {
+const LevantarDialogoDeleteProvincia = (nombre, codigo, id) => {
   backdropFilter.value = list
+
+  console.log('Id a eliminar:' + id)
+
   dialogDeleteProvincia.value = true
   nombreProvinciaDelete.value = nombre
-  codigoProvinciaDelete.value = codigo
+  codigoProvinciaDelete.value = String(codigo)
+  idProvinciaDelete.value = id
 }
 
 defineExpose({

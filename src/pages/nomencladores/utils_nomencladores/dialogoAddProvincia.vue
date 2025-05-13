@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="q-pa-md q-gutter-sm">
     <q-dialog
       v-model="dialog"
       persistent
@@ -21,7 +21,6 @@
                 :rules="rulesAddNombreProvincia"
                 type="text"
                 :label="STRINGS.nombre_prov"
-                @keyup="ComprobarEstadoInputs"
               />
             </div>
             <div class="col-5">
@@ -32,18 +31,16 @@
                 type="text"
                 :rules="rulesAddCodigoProvincia"
                 :label="STRINGS.codigo_prov"
-                @keyup="ComprobarEstadoInputs"
               />
             </div>
           </div>
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-start">
+          <div class="row flex justify-end">
             <div class="col-5">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
                 @click="Procesar_AddProvincia()"
                 :label="STRINGS.save"
                 color="green"
@@ -51,14 +48,7 @@
             </div>
 
             <div class="col-5">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -75,10 +65,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
-import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
+import { STRINGS } from '../../../utils/string.js'
+import table_Gest_provincia from './table_Gest_provincia.vue'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -94,45 +82,26 @@ const refDialogoAddProvincia = ref(null)
 /*Validaciones*/
 const rulesAddNombreProvincia = [
   (val) => val != '' || 'El campo no puede estar vacío',
-  (val) => /^[a-zA-ZáééíóúüñÁÉÍÓÚÑÜ\s]+$/.test(val) || 'El campo solo puede contener letras',
+  (val) => /^[a-zA-Z\s]+$/.test(val) || 'El campo solo puede contener letras',
 ]
 
 const rulesAddCodigoProvincia = [
   (val) => val != '' || 'El campo no puede estar vacío',
   (val) => /^[0-9\s]+$/.test(val) || 'El campo solo puede contener números',
 ]
-
-const regexCodigoProvincia = /^[0-9\s]+$/
-const regexNombreProvincia = /^[a-zA-ZáééíóúüñÁÉÍÓÚÑÜ\s]+$/
 /*Validaciones*/
 
-const emit = defineEmits(['ActualizarTablaProvincia'])
-
 /*Funcion de procesado de Datos*/
-const Procesar_AddProvincia = async () => {
-  if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
+const Procesar_AddProvincia = () => {
+  if (TextCodigo_prov.value == '' || TextNombre_prov.value == '') {
+    refDialogoAddProvincia.value.show()
+    alert('Error')
+  } else {
+    let objet = { name: TextNombre_prov.value, codigo: TextCodigo_prov.value }
 
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
-    if (existeCodigo) {
-      // Mostrar mensaje de error o alertar al usuario
-      alert('El código de provincia ya existe en la base de datos. Por favor, usa otro código.')
-      return
-    } else {
-      const newItem = { nombre: TextNombre_prov.value, codigo: Number(TextCodigo_prov.value) }
-
-      try {
-        const response = await api.post(STRINGS.urlApiProvincia, newItem) // POST /items
-        console.log('Petición ADD PROVINCIA:', response.data)
-        emit('ActualizarTablaProvincia', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        emit('ActualizarTablaProvincia', false)
-      }
-      refDialogoAddProvincia.value.hide()
-      Reset()
-    }
+    Ref_table_Gest_provincia.value.rows.value = objet
+    refDialogoAddProvincia.value.hide()
+    Reset()
   }
 }
 
@@ -153,15 +122,10 @@ const LevantarDialogoAddModelo = () => {
   dialogModel.value = true
 }
 
-const ComprobarEstadoInputs = () => {
-  if (TextCodigo_prov.value != '' && regexCodigoProvincia.test(TextCodigo_prov.value))
-    if (TextNombre_prov.value != '' && regexNombreProvincia.test(TextNombre_prov.value))
-      disabledBtnSaveEdit.value = ''
-    else disabledBtnSaveEdit.value = STRINGS.desabilitar
-  else disabledBtnSaveEdit.value = STRINGS.desabilitar
-
-  return disabledBtnSaveEdit.value
-}
+defineExpose({
+  LevantarDialogo,
+  LevantarDialogoAddModelo,
+})
 
 const dialog = ref(false)
 
@@ -174,10 +138,4 @@ const Ref_table_Gest_provincia = ref(null)
 
 const textNombre_prov = ref(null)
 const textCodigo_prov = ref(null)
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
-
-defineExpose({
-  LevantarDialogo,
-  LevantarDialogoAddModelo,
-})
 </script>
