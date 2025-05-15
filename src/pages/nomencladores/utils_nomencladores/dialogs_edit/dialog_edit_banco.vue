@@ -7,8 +7,11 @@
       :backdrop-filter="backdropFilter"
     >
       <q-card>
-        <q-card-section class="row items-center q-pb-none text-h6">
-          {{ STRINGS.editBanco }}
+        <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
+          <span class="icon-text q-mx-sm">
+            <q-icon name="edit" />
+          </span>
+          <span class="icon-text">{{ STRINGS.editBanco.toUpperCase() }}</span>
         </q-card-section>
         <q-card-section>
           <div class="row flex justify-between">
@@ -52,8 +55,8 @@
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-start">
-            <div class="col-5">
+          <div class="flex justify-start">
+            <div class="">
               <q-btn
                 icon="check"
                 :class="disabledBtnSaveEdit"
@@ -63,7 +66,7 @@
               />
             </div>
 
-            <div class="col-5">
+            <div class="">
               <q-btn
                 flat
                 icon="close"

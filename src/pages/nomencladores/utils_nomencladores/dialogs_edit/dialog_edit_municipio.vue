@@ -7,8 +7,11 @@
       :backdrop-filter="backdropFilter"
     >
       <q-card>
-        <q-card-section class="row items-center q-pb-none text-h6">
-          {{ STRINGS.editMunicipio }}
+        <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
+          <span class="icon-text q-mx-sm">
+            <q-icon name="edit" />
+          </span>
+          <span class="icon-text">{{ STRINGS.editMunicipio.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
@@ -50,8 +53,8 @@
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-start">
-            <div class="col-5">
+          <div class="flex justify-start">
+            <div class="">
               <q-btn
                 icon="check"
                 :class="disabledBtnSaveEdit"
@@ -61,7 +64,7 @@
               />
             </div>
 
-            <div class="col-5">
+            <div class="">
               <q-btn
                 flat
                 icon="close"
@@ -79,10 +82,6 @@
 
   <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
-
-<!-- <q-alert color="positive" ref="Myalert" icon="check_circle" dense rounded class="q-mb-md">
-¡Operación exitosa!
-</q-alert> -->
 
 <script setup>
 import { ref } from 'vue'
@@ -199,8 +198,6 @@ const LevantarDialogoEditMunicipio = (name, codigo, provincia, id) => {
   TextCodigo_mun_copy.value = String(codigo)
   TextNombre_mun_copy.value = name
   SelectNombre_prov_copy.value = provincia
-
-  console.log('SelectNombre_prov_copy:' + String(provincia))
 
   IdMunicipio.value = id
 }

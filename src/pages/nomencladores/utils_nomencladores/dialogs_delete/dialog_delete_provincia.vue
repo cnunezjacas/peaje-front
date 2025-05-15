@@ -49,10 +49,6 @@
   <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
-<!-- <q-alert color="positive" ref="Myalert" icon="check_circle" dense rounded class="q-mb-md">
-¡Operación exitosa!
-</q-alert> -->
-
 <script setup>
 //importaciones
 import { ref } from 'vue'
@@ -102,8 +98,6 @@ const Procesar_DeleteProvincia = async () => {
 /*Función que levanta el dialogo*/
 const LevantarDialogoDeleteProvincia = (nombre, codigo, id) => {
   backdropFilter.value = list
-
-  console.log('Id a eliminar:' + id)
 
   dialogDeleteProvincia.value = true
   nombreProvinciaDelete.value = nombre

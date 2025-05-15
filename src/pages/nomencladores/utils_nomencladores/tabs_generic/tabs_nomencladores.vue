@@ -9,7 +9,7 @@
       -->
 
       <q-tabs v-model="tab" shrink bordered>
-        <q-tab name="tab1" icon="add" class="small-font" @click="onItemClick('Add')"
+        <q-tab name="tab1" icon="note_add" class="small-font" @click="onItemClick('Add')"
           >Adicionar</q-tab
         >
         <q-tab name="tab2" icon="edit" :class="disabledEdit" @click="onItemClick('Edit')"
@@ -17,9 +17,6 @@
         >
         <q-tab name="tab3" icon="delete" :class="disabledDelete" @click="onItemClick('Delete')"
           >Eliminar</q-tab
-        >
-        <q-tab name="tab4" icon="save" :class="disabledGuardar" @click="onItemClick('Save')"
-          >Guardar</q-tab
         >
         <q-tab name="tab6" icon="picture_as_pdf" class="small-font" @click="onItemClick('Export')"
           >Exportar</q-tab
@@ -255,7 +252,6 @@ const handleSelection = (row) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
   if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
-    console.log(row['nombre'] + '/' + row['codigo'])
     arrayProvinceSelected.value['nombre'] = row['nombre']
     arrayProvinceSelected.value['codigo'] = row['codigo']
     arrayProvinceSelected.value['_id'] = row['_id']
@@ -274,6 +270,7 @@ const handleSelection = (row) => {
     arrayBancoSelected.value['detalle'] = row['detalle']
     arrayBancoSelected.value['_id'] = row['_id']
   } else {
+    //TODO:Notify
     console.log('No hay fila seleccionada')
   }
 }
@@ -281,21 +278,20 @@ const handleSelection = (row) => {
 const ActualizadorTabla = (value) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
-  console.log('ActualizadorTabla llamada con valor:', value)
-  console.log('Con Ruta:', nuevaRuta)
   if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
     if (value) tableProvincia.value.UpdateTable()
-    else console.log('Operación Fallida')
+    else console.log('Operación Fallida') //TODO:Notify
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
     if (value) tableMunicipio.value.UpdateTable()
-    else console.log('Operación Fallida')
+    else console.log('Operación Fallida') //TODO:Notify
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
     if (value) tableOrganismo.value.UpdateTable()
-    else console.log('Operación Fallida')
+    else console.log('Operación Fallida') //TODO:Notify
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
     if (value) tableBanco.value.UpdateTable()
-    else console.log('Operación Fallida')
+    else console.log('Operación Fallida') //TODO:Notify
   } else {
+    //TODO:Notify
     console.log('Evento mal ejecutado')
   }
 }
@@ -330,11 +326,6 @@ const BloquearGuardar = (variable) => {
   } else {
     disabledGuardar.value = 'small-font'
   }
-}
-
-const ProcesoDeleteProvincia = (codigo) => {
-  //if (codigo != '')
-  console.log('ProcesoDeleteProvincia: ' + codigo)
 }
 
 const CambioRuta = () => {
@@ -408,7 +399,6 @@ const onItemClick = (value) => {
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arrayProvinceSelected.value != null)
-            //console.log('Antes de enviar arrayProvinceSelected: ' + arrayProvinceSelected.value)
             dialogoEditProvincia.value.LevantarDialogoEditProvincia(
               arrayProvinceSelected.value['nombre'],
               arrayProvinceSelected.value['codigo'],
@@ -482,12 +472,10 @@ const onItemClick = (value) => {
       }
 
       break
-    case 'Save':
+    case 'Export':
       if (!disabledGuardar.value.includes(STRINGS.desabilitar)) {
         alert('TODO: Guardar')
       }
-      break
-    case 'Export':
       break
     case 'Details':
       if (!disabledDetalle.value.includes(STRINGS.desabilitar)) {

@@ -49,10 +49,6 @@
   <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
-<!-- <q-alert color="positive" ref="Myalert" icon="check_circle" dense rounded class="q-mb-md">
-¡Operación exitosa!
-</q-alert> -->
-
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'

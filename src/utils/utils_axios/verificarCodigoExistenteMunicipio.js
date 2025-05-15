@@ -7,10 +7,9 @@ const verificarCodigoExistente = async (codigo) => {
   try {
     const response = await api.get(`${STRINGS.urlApiMunicipio}?/codigo=${Number(codigo)}`)
     // Asumiendo que tu API devuelve un array de resultados
-    console.log(response.data)
+
     response.data.forEach((element) => {
       if (element.codigo === Number(codigo)) {
-        console.log('Fui verdadero')
         aux = true
       }
     })

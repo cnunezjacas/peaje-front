@@ -7,7 +7,6 @@ const verificarSiglaExistente = async (siglas) => {
   try {
     const response = await api.get(`${STRINGS.urlApiOrganismo}?/sigla=${siglas}`)
     // Asumiendo que tu API devuelve un array de resultados
-    console.log(response.data)
     response.data.forEach((element) => {
       if (element.siglas === siglas) {
         aux = true

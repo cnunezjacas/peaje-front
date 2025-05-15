@@ -108,14 +108,12 @@ const emit = defineEmits(['seleccionado'])
 
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {
-    console.log('newSelected:' + newSelected.length)
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
     emit('onBloquearEdit', (BloquearEdit.value = false))
     emit('onBloquearDelete', (BloquearDelete.value = false))
     emit('onBloquearDetalle', (BloquearDetalle.value = false))
     emit('onBloquearGuardar', (BloquearGuardar.value = false))
   } else {
-    // console.log('Nada seleccionado')
     emit('onBloquearEdit', (BloquearEdit.value = true))
     emit('onBloquearDelete', (BloquearDelete.value = true))
     emit('onBloquearDetalle', (BloquearDetalle.value = true))

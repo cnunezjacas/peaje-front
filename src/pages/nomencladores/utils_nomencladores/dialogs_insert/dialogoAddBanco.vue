@@ -7,8 +7,11 @@
       :backdrop-filter="backdropFilter"
     >
       <q-card>
-        <q-card-section class="row items-center q-pb-none text-h6">
-          {{ STRINGS.addBanco.toUpperCase() }}
+        <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
+          <span class="icon-text q-mx-sm">
+            <q-icon name="note_add" />
+          </span>
+          <span class="icon-text">{{ STRINGS.addBanco.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
@@ -79,10 +82,6 @@
     </q-dialog>
   </div>
 </template>
-
-<!-- <q-alert color="positive" ref="Myalert" icon="check_circle" dense rounded class="q-mb-md">
-¡Operación exitosa!
-</q-alert> -->
 
 <script setup>
 import { ref } from 'vue'
