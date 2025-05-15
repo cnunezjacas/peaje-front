@@ -164,5 +164,7 @@ export const STRINGS = {
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
   loadingTablesError: 'Problemas al intentar cargar las tablas. Por favor, intenta nuevamente.',
 
+  //Tamaño Botones
+  SizeBottom: '16px',
   // Agrega más textos según sea necesario
 }

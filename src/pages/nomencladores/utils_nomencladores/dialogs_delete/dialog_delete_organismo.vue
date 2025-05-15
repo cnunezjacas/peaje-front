@@ -7,6 +7,13 @@
       :backdrop-filter="backdropFilter"
     >
       <q-card>
+        <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
+          <span class="icon-text q-mx-sm">
+            <q-icon name="delete" />
+          </span>
+          <span class="icon-text">{{ STRINGS.deleteOrganismo.toUpperCase() }}</span>
+        </q-card-section>
+
         <q-card-section>
           <div class="row flex justify-center">
             <div class="col-12 text-center">

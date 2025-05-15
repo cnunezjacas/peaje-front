@@ -7,6 +7,13 @@
       :backdrop-filter="backdropFilter"
     >
       <q-card>
+        <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
+          <span class="icon-text q-mx-sm">
+            <q-icon name="delete" />
+          </span>
+          <span class="icon-text">{{ STRINGS.deleteBanco.toUpperCase() }}</span>
+        </q-card-section>
+
         <q-card-section>
           <div class="row flex justify-center">
             <div class="col-12 text-center">
@@ -19,24 +26,24 @@
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-center">
-            <div class="col-5">
+          <div class="flex justify-center">
+            <div class="">
               <q-btn
                 icon="check"
                 @click="Procesar_DeleteBanco"
                 :label="STRINGS.access"
                 color="green"
-                size="18px"
+                :size="STRINGS.SizeBottom"
               />
             </div>
 
-            <div class="col-5">
+            <div class="">
               <q-btn
                 flat
                 icon="close"
                 :label="STRINGS.cancel"
                 color="dark"
-                size="18px"
+                :size="STRINGS.SizeBottom"
                 v-close-popup
               />
             </div>
