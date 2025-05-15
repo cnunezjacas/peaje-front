@@ -16,7 +16,7 @@
             <div class="col-4">
               <q-input
                 v-model="TextNombreAbrOrg"
-                ref="textNombreAbrOrg"
+                ref="textNombre_AbrOrg"
                 color="green"
                 :rules="rulesAddNombreAbrOrganismo"
                 type="text"
@@ -80,10 +80,7 @@ import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-
-/*import { useQuasar } from 'quasar'
-var $q = useQuasar()*/
-
+import { Notify } from 'quasar'
 /**
  * Values for backdrop-filter are the same as in the CSS specs.
  * The following list is not an exhaustive one.
@@ -129,7 +126,15 @@ const Procesar_EditOrganismo = async () => {
     existeSigla = await verificarSiglaExistente(TextNombreAbrOrg.value)
     if (existeSigla ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
-      alert(STRINGS.siglasRepetidas)
+      Notify.create({
+        color: 'negative', // color rojo para error
+        icon: 'error',
+        message: STRINGS.siglasRepetidas,
+        position: 'bottom',
+        timeout: 3000, // en milisegundos
+      })
+
+      textNombre_AbrOrg.value.focus()
       return
     } else {
       const newItem = {
@@ -138,14 +143,26 @@ const Procesar_EditOrganismo = async () => {
       }
 
       try {
-        const response = await api.patch(
-          STRINGS.urlApiOrganismo + '/' + IdMunicipioEdit.value,
-          newItem,
-        ) // POST /items
-        console.log('Petición UPDATE ORGANISMO:', response.data)
+        await api.patch(STRINGS.urlApiOrganismo + '/' + IdMunicipioEdit.value, newItem) // POST /items
+
+        Notify.create({
+          color: 'positive', // color verde para éxito
+          icon: 'check_circle',
+          message: STRINGS.organismoEditSuccess,
+          position: 'top',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
-        console.error('Error al crear item:', error)
+        console.error('Error al editar el item:', error)
+        Notify.create({
+          color: 'negative',
+          icon: 'error',
+          message: STRINGS.OrganismoEditError,
+          position: 'bottom',
+          timeout: 3000,
+        })
         emit('ActualizarTablaOrganismo', false)
       }
       refDialogoEditOrganismo.value.hide()
@@ -196,19 +213,7 @@ const Reset = () => {
   TextNombreAbrOrg.value = ''
 }
 
-// const LevantarDialogoAddModelo = () => {
-//   backdropFilter.value = list
-//   dialogModel.value = true
-// }
-
-defineExpose({
-  LevantarDialogoEditOrganismo,
-  // LevantarDialogoAddModelo,
-})
-
 const dialogEditMunicipio = ref(false)
-
-//const dialogModel = ref(false)
 
 //Campos Originales
 const TextNombreOrg = ref('')
@@ -222,8 +227,12 @@ const TextNombreAbrOrg_copy = ref('')
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
 
-const textNombreAbrOrg = ref(null)
+const textNombre_AbrOrg = ref(null)
 const textNombreOrg = ref(null)
 
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+
+defineExpose({
+  LevantarDialogoEditOrganismo,
+})
 </script>

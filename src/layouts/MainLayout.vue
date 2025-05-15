@@ -72,7 +72,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </q-page-container>
     <!-- Footer con mismo color que la toolbar -->
     <q-footer class="bg-green-5 text-white">
@@ -101,14 +103,31 @@ const linksNavLeft = [
     label: 'Gestión',
     icon: 'folder',
     children: [
-      { id: 'gest_provincia', label: STRINGS.name_provincia, icon: 'post_add' },
-      { id: 'gest_municipio', label: STRINGS.name_municipio, icon: 'post_add' },
-      { id: 'gest_organismo', label: STRINGS.name_organismo, icon: 'post_add' },
-      { id: 'gest_organismox', label: STRINGS.name_bancos, icon: 'post_add' },
-      { id: 'gest_organismox', label: STRINGS.name_monedas, icon: 'post_add' },
-      { id: 'gest_organismox', label: STRINGS.name_vehiculos, icon: 'post_add' },
-      { id: 'gest_organismox', label: STRINGS.name_exento, icon: 'post_add' },
-      { id: 'gest_organismox', label: STRINGS.name_comprobantes, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.provinciaLowercase, label: STRINGS.name_provincia, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.municipioLowercase, label: STRINGS.name_municipio, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.organismoLowercase, label: STRINGS.name_organismo, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.bancoLowercase, label: STRINGS.name_bancos, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.monedasLowercase, label: STRINGS.name_monedas, icon: 'post_add' },
+      {
+        id: 'gest_' + STRINGS.vehiculosLowercase,
+        label: STRINGS.name_vehiculos,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.exentoLowercase,
+        label: STRINGS.name_exento,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.comprobanteLowercase,
+        label: STRINGS.name_comprobantes,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.formaDePagoLowercaseURL,
+        label: STRINGS.name_formaDePago,
+        icon: 'post_add',
+      },
     ],
   },
   {

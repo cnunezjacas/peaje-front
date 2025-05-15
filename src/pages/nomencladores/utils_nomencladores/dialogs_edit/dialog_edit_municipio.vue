@@ -39,7 +39,7 @@
             <div class="col-12">
               <q-select
                 v-model="SelectNombre_prov"
-                ref="selectProv"
+                ref="SelectNombre_prov_ref"
                 @update:model-value="SelectNombre_prov = $event"
                 :options="options"
                 :label="STRINGS.nombre_prov"
@@ -122,9 +122,8 @@ const Procesar_EditMunicipio = async () => {
     var existeCodigo = false
 
     // Verificar si el código ya existe
-    if (TextCodigo_mun.value !== TextCodigo_mun_copy.value) {
+    if (TextCodigo_mun.value !== TextCodigo_mun_copy.value)
       existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
-    }
 
     if (existeCodigo ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
@@ -157,7 +156,7 @@ const Procesar_EditMunicipio = async () => {
         Notify.create({
           color: 'positive', // color verde para éxito
           icon: 'check_circle',
-          message: STRINGS.MunicipioEditError,
+          message: STRINGS.municipioEditSuccess,
           position: 'top',
           timeout: 3000,
         })
@@ -168,7 +167,7 @@ const Procesar_EditMunicipio = async () => {
         Notify.create({
           color: 'negative',
           icon: 'error',
-          message: STRINGS.MunicipioAddError,
+          message: STRINGS.MunicipioEditError,
           position: 'bottom',
           timeout: 3000,
         })
@@ -201,15 +200,17 @@ const LevantarDialogoEditMunicipio = (name, codigo, provincia, id) => {
   TextNombre_mun_copy.value = name
   SelectNombre_prov_copy.value = provincia
 
+  console.log('SelectNombre_prov_copy:' + String(provincia))
+
   IdMunicipio.value = id
 }
 
 const ComprobarEstadoInputsEdit = () => {
   // Si ambos campos son iguales a sus valores originales, deshabilitar
   const noHaCambiado =
-    TextNombre_mun.value === TextNombre_mun_copy.value &&
-    TextCodigo_mun.value === TextCodigo_mun_copy.value &&
-    SelectNombre_prov.value === SelectNombre_prov_copy.value
+    TextNombre_mun.value.trim() === TextNombre_mun_copy.value.trim() &&
+    TextCodigo_mun.value.trim() === TextCodigo_mun_copy.value.trim() &&
+    SelectNombre_prov.value.trim() === SelectNombre_prov_copy.value.trim()
 
   if (TextNombre_mun.value.trim() == '' || TextCodigo_mun.value.trim() == '') {
     // Si algún campo está vacío, deshabilitar
@@ -249,7 +250,7 @@ const TextCodigo_mun_copy = ref('')
 const TextNombre_mun_copy = ref('')
 const SelectNombre_prov_copy = ref('')
 
-const selectProv = ref(null)
+const SelectNombre_prov_ref = ref(null)
 const IdMunicipio = ref('')
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)

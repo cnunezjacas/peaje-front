@@ -2,7 +2,7 @@
   <div class="q-px-md">
     <div class="flex justify-between padding_minimo">
       <div class="text-center bg-green-10 rounded-borders my-cell">
-        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.municipioLowercase }}</p>
+        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.bancoLowercase }}</p>
       </div>
 
       <div>
@@ -10,7 +10,7 @@
           <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
-          <q-breadcrumbs-el :label="STRINGS.municipioLowercase" icon="post_add" />
+          <q-breadcrumbs-el :label="STRINGS.bancoLowercase" icon="post_add" />
         </q-breadcrumbs>
       </div>
     </div>
@@ -26,11 +26,11 @@
       class="shadow-6"
       bordered
       table-header-class="bg-green-10 text-white"
-      ref="tableAddMunicipio"
+      ref="tableAddProvincia"
       :rows-per-page-label="STRINGS.record_page"
       :rows="filteredRows"
       :columns="columns"
-      :rows-per-page-options="numberForPage"
+      :rows-per-page-options="nomberForPage"
       row-key="codigo"
       :separator="separator"
       selection="single"
@@ -41,28 +41,37 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
+import { Notify } from 'quasar'
 
-var numberForPage = [5, 7, 10, 15, 20, 50, 0]
+const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
 const isLoading = ref(true)
 
 const columns = [
-  { name: 'codigo', align: 'center', label: STRINGS.codigo_mun, field: 'codigo', sortable: true },
   {
-    name: 'nombre',
-    required: true,
-    label: STRINGS.nombre_mun,
+    name: 'codigo',
     align: 'center',
-    field: 'nombre',
+    label: STRINGS.codigo_banco,
+    field: 'codigo',
     sortable: true,
   },
   {
-    name: 'Texto_provincia',
+    name: 'nombre',
+    required: true,
+    label: STRINGS.nombre_banco,
     align: 'center',
-    label: STRINGS.name_provincia,
-    field: 'Texto_provincia',
+    field: (rows) => rows.nombre,
+    format: (val) => `${val}`,
+    sortable: true,
+  },
+  {
+    name: 'detalles',
+    required: true,
+    label: STRINGS.detalles_banco,
+    align: 'center',
+    field: STRINGS.detalles_banco.toLocaleLowerCase(),
     sortable: true,
   },
   {
@@ -79,20 +88,17 @@ import { onBeforeMount } from 'vue'
 const InicializarDatosTabla = async () => {
   isLoading.value = true
   try {
-    const responseMun = await api.get(STRINGS.urlApiMunicipio)
-    const responseProv = await api.get(STRINGS.urlApiProvincia)
-
-    responseMun.data.forEach((element) => {
-      responseProv.data.forEach((item) => {
-        if (item['_id'] === element['provincia']) {
-          element['Texto_provincia'] = item['nombre']
-        }
-      })
-    })
-
-    rows.value = responseMun.data
+    const response = await api.get(STRINGS.urlApiBanco)
+    rows.value = response.data
   } catch (error) {
     console.error('Error cargando datos:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.loadingTablesError,
+      position: 'bottom',
+      timeout: 3000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -104,46 +110,8 @@ onBeforeMount(() => {
 
 const rows = ref([])
 const separator = ref('vertical')
-// Para manejar la fila seleccionada
-
 const selectedRows = ref([])
 
-//Manejador de los botones de la navBottom
-var BloquearEdit = ref(true)
-var BloquearDelete = ref(true)
-var BloquearDetalle = ref(true)
-var BloquearGuardar = ref(true)
-
-//Provincia a Eliminar
-//var ProvinciaDelete = ref('')
-//var ProvinciaCodigoDelete = ref('')
-
-// Para emitir eventos
-const emit = defineEmits(['seleccionado'])
-//const tabs_nomencaldores_provincia = ref(null)
-
-const onSelectedRowsChange = (newSelected) => {
-  if (newSelected.length > 0) {
-    console.log('newSelected:' + newSelected.length)
-    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onBloquearEdit', (BloquearEdit.value = false))
-    emit('onBloquearDelete', (BloquearDelete.value = false))
-    emit('onBloquearDetalle', (BloquearDetalle.value = false))
-    emit('onBloquearGuardar', (BloquearGuardar.value = false))
-    //emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['name']))
-    //emit('oNcodigoProvinciaDelete', (ProvinciaCodigoDelete.value = newSelected[0]['codigo']))
-  } else {
-    // console.log('Nada seleccionado')
-    emit('onBloquearEdit', (BloquearEdit.value = true))
-    emit('onBloquearDelete', (BloquearDelete.value = true))
-    emit('onBloquearDetalle', (BloquearDetalle.value = true))
-    emit('onBloquearGuardar', (BloquearGuardar.value = true))
-  }
-}
-
-import { computed } from 'vue'
-
-// Props
 const props = defineProps({
   TextSearch: String,
 })
@@ -157,16 +125,42 @@ const filteredRows = computed(() => {
   return rows.value.filter((row) => {
     return (
       row.nombre.toLowerCase().includes(searchTerm) ||
-      String(row.codigo).toLowerCase().includes(searchTerm) ||
-      row.Texto_provincia.toLowerCase().includes(searchTerm)
+      row.codigo.toLowerCase().includes(searchTerm) ||
+      row.detalles.toLowerCase().includes(searchTerm)
     )
   })
 })
 
-const UpdateTable = async () => {
-  InicializarDatosTabla()
+// Emite eventos
+const emit = defineEmits(['seleccionado'])
+//Manejador de los botones de la navBottom
+var BloquearEdit = ref(true)
+var BloquearDelete = ref(true)
+var BloquearDetalle = ref(true)
+var BloquearGuardar = ref(true)
+
+// Manejador de selección
+const onSelectedRowsChange = (newSelected) => {
+  if (newSelected.length > 0) {
+    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
+    emit('onBloquearEdit', (BloquearEdit.value = false))
+    emit('onBloquearDelete', (BloquearDelete.value = false))
+    emit('onBloquearDetalle', (BloquearDetalle.value = false))
+    emit('onBloquearGuardar', (BloquearGuardar.value = false))
+  } else {
+    emit('onBloquearEdit', (BloquearEdit.value = true))
+    emit('onBloquearDelete', (BloquearDelete.value = true))
+    emit('onBloquearDetalle', (BloquearDetalle.value = true))
+    emit('onBloquearGuardar', (BloquearGuardar.value = true))
+  }
 }
 
+const UpdateTable = async () => {
+  const response = await api.get(STRINGS.urlApiBanco)
+  rows.value = response.data
+}
+
+// Exponemos `filteredRows` si el padre necesita acceder directamente
 defineExpose({
   filteredRows,
   UpdateTable,

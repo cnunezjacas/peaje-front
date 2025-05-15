@@ -81,6 +81,7 @@ import api from 'src/axios.js'
 import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { Notify } from 'quasar'
+import imports from 'src/utils/imports.js'
 
 /**
  * Values for backdrop-filter are the same as in the CSS specs.
@@ -102,17 +103,6 @@ const rulesAddNombreAbrOrganismo = [
 ]
 
 /*Validaciones*/
-
-//Función para realizar el Capitalize del nombre del organismo
-function capitalizeWords(str) {
-  return str
-    .split(' ')
-    .map((word) => {
-      if (word.length === 0) return word // Por si hay cadenas vacías
-      return word[0].toUpperCase() + word.slice(1).toLowerCase()
-    })
-    .join(' ')
-}
 
 const emit = defineEmits(['ActualizarTablaOrganismo'])
 
@@ -137,7 +127,7 @@ const Procesar_AddOrganismo = async () => {
       return
     } else {
       const newItem = {
-        nombre: capitalizeWords(TextNombreOrg.value),
+        nombre: imports.capitalizeWords(TextNombreOrg.value),
         siglas: TextNombreAbrOrg.value,
       }
 

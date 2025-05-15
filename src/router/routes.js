@@ -1,4 +1,4 @@
-//import { STRINGS } from '../utils/string'
+import { STRINGS } from '../utils/string.js'
 
 const routes = [
   {
@@ -7,16 +7,40 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
-        path: '/gest_provincia',
+        path: '/gest_' + STRINGS.provinciaLowercase,
         component: () => import('src/pages/nomencladores/gest_provincia.vue'),
       },
       {
-        path: '/gest_municipio',
+        path: '/gest_' + STRINGS.municipioLowercase,
         component: () => import('src/pages/nomencladores/gest_municipio.vue'),
       },
       {
-        path: '/gest_organismo',
+        path: '/gest_' + STRINGS.organismoLowercase,
         component: () => import('src/pages/nomencladores/gest_organismo.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.bancoLowercase,
+        component: () => import('src/pages/nomencladores/gest_banco.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.monedasLowercase,
+        component: () => import('src/pages/nomencladores/gest_moneda.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.vehiculosLowercase,
+        component: () => import('src/pages/nomencladores/gest_vehiculos.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.exentoLowercase,
+        component: () => import('src/pages/nomencladores/gest_exento.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.comprobanteLowercase,
+        component: () => import('src/pages/nomencladores/gest_comprobantes.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
+        component: () => import('src/pages/nomencladores/gest_formaDePago.vue'),
       },
       {
         path: '/pageAyuda',

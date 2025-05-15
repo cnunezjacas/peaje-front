@@ -72,6 +72,9 @@
   <!-- Dialogo Add Organismo-->
   <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
 
+  <!-- Dialogo Add Organismo-->
+  <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTablaBanco="ActualizadorTabla" />
+
   <!-- Dialogo Edit Provincia -->
   <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
 
@@ -80,6 +83,9 @@
 
   <!-- Dialogo Edit Municipio -->
   <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
+
+  <!-- Dialogo Edit Municipio -->
+  <DialogEditBanco ref="dialogEditBanco" @ActualizarTablaBanco="ActualizadorTabla" />
 
   <!-- Dialogo Delete Provincia-->
   <DialogDeleteProvincia
@@ -99,6 +105,10 @@
     @ActualizarTablaOrganismo="ActualizadorTabla"
   />
 
+  <!-- Dialogo Delete Municipio-->
+  <DialogDeleteBanco ref="dialogDeleteBanco" @ActualizarTablaBanco="ActualizadorTabla" />
+
+  <!-- Tabla de Provincias -->
   <table_Gest_provincia
     ref="tableProvincia"
     @seleccionado="handleSelection"
@@ -114,6 +124,7 @@
     :rows="rows"
   ></table_Gest_provincia>
 
+  <!-- Tabla de Municipio -->
   <table_Gest_municipio
     ref="tableMunicipio"
     @seleccionado="handleSelection"
@@ -126,6 +137,7 @@
     :TextSearch="TextSearch"
   />
 
+  <!-- Tabla de Organismo -->
   <table_Gest_organismo
     ref="tableOrganismo"
     @seleccionado="handleSelection"
@@ -136,6 +148,24 @@
     :style="StyleFocusO"
     :TextSearch="TextSearch"
   />
+
+  <!-- Tabla de Banco -->
+  <table_Gest_banco
+    ref="tableBanco"
+    @seleccionado="handleSelection"
+    @onBloquearEdit="BloquearEdit"
+    @onBloquearDelete="BloquearDelete"
+    @onBloquearDetalle="BloquearDetalle"
+    @onBloquearGuardar="BloquearGuardar"
+    :style="StyleFocusB"
+    :TextSearch="TextSearch"
+  />
+
+  <!-- Tabla de Banco -->
+  <table_Gest_monedas ref="tableMonedas" :style="StyleFocusMO" />
+
+  <!-- Tabla de Comprobante -->
+  <table_Gest_comprobante ref="tableComprobante" :style="StyleFocusC" />
 </template>
 
 <script setup>
@@ -146,21 +176,27 @@ import { STRINGS } from '../../../../utils/string.js'
 import DialogoAddProvincia from '../dialogs_insert/dialogoAddProvincia.vue'
 import DialogoAddMunicipio from '../dialogs_insert/dialogoAddMunicipio.vue'
 import DialogoAddOrganismo from '../dialogs_insert/dialogoAddOrganismo.vue'
+import DialogoAddBanco from '../dialogs_insert/dialogoAddBanco.vue'
 
 //Dialogs Edit
 import DialogEditProvincia from '../dialogs_edit/dialog_edit_provincia.vue'
 import DialogEditMunicipio from '../dialogs_edit/dialog_edit_municipio.vue'
 import DialogEditOrganismo from '../dialogs_edit/dialog_edit_organismo.vue'
+import DialogEditBanco from '../dialogs_edit/dialog_edit_banco.vue'
 
 //Dialogs Delete
 import DialogDeleteProvincia from '../dialogs_delete/dialog_delete_provincia.vue'
 import DialogDeleteMunicipio from '../dialogs_delete/dialog_delete_municipio.vue'
 import DialogDeleteOrganismo from '../dialogs_delete/dialog_delete_organismo.vue'
+import DialogDeleteBanco from '../dialogs_delete/dialog_delete_banco.vue'
 
 //Tables
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import table_Gest_municipio from '../tables/table_Gest_municipio.vue'
 import table_Gest_organismo from '../tables/table_Gest_organismo.vue'
+import table_Gest_banco from '../tables/table_Gest_banco.vue'
+import table_Gest_comprobante from '../tables/table_Gest_comprobantes.vue'
+import table_Gest_monedas from '../tables/table_Gest_moneda.vue'
 
 import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
@@ -173,6 +209,9 @@ const TextSearch = ref('')
 const StyleFocusP = ref('display: none')
 const StyleFocusM = ref('display: none')
 const StyleFocusO = ref('display: none')
+const StyleFocusB = ref('display: none')
+const StyleFocusMO = ref('display: none')
+const StyleFocusC = ref('display: none')
 
 //Constantes referencias de los dialogos Provincia
 const dialogoAddProvincia = ref(null)
@@ -189,13 +228,22 @@ const dialogoAddOrganismo = ref(null)
 const dialogEditOrganismo = ref(null)
 const dialogDeleteOrganismo = ref(null)
 
+//Constantes referencias de los dialogos Banco
+const dialogoAddBanco = ref(null)
+const dialogEditBanco = ref(null)
+const dialogDeleteBanco = ref(null)
+
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
 const tableOrganismo = ref(null)
+const tableBanco = ref(null)
+const tableMonedas = ref(null)
+const tableComprobante = ref(null)
 
 var arrayProvinceSelected = ref([])
 var arrayMunicipioSelected = ref([])
 var arrayOrganismoSelected = ref([])
+var arrayBancoSelected = ref([])
 
 //Variables a evaluar clases de tabsBotton
 const disabledEdit = ref('small-font disabled')
@@ -220,6 +268,11 @@ const handleSelection = (row) => {
     arrayOrganismoSelected.value['name_min'] = row['siglas']
     arrayOrganismoSelected.value['name'] = row['nombre']
     arrayOrganismoSelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
+    arrayBancoSelected.value['nombre'] = row['nombre']
+    arrayBancoSelected.value['codigo'] = row['codigo']
+    arrayBancoSelected.value['detalle'] = row['detalle']
+    arrayBancoSelected.value['_id'] = row['_id']
   } else {
     console.log('No hay fila seleccionada')
   }
@@ -237,8 +290,10 @@ const ActualizadorTabla = (value) => {
     if (value) tableMunicipio.value.UpdateTable()
     else console.log('Operación Fallida')
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-    console.log('Soy un organismo')
     if (value) tableOrganismo.value.UpdateTable()
+    else console.log('Operación Fallida')
+  } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
+    if (value) tableBanco.value.UpdateTable()
     else console.log('Operación Fallida')
   } else {
     console.log('Evento mal ejecutado')
@@ -289,14 +344,44 @@ const CambioRuta = () => {
     StyleFocusP.value = ''
     StyleFocusM.value = 'display: none'
     StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = ''
     StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = 'display: none'
     StyleFocusO.value = ''
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
+  } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
+    StyleFocusP.value = 'display: none'
+    StyleFocusM.value = 'display: none'
+    StyleFocusO.value = 'display: none'
+    StyleFocusB.value = ''
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
+  } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
+    StyleFocusP.value = 'display: none'
+    StyleFocusM.value = 'display: none'
+    StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = ''
+    StyleFocusMO.value = 'display: none'
+  } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
+    StyleFocusP.value = 'display: none'
+    StyleFocusM.value = 'display: none'
+    StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = ''
   }
 }
 
@@ -315,6 +400,8 @@ const onItemClick = (value) => {
         dialogoAddMunicipio.value.LevantarDialogoAddMunicipio()
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         dialogoAddOrganismo.value.LevantarDialogoAddOrganismo()
+      } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
+        dialogoAddBanco.value.LevantarDialogo()
       }
       break
     case 'Edit':
@@ -347,6 +434,16 @@ const onItemClick = (value) => {
               arrayOrganismoSelected.value['_id'],
             )
         }
+      } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arrayOrganismoSelected.value != null)
+            dialogEditBanco.value.LevantarDialogoEditBanco(
+              arrayBancoSelected.value['nombre'],
+              arrayBancoSelected.value['codigo'],
+              arrayBancoSelected.value['detalle'],
+              arrayBancoSelected.value['_id'],
+            )
+        }
       }
 
       break
@@ -373,6 +470,13 @@ const onItemClick = (value) => {
           dialogDeleteOrganismo.value.LevantarDialogoDeleteOrganismo(
             arrayOrganismoSelected.value['name_min'],
             arrayOrganismoSelected.value['_id'],
+          )
+        }
+      } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
+        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
+          dialogDeleteBanco.value.LevantarDialogoDeleteBanco(
+            arrayBancoSelected.value['codigo'],
+            arrayBancoSelected.value['_id'],
           )
         }
       }

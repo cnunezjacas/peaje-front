@@ -3,44 +3,57 @@
     <q-dialog
       v-model="dialog"
       persistent
-      ref="refDialogoAddProvincia"
+      ref="refDialogoAddBanco"
       :backdrop-filter="backdropFilter"
     >
       <q-card>
         <q-card-section class="row items-center q-pb-none text-h6">
-          {{ STRINGS.addProvincia }}
+          {{ STRINGS.addBanco.toUpperCase() }}
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
               <q-input
-                v-model="TextNombre_prov"
-                ref="textNombre_prov"
+                v-model="TextNombre_banco"
+                ref="textNombre_banco"
                 color="green"
-                :rules="rulesAddNombreProvincia"
+                :rules="rulesAddNombreBanco"
                 type="text"
-                :label="STRINGS.nombre_prov"
+                :label="STRINGS.nombre_banco"
                 @keyup="ComprobarEstadoInputs"
               />
             </div>
             <div class="col-5">
               <q-input
-                ref="textCodigo_prov"
-                v-model="TextCodigo_prov"
+                ref="textCodigo_banco"
+                v-model="TextCodigo_banco"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigoProvincia"
-                :label="STRINGS.codigo_prov"
+                :rules="rulesAddCodigoBanco"
+                :label="STRINGS.codigo_banco"
                 @keyup="ComprobarEstadoInputs"
               />
+            </div>
+
+            <div class="col-12 q-mt-md">
+              <p>{{ STRINGS.detalles_banco }}:</p>
+              <div class="bg-grey-4">
+                <q-input
+                  ref="textDetalles_banco"
+                  v-model="TextDetalles_banco"
+                  class="q-pa-md"
+                  color="green"
+                  autogrow
+                />
+              </div>
             </div>
           </div>
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-start">
-            <div class="col-5">
+          <div class="flex justify-start">
+            <div class="">
               <q-btn
                 icon="check"
                 :class="disabledBtnSaveEdit"
@@ -50,7 +63,7 @@
               />
             </div>
 
-            <div class="col-5">
+            <div class="">
               <q-btn
                 flat
                 icon="close"
@@ -74,28 +87,29 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { Notify } from 'quasar'
+import api from 'src/axios.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteBanco.js'
+import imports from 'src/utils/imports.js'
 
 const list = 'blur(4px) saturate(150%)'
 
-const refDialogoAddProvincia = ref(null)
+const refDialogoAddBanco = ref(null)
 
 /*Validaciones*/
-const rulesAddNombreProvincia = [
+const rulesAddNombreBanco = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
 ]
 
-const rulesAddCodigoProvincia = [
+const rulesAddCodigoBanco = [
   (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
+  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
 ]
 /*Validaciones*/
 
-const emit = defineEmits(['ActualizarTablaProvincia'])
+const emit = defineEmits(['ActualizarTablaBanco'])
 
 /*Funcion de procesado de Datos*/
 const Procesar_AddProvincia = async () => {
@@ -103,7 +117,7 @@ const Procesar_AddProvincia = async () => {
     // Datos enviar, típicamente en formato JSON
 
     // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
+    const existeCodigo = await verificarCodigoExistente(TextCodigo_banco.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
       Notify.create({
@@ -114,38 +128,42 @@ const Procesar_AddProvincia = async () => {
         timeout: 3000, // en milisegundos
       })
 
-      textCodigo_prov.value.focus()
+      textCodigo_banco.value.focus()
       return
     } else {
-      const newItem = { nombre: TextNombre_prov.value, codigo: Number(TextCodigo_prov.value) }
+      const newItem = {
+        nombre: imports.capitalizeWords(TextNombre_banco.value),
+        codigo: TextCodigo_banco.value,
+        detalles: TextDetalles_banco.value,
+      }
 
       try {
-        await api.post(STRINGS.urlApiProvincia, newItem) // POST /items
+        await api.post(STRINGS.urlApiBanco, newItem) // POST /items
 
         // Mostrar alerta positiva de éxito
         Notify.create({
           color: 'positive', // color verde para éxito
           icon: 'check_circle',
-          message: STRINGS.provinciaAddSuccess,
+          message: STRINGS.BancoAddSuccess,
           position: 'top',
           timeout: 3000,
         })
 
-        emit('ActualizarTablaProvincia', true)
+        emit('ActualizarTablaBanco', true)
       } catch (error) {
         console.error('Error al crear item:', error)
 
         Notify.create({
           color: 'negative',
           icon: 'error',
-          message: STRINGS.provinciaAddError,
+          message: STRINGS.BancoAddError,
           position: 'bottom',
           timeout: 3000,
         })
 
-        emit('ActualizarTablaProvincia', false)
+        emit('ActualizarTablaBanco', false)
       }
-      refDialogoAddProvincia.value.hide()
+      refDialogoAddBanco.value.hide()
       Reset()
     }
   }
@@ -159,18 +177,14 @@ const LevantarDialogo = () => {
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
-  TextCodigo_prov.value = ''
-  TextNombre_prov.value = ''
-}
-
-const LevantarDialogoAddModelo = () => {
-  backdropFilter.value = list
-  dialogModel.value = true
+  TextCodigo_banco.value = ''
+  TextNombre_banco.value = ''
+  TextDetalles_banco.value = ''
 }
 
 const ComprobarEstadoInputs = () => {
-  if (TextCodigo_prov.value != '' && expRegulares.onlyNumber.test(TextCodigo_prov.value))
-    if (TextNombre_prov.value != '' && expRegulares.FullText.test(TextNombre_prov.value))
+  if (TextCodigo_banco.value != '' && expRegulares.onlyUppercase.test(TextCodigo_banco.value))
+    if (TextNombre_banco.value != '' && expRegulares.FullText.test(TextNombre_banco.value))
       disabledBtnSaveEdit.value = ''
     else disabledBtnSaveEdit.value = STRINGS.desabilitar
   else disabledBtnSaveEdit.value = STRINGS.desabilitar
@@ -179,19 +193,14 @@ const ComprobarEstadoInputs = () => {
 }
 
 const dialog = ref(false)
-
-const dialogModel = ref(false)
-
-const TextCodigo_prov = ref('')
-const TextNombre_prov = ref('')
 const backdropFilter = ref(null)
 
-const textNombre_prov = ref(null)
-const textCodigo_prov = ref(null)
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+const TextNombre_banco = ref('')
+const TextCodigo_banco = ref('')
+const TextDetalles_banco = ref('')
+const textCodigo_banco = ref(null)
 
-defineExpose({
-  LevantarDialogo,
-  LevantarDialogoAddModelo,
-})
+const disabledBtnSaveEdit = ref('disabled')
+
+defineExpose({ LevantarDialogo })
 </script>

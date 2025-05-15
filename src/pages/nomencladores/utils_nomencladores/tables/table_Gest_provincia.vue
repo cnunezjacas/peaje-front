@@ -35,8 +35,7 @@
       selection="single"
       v-model:selected="selectedRows"
       @update:selected="onSelectedRowsChange"
-    >
-    </q-table>
+    />
   </div>
 </template>
 
@@ -44,6 +43,7 @@
 import { ref, computed } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
+import { Notify } from 'quasar'
 
 // Datos
 const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
@@ -76,12 +76,6 @@ const columns = [
   },
 ]
 
-/*const rows = ref([
-  { name: 'Granma', codigo: '33' },
-  { name: 'Las Tunas', codigo: '31' },
-  { name: 'La Habana', codigo: '24' },
-])*/
-
 import { onBeforeMount } from 'vue'
 
 const InicializarDatosTabla = async () => {
@@ -91,6 +85,13 @@ const InicializarDatosTabla = async () => {
     rows.value = response.data
   } catch (error) {
     console.error('Error cargando datos:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.loadingTablesError,
+      position: 'bottom',
+      timeout: 3000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -100,7 +101,7 @@ onBeforeMount(() => {
   InicializarDatosTabla()
 })
 
-const rows = ref(InicializarDatosTabla())
+const rows = ref([])
 const separator = ref('vertical')
 const selectedRows = ref([])
 

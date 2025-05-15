@@ -16,7 +16,7 @@
             <div class="col-5">
               <q-input
                 v-model="TextNombre_mun"
-                ref="textNombre_prov"
+                ref="textNombre_Mun"
                 color="green"
                 :rules="rulesAddNombreMunicipio"
                 type="text"
@@ -26,7 +26,7 @@
             </div>
             <div class="col-5">
               <q-input
-                ref="textCodigo_prov"
+                ref="textCodigo_Mun"
                 v-model="TextCodigo_mun"
                 color="green"
                 type="text"
@@ -91,6 +91,7 @@ import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
+import { Notify } from 'quasar'
 
 import { onBeforeMount } from 'vue'
 const list = 'blur(4px) saturate(150%)'
@@ -135,7 +136,16 @@ const Procesar_AddMunicipio = async () => {
     const existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      alert(STRINGS.codigoRepetido)
+      Notify.create({
+        color: 'negative', // color rojo para error
+        icon: 'error',
+        message: STRINGS.codigoRepetido,
+        position: 'bottom',
+        timeout: 3000, // en milisegundos
+      })
+
+      textCodigo_Mun.value.focus()
+
       return
     } else {
       const response = await api.get(STRINGS.urlApiProvincia)
@@ -151,14 +161,27 @@ const Procesar_AddMunicipio = async () => {
         provincia: String(aux),
       }
 
-      console.log(newItem)
-
       try {
-        const response = await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
-        console.log('Petición ADD Municipio:', response.data)
+        await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
+
+        Notify.create({
+          color: 'positive', // color verde para éxito
+          icon: 'check_circle',
+          message: STRINGS.municipioAddSuccess,
+          position: 'top',
+          timeout: 3000,
+        })
+
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
+        Notify.create({
+          color: 'negative',
+          icon: 'error',
+          message: STRINGS.MunicipioAddError,
+          position: 'bottom',
+          timeout: 3000,
+        })
         emit('ActualizarTablaMunicipio', false)
       }
       refDialogoAddMunicipio.value.hide()
@@ -200,8 +223,8 @@ const selectProv = ref(null)
 const backdropFilter = ref(null)
 const Ref_table_Gest_provincia = ref(null)
 
-const textNombre_prov = ref(null)
-const textCodigo_prov = ref(null)
+const textNombre_Mun = ref(null)
+const textCodigo_Mun = ref(null)
 
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
