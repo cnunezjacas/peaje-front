@@ -57,7 +57,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                @click="Procesar_AddMunicipio()"
+                @click="Procesar_Add()"
                 :label="STRINGS.save"
                 :class="disabledBtnSave"
                 color="green"
@@ -126,7 +126,7 @@ const rulesAddNombreProvincia = [(val) => val != '' || STRINGS.inputEmpty]
 const emit = defineEmits(['ActualizarTablaMunicipio'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_AddMunicipio = async () => {
+const Procesar_Add = async () => {
   if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
     //TODO: Ajax Request ADD_MUNICIPIO
     var aux = ''

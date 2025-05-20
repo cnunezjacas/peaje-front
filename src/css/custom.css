@@ -84,3 +84,28 @@
 .icon-text q-icon {
   margin-right: 8px; /* ajusta a tu preferencia */
 }
+/*Animaciones*/
+
+/* Tamaño dialogos */
+
+.dialog-sm {
+  --q-dialog-max-width: 300px;
+}
+.dialog-md {
+  --q-dialog-max-width: 500px;
+}
+.dialog-lg {
+  --q-dialog-max-width: 800px;
+}
+
+.dialog-xl {
+  --q-dialog-max-width: 1000px;
+}
+
+/* Si quieres asegurar que se aplique a la tarjeta */
+.my-dialog-card {
+  max-width: var(--q-dialog-max-width);
+  width: 100%; /* para que ocupe todo el ancho disponible */
+}
+
+/* Tamaño dialogos */

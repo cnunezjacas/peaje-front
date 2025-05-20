@@ -31,6 +31,7 @@
       :rows="filteredRows"
       :columns="columns"
       :rows-per-page-options="nomberForPage"
+      :no-data-label="STRINGS.no_data_available"
       row-key="siglas"
       :separator="separator"
       selection="single"

@@ -2,6 +2,8 @@ export const STRINGS = {
   tittleSite: 'PEAJESIG',
   textConfig: 'Configuración',
   gestion: 'Gestión',
+  gestionNomencladores: 'Gestión nomencladores',
+  gestionEntidad: 'Gestión entidad',
   gestionPeaje: 'Acciones de peaje',
 
   //ERRORES
@@ -35,6 +37,11 @@ export const STRINGS = {
   editBanco: 'Modificar banco',
   deleteBanco: 'Eliminar banco',
 
+  //Moneda
+  addMoneda: 'Adicionar moneda',
+  editMoneda: 'Modificar moneda',
+  deleteMoneda: 'Eliminar moneda',
+
   //Preguntas de Eliminar
   PreguntaDeleteProvincia: '¿Está seguro de eliminar la provincia: ',
   PreguntaDeleteMunicipio: '¿Está seguro de eliminar el municipio ',
@@ -67,6 +74,15 @@ export const STRINGS = {
   codigo_banco: 'Código banco',
   detalles_banco: 'Detalles',
 
+  //Campos Moneda
+  nombre_moneda: 'Nombre moneda',
+  siglas_moneda: 'Siglas',
+  nomenclador_moneda: 'Nomenclador',
+  tasaCambio_moneda: 'Tasa de cambio',
+  idCondor_moneda: 'ID Condor',
+  mBase_moneda: 'Moneda base',
+  detalle_moneda: 'Detalles moneda',
+
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
   multiselección: 'Multiselección',
@@ -79,7 +95,7 @@ export const STRINGS = {
   cancel: 'Cancelar',
   dir_provincia: 'gest_provincia',
 
-  //NOMBRES NOMENCLADORES MAYUSCULAS
+  //NOMBRES MODULO NOMENCLADORES MAYUSCULAS
   name_provincia: 'Provincia',
   name_municipio: 'Municipio',
   name_organismo: 'Organismos',
@@ -90,7 +106,7 @@ export const STRINGS = {
   name_comprobantes: 'Comprobantes',
   name_formaDePago: 'Forma de pago',
 
-  //NOMBRES NOMENCLADORES MINUSCULAS
+  //NOMBRES MODULO NOMENCLADORES MINUSCULAS
   provinciaLowercase: 'provincia',
   municipioLowercase: 'municipio',
   organismoLowercase: 'organismos',
@@ -102,22 +118,46 @@ export const STRINGS = {
   formaDePagoLowercase: 'forma de pago',
   formaDePagoLowercaseURL: 'formaDePago',
 
+  //NOMBRES MODULO ENTIDAD MAYUSCULAS
+  name_estaciones: 'Estaciones',
+  name_areas_trabajo: 'Áreas de trabajo',
+  name_puntos_venta: 'Puntos de ventas',
+  name_terminal: 'Terminal',
+  name_operadores: 'Operadores',
+  name_clientes: 'Clientes',
+  name_tramitador: 'Tramitador',
+
+  //NOMBRES MODULO ENTIDAD MINUSCULAS
+  estacionesLowercase: 'estaciones',
+  areasDeTrabajoLowercase: 'areasDeTrabajo',
+  puntosDeVentasLowercase: 'puntosDeVentas',
+  terminalLowercase: 'terminal',
+  operadoresLowercase: 'operadores',
+  clientesLowercase: 'clientes',
+  tramitadorLowercase: 'tramitador',
+
   search: 'Buscar...',
   desabilitar: 'disabled',
   help: 'Ayuda',
   close_seccion: 'Cerrar Sección',
+  no_data_available: 'No hay datos disponibles',
+  fila_no_selected: 'No hay fila seleccionada',
+  errorUpdate: 'Operación fallida',
 
   //URL APIS
   urlApiProvincia: '/api/v1/manage/provincia',
   urlApiMunicipio: '/api/v1/manage/municipio',
   urlApiOrganismo: '/api/v1/manage/organismo',
   urlApiBanco: '/api/v1/manage/banco',
+  urlApiMoneda: '/api/v1/manage/moneda',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
   onlyLetters: 'El campo solo puede contener letras',
   onlyUppercase: 'El campo solo puede contener letras Mayúsculas',
   onlyNumbers: 'El campo solo puede contener números naturales',
+  CondorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
+  decimalPositive: 'Ingrese un decimal positivo',
 
   //Alertas Success Provincias
   provinciaAddSuccess: 'Provincia añadida correctamente.',
@@ -139,6 +179,11 @@ export const STRINGS = {
   BancoEditSuccess: 'Banco editado correctamente.',
   BancoDeleteSuccess: 'Banco eliminado correctamente.',
 
+  //Alertas Success Moneda
+  monedaAddSuccess: 'Moneda añadida correctamente.',
+  monedaEditSuccess: 'Moneda editada correctamente.',
+  monedaDeleteSuccess: 'Moneda eliminada correctamente.',
+
   //Alertas Errores Provincias
   provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
   provinciaEditError: 'Error al editar la provincia. Por favor, intenta nuevamente.',
@@ -159,6 +204,11 @@ export const STRINGS = {
   BancoEditError: 'Error al editar el banco. Por favor, intenta nuevamente.',
   BancoDeleteError: 'Error al eliminar el banco. Por favor, intenta nuevamente.',
 
+  //Alertas Errores Moneda
+  MonedaAddError: 'Error al guardar la moneda. Por favor, intenta nuevamente.',
+  MonedaEditError: 'Error al editar la moneda. Por favor, intenta nuevamente.',
+  MonedaDeleteError: 'Error al eliminar la moneda. Por favor, intenta nuevamente.',
+
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
@@ -167,4 +217,8 @@ export const STRINGS = {
   //Tamaño Botones
   SizeBottom: '16px',
   // Agrega más textos según sea necesario
+
+  //Opciones Lógicas
+  yes: 'SI',
+  no: 'NO',
 }

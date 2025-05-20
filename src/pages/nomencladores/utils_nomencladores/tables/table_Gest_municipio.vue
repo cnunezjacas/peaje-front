@@ -31,6 +31,7 @@
       :rows="filteredRows"
       :columns="columns"
       :rows-per-page-options="numberForPage"
+      :no-data-label="STRINGS.no_data_available"
       row-key="codigo"
       :separator="separator"
       selection="single"
@@ -44,6 +45,7 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
+import { Notify } from 'quasar'
 
 var numberForPage = [5, 7, 10, 15, 20, 50, 0]
 const isLoading = ref(true)
@@ -93,6 +95,13 @@ const InicializarDatosTabla = async () => {
     rows.value = responseMun.data
   } catch (error) {
     console.error('Error cargando datos:', error)
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.loadingTablesError,
+      position: 'bottom',
+      timeout: 3000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -120,7 +129,6 @@ var BloquearGuardar = ref(true)
 
 // Para emitir eventos
 const emit = defineEmits(['seleccionado'])
-//const tabs_nomencaldores_provincia = ref(null)
 
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {

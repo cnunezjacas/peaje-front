@@ -60,7 +60,7 @@
               <q-btn
                 icon="check"
                 :class="disabledBtnSaveEdit"
-                @click="Procesar_AddProvincia()"
+                @click="Procesar_Add()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -111,7 +111,7 @@ const rulesAddCodigoBanco = [
 const emit = defineEmits(['ActualizarTablaBanco'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_AddProvincia = async () => {
+const Procesar_Add = async () => {
   if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
     // Datos enviar, típicamente en formato JSON
 

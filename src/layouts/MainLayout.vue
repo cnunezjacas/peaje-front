@@ -16,7 +16,7 @@
 
         <q-space />
 
-        <q-btn-dropdown stretch flat :label="STRINGS.gestion">
+        <q-btn-dropdown stretch flat :label="STRINGS.gestionNomencladores">
           <q-list>
             <q-item-label header>Folders</q-item-label>
             <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
@@ -99,8 +99,8 @@ import { STRINGS } from '../utils/string.js'
 
 const linksNavLeft = [
   {
-    id: 'gestion',
-    label: 'Gestión',
+    id: STRINGS.gestionNomencladores,
+    label: STRINGS.gestionNomencladores,
     icon: 'folder',
     children: [
       { id: 'gest_' + STRINGS.provinciaLowercase, label: STRINGS.name_provincia, icon: 'post_add' },
@@ -130,6 +130,50 @@ const linksNavLeft = [
       },
     ],
   },
+
+  {
+    id: STRINGS.gestionEntidad,
+    label: STRINGS.gestionEntidad,
+    icon: 'folder',
+    children: [
+      {
+        id: 'gest_' + STRINGS.estacionesLowercase,
+        label: STRINGS.name_estaciones,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.areasDeTrabajoLowercase,
+        label: STRINGS.name_areas_trabajo,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.puntosDeVentasLowercase,
+        label: STRINGS.name_puntos_venta,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.terminalLowercase,
+        label: STRINGS.name_terminal,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.operadoresLowercase,
+        label: STRINGS.name_operadores,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.clientesLowercase,
+        label: STRINGS.name_clientes,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.tramitadorLowercase,
+        label: STRINGS.name_tramitador,
+        icon: 'post_add',
+      },
+    ],
+  },
+
   {
     id: 'pageConfiguracion',
     label: 'Configuración',

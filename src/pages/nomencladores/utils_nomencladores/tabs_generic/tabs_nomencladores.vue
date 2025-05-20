@@ -72,6 +72,9 @@
   <!-- Dialogo Add Organismo-->
   <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTablaBanco="ActualizadorTabla" />
 
+  <!-- Dialogo Add Organismo-->
+  <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+
   <!-- Dialogo Edit Provincia -->
   <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
 
@@ -168,12 +171,14 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
+import { Notify } from 'quasar'
 
 //Dialogs Add
 import DialogoAddProvincia from '../dialogs_insert/dialogoAddProvincia.vue'
 import DialogoAddMunicipio from '../dialogs_insert/dialogoAddMunicipio.vue'
 import DialogoAddOrganismo from '../dialogs_insert/dialogoAddOrganismo.vue'
 import DialogoAddBanco from '../dialogs_insert/dialogoAddBanco.vue'
+import DialogoAddMoneda from '../dialogs_insert/dialogAddMoneda.vue'
 
 //Dialogs Edit
 import DialogEditProvincia from '../dialogs_edit/dialog_edit_provincia.vue'
@@ -230,6 +235,10 @@ const dialogoAddBanco = ref(null)
 const dialogEditBanco = ref(null)
 const dialogDeleteBanco = ref(null)
 
+const dialogoAddMoneda = ref(null)
+//const dialogEditMoneda = ref(null)
+//const dialogDeleteMoneda = ref(null)
+
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
 const tableOrganismo = ref(null)
@@ -271,7 +280,13 @@ const handleSelection = (row) => {
     arrayBancoSelected.value['_id'] = row['_id']
   } else {
     //TODO:Notify
-    console.log('No hay fila seleccionada')
+    Notify.create({
+      color: 'negative',
+      icon: 'error',
+      message: STRINGS.fila_no_selected,
+      position: 'bottom',
+      timeout: 3000,
+    })
   }
 }
 
@@ -280,20 +295,32 @@ const ActualizadorTabla = (value) => {
   var nuevaRuta = ruta.split('_')
   if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
     if (value) tableProvincia.value.UpdateTable()
-    else console.log('Operación Fallida') //TODO:Notify
+    else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
     if (value) tableMunicipio.value.UpdateTable()
-    else console.log('Operación Fallida') //TODO:Notify
+    else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
     if (value) tableOrganismo.value.UpdateTable()
-    else console.log('Operación Fallida') //TODO:Notify
+    else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
     if (value) tableBanco.value.UpdateTable()
-    else console.log('Operación Fallida') //TODO:Notify
+    else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
+    if (value) tableMonedas.value.UpdateTable()
+    else ErrorUpdateTable()
   } else {
-    //TODO:Notify
-    console.log('Evento mal ejecutado')
+    ErrorUpdateTable()
   }
+}
+
+const ErrorUpdateTable = () => {
+  Notify.create({
+    color: 'negative',
+    icon: 'error',
+    message: STRINGS.errorUpdate,
+    position: 'bottom',
+    timeout: 3000,
+  })
 }
 
 const BloquearEdit = (variable) => {
@@ -393,6 +420,8 @@ const onItemClick = (value) => {
         dialogoAddOrganismo.value.LevantarDialogoAddOrganismo()
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         dialogoAddBanco.value.LevantarDialogo()
+      } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
+        dialogoAddMoneda.value.LevantarDialogoAddMoneda()
       }
       break
     case 'Edit':

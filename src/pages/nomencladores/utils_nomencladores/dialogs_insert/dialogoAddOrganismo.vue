@@ -46,7 +46,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                @click="Procesar_AddOrganismo"
+                @click="Procesar_Add"
                 :label="STRINGS.save"
                 color="green"
                 :class="disabledBtnSave"
@@ -106,7 +106,7 @@ const rulesAddNombreAbrOrganismo = [
 const emit = defineEmits(['ActualizarTablaOrganismo'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_AddOrganismo = async () => {
+const Procesar_Add = async () => {
   if (ComprobarEstadoInputsEdit() != STRINGS.desabilitar) {
     //TODO: Ajax Request ADD_ORGANISMO
     // Verificar si el código ya existe
