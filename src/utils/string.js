@@ -47,6 +47,7 @@ export const STRINGS = {
   PreguntaDeleteMunicipio: '¿Está seguro de eliminar el municipio ',
   PreguntaDeleteOrganismo: '¿Está seguro de eliminar el organismo: ',
   PreguntaDeleteBanco: '¿Está seguro de eliminar el banco: ',
+  PreguntaDeleteMoneda: '¿Está seguro de eliminar la moneda: ',
 
   category: 'Categoría',
   addModelo: 'Adicionar modelo',

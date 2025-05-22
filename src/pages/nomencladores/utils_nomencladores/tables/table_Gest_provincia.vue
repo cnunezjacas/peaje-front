@@ -44,7 +44,6 @@
 import { ref, computed } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
-import { Notify } from 'quasar'
 
 // Datos
 const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
@@ -78,6 +77,7 @@ const columns = [
 ]
 
 import { onBeforeMount } from 'vue'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const InicializarDatosTabla = async () => {
   isLoading.value = true
@@ -86,13 +86,7 @@ const InicializarDatosTabla = async () => {
     rows.value = response.data
   } catch (error) {
     console.error('Error cargando datos:', error)
-    Notify.create({
-      color: 'negative',
-      icon: 'error',
-      message: STRINGS.loadingTablesError,
-      position: 'bottom',
-      timeout: 3000,
-    })
+    notify_error(STRINGS.loadingTablesError)
   } finally {
     isLoading.value = false
   }
@@ -131,11 +125,6 @@ const emit = defineEmits(['seleccionado'])
 var BloquearEdit = ref(true)
 var BloquearDelete = ref(true)
 var BloquearDetalle = ref(true)
-var BloquearGuardar = ref(true)
-
-//Provincia a Eliminar
-var ProvinciaDelete = ref('')
-var ProvinciaCodigoDelete = ref('')
 
 // Manejador de selección
 const onSelectedRowsChange = (newSelected) => {
@@ -144,14 +133,10 @@ const onSelectedRowsChange = (newSelected) => {
     emit('onBloquearEdit', (BloquearEdit.value = false))
     emit('onBloquearDelete', (BloquearDelete.value = false))
     emit('onBloquearDetalle', (BloquearDetalle.value = false))
-    emit('onBloquearGuardar', (BloquearGuardar.value = false))
-    emit('oNnameProvinciaDelete', (ProvinciaDelete.value = newSelected[0]['nombre']))
-    emit('oNcodigoProvinciaDelete', (ProvinciaCodigoDelete.value = newSelected[0]['codigo']))
   } else {
     emit('onBloquearEdit', (BloquearEdit.value = true))
     emit('onBloquearDelete', (BloquearDelete.value = true))
     emit('onBloquearDetalle', (BloquearDetalle.value = true))
-    emit('onBloquearGuardar', (BloquearGuardar.value = true))
   }
 }
 

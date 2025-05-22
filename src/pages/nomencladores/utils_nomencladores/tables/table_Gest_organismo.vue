@@ -101,7 +101,6 @@ const selectedRows = ref([])
 var BloquearEdit = ref(true)
 var BloquearDelete = ref(true)
 var BloquearDetalle = ref(true)
-var BloquearGuardar = ref(true)
 
 // Para emitir eventos
 const emit = defineEmits(['seleccionado'])
@@ -113,12 +112,10 @@ const onSelectedRowsChange = (newSelected) => {
     emit('onBloquearEdit', (BloquearEdit.value = false))
     emit('onBloquearDelete', (BloquearDelete.value = false))
     emit('onBloquearDetalle', (BloquearDetalle.value = false))
-    emit('onBloquearGuardar', (BloquearGuardar.value = false))
   } else {
     emit('onBloquearEdit', (BloquearEdit.value = true))
     emit('onBloquearDelete', (BloquearDelete.value = true))
     emit('onBloquearDetalle', (BloquearDetalle.value = true))
-    emit('onBloquearGuardar', (BloquearGuardar.value = true))
   }
 }
 

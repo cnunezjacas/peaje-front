@@ -62,7 +62,8 @@ import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import { Notify } from 'quasar'
+import notify_success from 'src/utils/notify/notify_success.js'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
@@ -80,23 +81,13 @@ const Procesar_DeleteProvincia = async () => {
 
   try {
     await api.delete(STRINGS.urlApiProvincia + '/' + idProvinciaDelete.value) // DELETE /items/:id
-    Notify.create({
-      color: 'positive', // color verde para éxito
-      icon: 'check_circle',
-      message: STRINGS.provinciaDeleteSuccess,
-      position: 'top',
-      timeout: 3000,
-    })
+
+    notify_success(STRINGS.provinciaDeleteSuccess)
+
     emit('ActualizarTablaProvincia', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
-    Notify.create({
-      color: 'negative',
-      icon: 'error',
-      message: STRINGS.provinciaDeleteError,
-      position: 'bottom',
-      timeout: 3000,
-    })
+    notify_error(STRINGS.provinciaDeleteError)
     emit('ActualizarTablaProvincia', false)
   }
   refDialogoDeleteProvincia.value.hide()

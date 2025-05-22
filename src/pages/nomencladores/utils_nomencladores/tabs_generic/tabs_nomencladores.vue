@@ -87,6 +87,9 @@
   <!-- Dialogo Edit Municipio -->
   <DialogEditBanco ref="dialogEditBanco" @ActualizarTablaBanco="ActualizadorTabla" />
 
+  <!-- Dialogo Edit Municipio -->
+  <DialogEditMoneda ref="dialogEditMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+
   <!-- Dialogo Delete Provincia-->
   <DialogDeleteProvincia
     ref="dialogoDeleteProvincia"
@@ -108,6 +111,9 @@
   <!-- Dialogo Delete Municipio-->
   <DialogDeleteBanco ref="dialogDeleteBanco" @ActualizarTablaBanco="ActualizadorTabla" />
 
+  <!-- Dialogo Delete Municipio-->
+  <DialogDeleteMoneda ref="dialogDeleteMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+
   <!-- Tabla de Provincias -->
   <table_Gest_provincia
     ref="tableProvincia"
@@ -115,10 +121,6 @@
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
     @onBloquearDetalle="BloquearDetalle"
-    @onBloquearGuardar="BloquearGuardar"
-    @oNnameProvinciaDelete="CapturanameProvinciaDelete"
-    @oNcodigoProvinciaDelete="CapturaCodigoProvinciaDelete"
-    @oNProvinciaDeleteGestProvincia="ProcesoDeleteProvincia"
     :style="StyleFocusP"
     :TextSearch="TextSearch"
     :rows="rows"
@@ -131,7 +133,6 @@
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
     @onBloquearDetalle="BloquearDetalle"
-    @onBloquearGuardar="BloquearGuardar"
     @oNMunicipioDeleteGestMunicipio="ProcesoDeleteMunicipio"
     :style="StyleFocusM"
     :TextSearch="TextSearch"
@@ -144,7 +145,6 @@
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
     @onBloquearDetalle="BloquearDetalle"
-    @onBloquearGuardar="BloquearGuardar"
     :style="StyleFocusO"
     :TextSearch="TextSearch"
   />
@@ -156,13 +156,19 @@
     @onBloquearEdit="BloquearEdit"
     @onBloquearDelete="BloquearDelete"
     @onBloquearDetalle="BloquearDetalle"
-    @onBloquearGuardar="BloquearGuardar"
     :style="StyleFocusB"
     :TextSearch="TextSearch"
   />
 
   <!-- Tabla de Banco -->
-  <table_Gest_monedas ref="tableMonedas" :style="StyleFocusMO" />
+  <table_Gest_monedas
+    ref="tableMonedas"
+    @seleccionado="handleSelection"
+    @onBloquearEdit="BloquearEdit"
+    @onBloquearDelete="BloquearDelete"
+    @onBloquearDetalle="BloquearDetalle"
+    :style="StyleFocusMO"
+  />
 
   <!-- Tabla de Comprobante -->
   <table_Gest_comprobante ref="tableComprobante" :style="StyleFocusC" />
@@ -171,7 +177,6 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import { Notify } from 'quasar'
 
 //Dialogs Add
 import DialogoAddProvincia from '../dialogs_insert/dialogoAddProvincia.vue'
@@ -185,12 +190,14 @@ import DialogEditProvincia from '../dialogs_edit/dialog_edit_provincia.vue'
 import DialogEditMunicipio from '../dialogs_edit/dialog_edit_municipio.vue'
 import DialogEditOrganismo from '../dialogs_edit/dialog_edit_organismo.vue'
 import DialogEditBanco from '../dialogs_edit/dialog_edit_banco.vue'
+import DialogEditMoneda from '../dialogs_edit/dialog_edit_moneda.vue'
 
 //Dialogs Delete
 import DialogDeleteProvincia from '../dialogs_delete/dialog_delete_provincia.vue'
 import DialogDeleteMunicipio from '../dialogs_delete/dialog_delete_municipio.vue'
 import DialogDeleteOrganismo from '../dialogs_delete/dialog_delete_organismo.vue'
 import DialogDeleteBanco from '../dialogs_delete/dialog_delete_banco.vue'
+import DialogDeleteMoneda from '../dialogs_delete/dialog_delete_moneda.vue'
 
 //Tables
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
@@ -202,6 +209,7 @@ import table_Gest_monedas from '../tables/table_Gest_moneda.vue'
 
 import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const route = useRoute()
 
@@ -236,8 +244,8 @@ const dialogEditBanco = ref(null)
 const dialogDeleteBanco = ref(null)
 
 const dialogoAddMoneda = ref(null)
-//const dialogEditMoneda = ref(null)
-//const dialogDeleteMoneda = ref(null)
+const dialogEditMoneda = ref(null)
+const dialogDeleteMoneda = ref(null)
 
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
@@ -246,47 +254,48 @@ const tableBanco = ref(null)
 const tableMonedas = ref(null)
 const tableComprobante = ref(null)
 
-var arrayProvinceSelected = ref([])
-var arrayMunicipioSelected = ref([])
+var arraySelected = ref([])
+/*var arrayMunicipioSelected = ref([])
 var arrayOrganismoSelected = ref([])
 var arrayBancoSelected = ref([])
+var arrayMonedaSelected = ref([])*/
 
 //Variables a evaluar clases de tabsBotton
 const disabledEdit = ref('small-font disabled')
 const disabledDelete = ref('small-font disabled')
 const disabledDetalle = ref('small-font disabled')
-const disabledGuardar = ref('small-font disabled')
 
 const handleSelection = (row) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
   if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
-    arrayProvinceSelected.value['nombre'] = row['nombre']
-    arrayProvinceSelected.value['codigo'] = row['codigo']
-    arrayProvinceSelected.value['_id'] = row['_id']
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase) && row) {
-    arrayMunicipioSelected.value['nombre'] = row['nombre']
-    arrayMunicipioSelected.value['codigo'] = row['codigo']
-    arrayMunicipioSelected.value['provincia'] = row['Texto_provincia']
-    arrayMunicipioSelected.value['_id'] = row['_id']
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['provincia'] = row['Texto_provincia']
+    arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
-    arrayOrganismoSelected.value['name_min'] = row['siglas']
-    arrayOrganismoSelected.value['name'] = row['nombre']
-    arrayOrganismoSelected.value['_id'] = row['_id']
+    arraySelected.value['name_min'] = row['siglas']
+    arraySelected.value['name'] = row['nombre']
+    arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
-    arrayBancoSelected.value['nombre'] = row['nombre']
-    arrayBancoSelected.value['codigo'] = row['codigo']
-    arrayBancoSelected.value['detalle'] = row['detalle']
-    arrayBancoSelected.value['_id'] = row['_id']
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['detalle'] = row['detalle']
+    arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.monedasLowercase) && row) {
+    arraySelected.value['siglas'] = row['siglas']
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['tasa'] = row['tasa']
+    arraySelected.value['nomenclador'] = row['nomenclador']
+    arraySelected.value['moneda'] = row['moneda']
+    arraySelected.value['condor'] = row['condor']
+    arraySelected.value['_id'] = row['_id']
   } else {
-    //TODO:Notify
-    Notify.create({
-      color: 'negative',
-      icon: 'error',
-      message: STRINGS.fila_no_selected,
-      position: 'bottom',
-      timeout: 3000,
-    })
+    notify_error(STRINGS.fila_no_selected)
   }
 }
 
@@ -314,13 +323,7 @@ const ActualizadorTabla = (value) => {
 }
 
 const ErrorUpdateTable = () => {
-  Notify.create({
-    color: 'negative',
-    icon: 'error',
-    message: STRINGS.errorUpdate,
-    position: 'bottom',
-    timeout: 3000,
-  })
+  notify_error(STRINGS.errorUpdate)
 }
 
 const BloquearEdit = (variable) => {
@@ -344,14 +347,6 @@ const BloquearDetalle = (variable) => {
     disabledDetalle.value = 'small-font disabled'
   } else {
     disabledDetalle.value = 'small-font'
-  }
-}
-
-const BloquearGuardar = (variable) => {
-  if (variable) {
-    disabledGuardar.value = 'small-font disabled'
-  } else {
-    disabledGuardar.value = 'small-font'
   }
 }
 
@@ -427,40 +422,53 @@ const onItemClick = (value) => {
     case 'Edit':
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
-          if (arrayProvinceSelected.value != null)
+          if (arraySelected.value != null)
             dialogoEditProvincia.value.LevantarDialogoEditProvincia(
-              arrayProvinceSelected.value['nombre'],
-              arrayProvinceSelected.value['codigo'],
-              arrayProvinceSelected.value['_id'],
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['_id'],
             )
         }
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
-          if (arrayMunicipioSelected.value != null)
+          if (arraySelected.value != null)
             dialogoEditMunicipio.value.LevantarDialogoEditMunicipio(
-              arrayMunicipioSelected.value['nombre'],
-              arrayMunicipioSelected.value['codigo'],
-              arrayMunicipioSelected.value['provincia'],
-              arrayMunicipioSelected.value['_id'],
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['provincia'],
+              arraySelected.value['_id'],
             )
         }
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
-          if (arrayOrganismoSelected.value != null)
+          if (arraySelected.value != null)
             dialogEditOrganismo.value.LevantarDialogoEditOrganismo(
-              arrayOrganismoSelected.value['name_min'],
-              arrayOrganismoSelected.value['name'],
-              arrayOrganismoSelected.value['_id'],
+              arraySelected.value['name_min'],
+              arraySelected.value['name'],
+              arraySelected.value['_id'],
             )
         }
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
-          if (arrayOrganismoSelected.value != null)
+          if (arraySelected.value != null)
             dialogEditBanco.value.LevantarDialogoEditBanco(
-              arrayBancoSelected.value['nombre'],
-              arrayBancoSelected.value['codigo'],
-              arrayBancoSelected.value['detalle'],
-              arrayBancoSelected.value['_id'],
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['detalle'],
+              arraySelected.value['_id'],
+            )
+        }
+      } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditMoneda.value.LevantarDialogoEdit(
+              arraySelected.value['siglas'],
+              arraySelected.value['nombre'],
+              arraySelected.value['tasa'],
+              arraySelected.value['nomenclador'],
+              arraySelected.value['moneda'],
+              arraySelected.value['condor'],
+              arraySelected.value['_id'],
             )
         }
       }
@@ -470,45 +478,51 @@ const onItemClick = (value) => {
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogoDeleteProvincia.value.LevantarDialogoDeleteProvincia(
-            arrayProvinceSelected.value['nombre'],
-            arrayProvinceSelected.value['codigo'],
-            arrayProvinceSelected.value['_id'],
+            arraySelected.value['nombre'],
+            arraySelected.value['codigo'],
+            arraySelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogoDeleteMunicipio.value.LevantarDialogoDeleteMunicipio(
-            arrayMunicipioSelected.value['nombre'],
-            arrayMunicipioSelected.value['codigo'],
-            arrayMunicipioSelected.value['provincia'],
-            arrayMunicipioSelected.value['_id'],
+            arraySelected.value['nombre'],
+            arraySelected.value['codigo'],
+            arraySelected.value['provincia'],
+            arraySelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogDeleteOrganismo.value.LevantarDialogoDeleteOrganismo(
-            arrayOrganismoSelected.value['name_min'],
-            arrayOrganismoSelected.value['_id'],
+            arraySelected.value['name_min'],
+            arraySelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogDeleteBanco.value.LevantarDialogoDeleteBanco(
-            arrayBancoSelected.value['codigo'],
-            arrayBancoSelected.value['_id'],
+            arraySelected.value['codigo'],
+            arraySelected.value['_id'],
           )
         }
+      } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
+        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
+          dialogDeleteMoneda.value.LevantarDialogoDelete(
+            arraySelected.value['siglas'],
+            arraySelected.value['_id'],
+          )
+        }
+        dialogDeleteMoneda
       }
 
       break
     case 'Export':
-      if (!disabledGuardar.value.includes(STRINGS.desabilitar)) {
-        alert('TODO: Guardar')
-      }
+      notify_error('TODO: Exportar')
       break
     case 'Details':
       if (!disabledDetalle.value.includes(STRINGS.desabilitar)) {
-        alert('TODO: Detalles')
+        notify_error('TODO: Detalles')
       }
       break
 
@@ -520,16 +534,4 @@ const onItemClick = (value) => {
 const resetSearch = () => {
   TextSearch.value = ''
 }
-
-// const UpdateSearch = () => {
-//   var ruta = route.fullPath
-//   var nuevaRuta = ruta.split('_')
-//   if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
-//     //tableAddProvincia.value.SearchRow(TextSearch.value)
-//   } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
-//     alert('Buscando Municipios.. : ' + TextSearch.value)
-//   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-//     alert('Buscando Organismos.. : ' + TextSearch.value)
-//   }
-// }
 </script>

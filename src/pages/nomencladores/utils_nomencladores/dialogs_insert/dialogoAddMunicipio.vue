@@ -90,9 +90,10 @@ import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
+import notify_success from 'src/utils/notify/notify_success.js'
 
 import { onBeforeMount } from 'vue'
+import notify_error from 'src/utils/notify/notify_error.js'
 const list = 'blur(4px) saturate(150%)'
 
 const options = ref([])
@@ -135,13 +136,8 @@ const Procesar_Add = async () => {
     const existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.codigoRepetido,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+
+      notify_error(STRINGS.codigoRepetido)
 
       textCodigo_Mun.value.focus()
 
@@ -163,24 +159,12 @@ const Procesar_Add = async () => {
       try {
         await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
 
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.municipioAddSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
+        notify_success(STRINGS.municipioAddSuccess)
 
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.MunicipioAddError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.MunicipioAddError)
         emit('ActualizarTablaMunicipio', false)
       }
       refDialogoAddMunicipio.value.hide()

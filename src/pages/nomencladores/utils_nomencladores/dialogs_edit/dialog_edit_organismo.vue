@@ -78,8 +78,9 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
+import notify_success from 'src/utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
+import notify_error from 'src/utils/notify/notify_error.js'
 /**
  * Values for backdrop-filter are the same as in the CSS specs.
  * The following list is not an exhaustive one.
@@ -125,13 +126,8 @@ const Procesar_EditOrganismo = async () => {
     existeSigla = await verificarSiglaExistente(TextNombreAbrOrg.value)
     if (existeSigla ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.siglasRepetidas,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+
+      notify_error(STRINGS.siglasRepetidas)
 
       textNombre_AbrOrg.value.focus()
       return
@@ -143,25 +139,11 @@ const Procesar_EditOrganismo = async () => {
 
       try {
         await api.patch(STRINGS.urlApiOrganismo + '/' + IdMunicipioEdit.value, newItem) // POST /items
-
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.organismoEditSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
-
+        notify_success(STRINGS.organismoEditSuccess)
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
         console.error('Error al editar el item:', error)
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.OrganismoEditError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.OrganismoEditError)
         emit('ActualizarTablaOrganismo', false)
       }
       refDialogoEditOrganismo.value.hide()

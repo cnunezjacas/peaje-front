@@ -79,8 +79,9 @@ import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
 import imports from 'src/utils/imports.js'
+import notify_success from 'src/utils/notify/notify_success.js'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 /**
  * Values for backdrop-filter are the same as in the CSS specs.
@@ -113,13 +114,7 @@ const Procesar_Add = async () => {
     const existeCodigo = await verificarSiglaExistente(TextNombreAbrOrg.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.siglasRepetidas,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+      notify_error(STRINGS.siglasRepetidas)
 
       textNombre_AbrOrg.value.focus()
 
@@ -133,24 +128,12 @@ const Procesar_Add = async () => {
       try {
         await api.post(STRINGS.urlApiOrganismo, newItem) // POST /items
 
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.organismoAddSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
+        notify_success(STRINGS.organismoAddSuccess)
 
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.OrganismoAddError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.OrganismoAddError)
         emit('ActualizarTablaOrganismo', false)
       }
       refDialogoAddOrganismo.value.hide()

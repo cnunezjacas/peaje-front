@@ -87,10 +87,11 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteBanco.js'
 import imports from 'src/utils/imports.js'
+import notify_success from 'src/utils/notify/notify_success.js'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
@@ -119,13 +120,7 @@ const Procesar_Add = async () => {
     const existeCodigo = await verificarCodigoExistente(TextCodigo_banco.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.codigoRepetido,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+      notify_error(STRINGS.codigoRepetido)
 
       textCodigo_banco.value.focus()
       return
@@ -140,25 +135,13 @@ const Procesar_Add = async () => {
         await api.post(STRINGS.urlApiBanco, newItem) // POST /items
 
         // Mostrar alerta positiva de éxito
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.BancoAddSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
+        notify_success(STRINGS.BancoAddSuccess)
 
         emit('ActualizarTablaBanco', true)
       } catch (error) {
         console.error('Error al crear item:', error)
 
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.BancoAddError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.BancoAddError)
 
         emit('ActualizarTablaBanco', false)
       }

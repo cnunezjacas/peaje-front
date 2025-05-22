@@ -89,8 +89,9 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
+import notify_success from 'src/utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 const options = ref([])
@@ -126,13 +127,7 @@ const Procesar_EditMunicipio = async () => {
 
     if (existeCodigo ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.codigoRepetido,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+      notify_error(STRINGS.codigoRepetido)
       textCodigo_Mun.value.focus()
       return
     } else {
@@ -151,25 +146,12 @@ const Procesar_EditMunicipio = async () => {
 
       try {
         await api.patch(STRINGS.urlApiMunicipio + '/' + IdMunicipio.value, newItem) // POST /items
-
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.municipioEditSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
+        notify_success(STRINGS.municipioEditSuccess)
 
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.MunicipioEditError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.MunicipioEditError)
         emit('ActualizarTablaMunicipio', false)
       }
       refDialogoEditMunicipio.value.hide()

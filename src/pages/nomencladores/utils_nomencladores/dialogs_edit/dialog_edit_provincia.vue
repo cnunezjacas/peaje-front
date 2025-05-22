@@ -78,8 +78,9 @@ import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
+import notify_success from '../../../../utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import { Notify } from 'quasar'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
@@ -105,17 +106,15 @@ const Procesar_EditProvincia = async () => {
     //TODO: Ajax Request EDIT_PROVINCIA
     // Datos enviar, típicamente en formato JSON
 
+    var existeCodigo = false
+
     // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
-    if (existeCodigo) {
+    if (TextCodigo_prov.value !== TextCodigo_prov_copy.value)
+      existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
+    if (existeCodigo ? true : false) {
       // Mostrar mensaje de error o alertar al usuario
-      Notify.create({
-        color: 'negative', // color rojo para error
-        icon: 'error',
-        message: STRINGS.codigoRepetido,
-        position: 'bottom',
-        timeout: 3000, // en milisegundos
-      })
+
+      notify_error(STRINGS.codigoRepetido)
 
       textCodigo_prov.value.focus()
 
@@ -125,25 +124,11 @@ const Procesar_EditProvincia = async () => {
 
       try {
         await api.patch(STRINGS.urlApiProvincia + '/' + _id.value, newItem) // POST /items
-        // Mostrar alerta positiva de éxito
-        Notify.create({
-          color: 'positive', // color verde para éxito
-          icon: 'check_circle',
-          message: STRINGS.provinciaEditSuccess,
-          position: 'top',
-          timeout: 3000,
-        })
-
+        notify_success(STRINGS.provinciaEditSuccess)
         emit('ActualizarTablaProvincia', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        Notify.create({
-          color: 'negative',
-          icon: 'error',
-          message: STRINGS.provinciaAddError,
-          position: 'bottom',
-          timeout: 3000,
-        })
+        notify_error(STRINGS.provinciaAddError)
         emit('ActualizarTablaProvincia', false)
       }
       refDialogoEditProvincia.value.hide()

@@ -1,9 +1,9 @@
 <template>
   <div class="">
     <q-dialog
-      v-model="dialogDeleteMunicipio"
+      v-model="dialogDelete"
       persistent
-      ref="refDialogoDeleteMunicipio"
+      ref="refDialogoDelete"
       :backdrop-filter="backdropFilter"
     >
       <q-card>
@@ -11,7 +11,7 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="delete" />
           </span>
-          <span class="icon-text">{{ STRINGS.deleteMunicipio.toUpperCase() }}</span>
+          <span class="icon-text">{{ STRINGS.deleteMoneda.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
@@ -20,10 +20,7 @@
               <q-icon name="help" color="green" size="3rem" />
             </div>
             <div class="col-12 text-center q-pt-md">
-              <p>
-                {{ STRINGS.PreguntaDeleteMunicipio }} {{ nombreMunicipioDelete }} de la provincia
-                {{ nombreProvinciaMunicipioDelete }} ?
-              </p>
+              <p>{{ STRINGS.PreguntaDeleteMoneda }} {{ siglas }} ?</p>
             </div>
           </div>
         </q-card-section>
@@ -33,7 +30,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                @click="Procesar_DeleteMunicipio"
+                @click="Procesar_Delete"
                 :label="STRINGS.access"
                 color="green"
                 :size="STRINGS.SizeBottom"
@@ -69,51 +66,49 @@ import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
-const refDialogoDeleteMunicipio = ref(null)
 
-const nombreMunicipioDelete = ref('')
-const nombreProvinciaMunicipioDelete = ref('')
-const codigoMunicipioDelete = ref('')
+const refDialogoDelete = ref(null)
 
-const emit = defineEmits(['ActualizarTablaMunicipio'])
+const siglas = ref('')
+const idDelete = ref('')
+
+const emit = defineEmits(['ActualizarTablaMoneda'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_DeleteMunicipio = async () => {
-  //TODO: Ajax Request DELETE MUNICIPIO
+const Procesar_Delete = async () => {
+  //TODO: Ajax Request DELETE PROVINCIA
+
   try {
-    await api.delete(STRINGS.urlApiMunicipio + '/' + IdMunicipioDelete.value) // DELETE /items/:id
+    await api.delete(STRINGS.urlApiMoneda + '/' + idDelete.value) // DELETE /items/:id
 
-    notify_success(STRINGS.municipioDeleteSuccess)
+    notify_success(STRINGS.monedaDeleteSuccess)
 
-    emit('ActualizarTablaMunicipio', true)
+    emit('ActualizarTablaMoneda', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
 
-    notify_error(STRINGS.MunicipioDeleteError)
+    notify_error(STRINGS.MonedaDeleteError)
 
-    emit('ActualizarTablaMunicipio', false)
+    emit('ActualizarTablaMoneda', false)
   }
-  refDialogoDeleteMunicipio.value.hide()
+  refDialogoDelete.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteMunicipio = (nombre, codigo, provincia, id) => {
+const LevantarDialogoDelete = (_siglas, _id) => {
   backdropFilter.value = list
-  dialogDeleteMunicipio.value = true
-  nombreMunicipioDelete.value = nombre
-  codigoMunicipioDelete.value = codigo
-  nombreProvinciaMunicipioDelete.value = provincia
-  IdMunicipioDelete.value = id
+  dialogDelete.value = true
+  siglas.value = _siglas
+  idDelete.value = _id
 }
 
 defineExpose({
-  LevantarDialogoDeleteMunicipio,
-  // LevantarDialogoAddModelo,
+  LevantarDialogoDelete,
 })
 
-const dialogDeleteMunicipio = ref(false)
+const dialogDelete = ref(false)
+
+//const dialogModel = ref(false)
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
-const IdMunicipioDelete = ref('')
 </script>

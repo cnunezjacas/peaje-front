@@ -61,7 +61,8 @@ import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import { Notify } from 'quasar'
+import notify_success from 'src/utils/notify/notify_success.js'
+import notify_error from 'src/utils/notify/notify_error.js'
 
 /*import { useQuasar } from 'quasar'
 var $q = useQuasar()*/
@@ -85,24 +86,12 @@ const Procesar_DeleteOrganismo = async () => {
   try {
     await api.delete(STRINGS.urlApiOrganismo + '/' + idOrganismoDelete.value) // DELETE /items/:id
 
-    Notify.create({
-      color: 'positive', // color verde para éxito
-      icon: 'check_circle',
-      message: STRINGS.organismoDeleteSuccess,
-      position: 'top',
-      timeout: 3000,
-    })
+    notify_success(STRINGS.organismoDeleteSuccess)
 
     emit('ActualizarTablaOrganismo', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
-    Notify.create({
-      color: 'negative',
-      icon: 'error',
-      message: STRINGS.OrganismoDeleteError,
-      position: 'bottom',
-      timeout: 3000,
-    })
+    notify_error(STRINGS.OrganismoDeleteError)
     emit('ActualizarTablaOrganismo', false)
   }
   refDialogoDeleteOrganismo.value.hide()
