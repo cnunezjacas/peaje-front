@@ -68,16 +68,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js'
 import notify_success from '../../../../utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -140,7 +137,7 @@ const Procesar_EditProvincia = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditProvincia = (name, codigo, id) => {
+const LevantarDialogoEdit = (name, codigo, id) => {
   backdropFilter.value = list
   dialogEditProvincia.value = true
   TextCodigo_prov.value = String(codigo)
@@ -198,7 +195,6 @@ const TextNombre_prov__copy = ref('')
 const _id = ref('')
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 
 const textNombre_prov = ref(null)
 const textCodigo_prov = ref(null)
@@ -206,6 +202,6 @@ const textCodigo_prov = ref(null)
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoEditProvincia,
+  LevantarDialogoEdit,
 })
 </script>

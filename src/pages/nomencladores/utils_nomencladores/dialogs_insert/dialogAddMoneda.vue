@@ -3,7 +3,7 @@
     <q-dialog
       v-model="dialog"
       persistent
-      ref="refDialogoAddMoneda"
+      ref="refDialogoAdd"
       :backdrop-filter="backdropFilter"
       content-class="dialog-xl"
       :style="{ '--q-dialog-max-width': '800px' }"
@@ -171,14 +171,14 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMoneda.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
-const refDialogoAddMoneda = ref(null)
+const refDialogoAdd = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreMoneda = [
@@ -248,18 +248,18 @@ const Procesar_Add = async () => {
         emit('ActualizarTablaMoneda', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.MonedaAddError)
+        notify_error(STRINGS.monedaAddError)
 
         emit('ActualizarTablaMoneda', false)
       }
-      refDialogoAddMoneda.value.hide()
+      refDialogoAdd.value.hide()
       Reset()
     }
   }
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoAddMoneda = () => {
+const LevantarDialogoAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
@@ -317,15 +317,6 @@ const textIdCondor_moneda = ref(null)
 
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
-import { watch } from 'vue'
-
-watch(TextTasaCambio_moneda, (newVal, oldVal) => {
-  let aux = EvaluarTazaCambio()
-  console.log('Nuevo valor:' + newVal)
-  console.log('Viejo valor:' + oldVal)
-  console.log('Valor Adecuado:' + aux)
-})
-
 const EvaluarTazaCambio = () => {
   return !isNaN(parseFloat(TextTasaCambio_moneda.value)) &&
     parseFloat(TextTasaCambio_moneda.value) >= 0
@@ -334,6 +325,6 @@ const EvaluarTazaCambio = () => {
 }
 
 defineExpose({
-  LevantarDialogoAddMoneda,
+  LevantarDialogoAdd,
 })
 </script>

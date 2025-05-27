@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAddBanco"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -88,14 +83,14 @@ import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteBanco.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteBanco.js'
 import imports from 'src/utils/imports.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
-const refDialogoAddBanco = ref(null)
+const refDialogoAdd = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreBanco = [
@@ -135,24 +130,24 @@ const Procesar_Add = async () => {
         await api.post(STRINGS.urlApiBanco, newItem) // POST /items
 
         // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.BancoAddSuccess)
+        notify_success(STRINGS.bancoAddSuccess)
 
         emit('ActualizarTablaBanco', true)
       } catch (error) {
         console.error('Error al crear item:', error)
 
-        notify_error(STRINGS.BancoAddError)
+        notify_error(STRINGS.bancoAddError)
 
         emit('ActualizarTablaBanco', false)
       }
-      refDialogoAddBanco.value.hide()
+      refDialogoAdd.value.hide()
       Reset()
     }
   }
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogo = () => {
+const LevantarDialogoAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
@@ -182,7 +177,7 @@ const TextCodigo_banco = ref('')
 const TextDetalles_banco = ref('')
 const textCodigo_banco = ref(null)
 
-const disabledBtnSaveEdit = ref('disabled')
+const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
-defineExpose({ LevantarDialogo })
+defineExpose({ LevantarDialogoAdd })
 </script>

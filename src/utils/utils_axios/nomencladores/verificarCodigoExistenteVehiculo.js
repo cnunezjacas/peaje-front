@@ -1,14 +1,14 @@
-import { STRINGS } from '../string.js'
+import { STRINGS } from '../../string.js'
 import api from 'src/axios.js'
 
 /* Función para verificar si el código ya existe */
-const verificarSiglaExistente = async (siglas) => {
+const verificarCodigoExistente = async (codigo) => {
   var aux = false
   try {
-    const response = await api.get(`${STRINGS.urlApiOrganismo}?/sigla=${siglas}`)
+    const response = await api.get(STRINGS.urlApiVehiculo)
     // Asumiendo que tu API devuelve un array de resultados
     response.data.forEach((element) => {
-      if (element.siglas === siglas) {
+      if (element.codigo === codigo) {
         aux = true
       }
     })
@@ -20,4 +20,4 @@ const verificarSiglaExistente = async (siglas) => {
   }
 }
 
-export default verificarSiglaExistente
+export default verificarCodigoExistente

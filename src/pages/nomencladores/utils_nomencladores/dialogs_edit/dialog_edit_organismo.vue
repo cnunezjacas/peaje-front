@@ -68,16 +68,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
+import verificarSiglaExistente from 'src/utils/utils_axios/nomencladores/verificarSiglaExistenteOrganismo.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -143,7 +140,7 @@ const Procesar_EditOrganismo = async () => {
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
         console.error('Error al editar el item:', error)
-        notify_error(STRINGS.OrganismoEditError)
+        notify_error(STRINGS.organismoEditError)
         emit('ActualizarTablaOrganismo', false)
       }
       refDialogoEditOrganismo.value.hide()
@@ -153,7 +150,7 @@ const Procesar_EditOrganismo = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditOrganismo = (nameAbrOrg, nombreOrg, id) => {
+const LevantarDialogoEdit = (nameAbrOrg, nombreOrg, id) => {
   backdropFilter.value = list
   dialogEditMunicipio.value = true
   TextNombreAbrOrg.value = nameAbrOrg
@@ -206,7 +203,6 @@ const TextNombreOrg_copy = ref('')
 const TextNombreAbrOrg_copy = ref('')
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 
 const textNombre_AbrOrg = ref(null)
 const textNombreOrg = ref(null)
@@ -214,6 +210,6 @@ const textNombreOrg = ref(null)
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoEditOrganismo,
+  LevantarDialogoEdit,
 })
 </script>

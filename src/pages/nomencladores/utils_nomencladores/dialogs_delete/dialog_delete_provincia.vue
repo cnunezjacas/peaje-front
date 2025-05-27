@@ -52,15 +52,12 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 //importaciones
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -94,7 +91,7 @@ const Procesar_DeleteProvincia = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteProvincia = (nombre, codigo, id) => {
+const LevantarDialogoDelete = (nombre, codigo, id) => {
   backdropFilter.value = list
 
   dialogDeleteProvincia.value = true
@@ -104,7 +101,7 @@ const LevantarDialogoDeleteProvincia = (nombre, codigo, id) => {
 }
 
 defineExpose({
-  LevantarDialogoDeleteProvincia,
+  LevantarDialogoDelete,
   // LevantarDialogoAddModelo,
 })
 
@@ -113,5 +110,4 @@ const dialogDeleteProvincia = ref(false)
 //const dialogModel = ref(false)
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 </script>

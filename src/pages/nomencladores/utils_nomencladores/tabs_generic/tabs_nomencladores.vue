@@ -75,6 +75,12 @@
   <!-- Dialogo Add Organismo-->
   <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
 
+  <!-- Dialogo Add Organismo-->
+  <DialogoAddVehiculo ref="dialogoAddVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
+
+  <!-- Dialogo Add Organismo-->
+  <DialogoAddExento ref="dialogoAddExento" @ActualizarTablaExento="ActualizadorTabla" />
+
   <!-- Dialogo Edit Provincia -->
   <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
 
@@ -89,6 +95,12 @@
 
   <!-- Dialogo Edit Municipio -->
   <DialogEditMoneda ref="dialogEditMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+
+  <!-- Dialogo Edit Municipio -->
+  <DialogEditVehiculo ref="dialogEditVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
+
+  <!-- Dialogo Edit Municipio -->
+  <DialogEditExento ref="dialogEditExento" @ActualizarTablaExento="ActualizadorTabla" />
 
   <!-- Dialogo Delete Provincia-->
   <DialogDeleteProvincia
@@ -113,6 +125,12 @@
 
   <!-- Dialogo Delete Municipio-->
   <DialogDeleteMoneda ref="dialogDeleteMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+
+  <!-- Dialogo Delete Municipio-->
+  <DialogDeleteVehiculo ref="dialogDeleteVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
+
+  <!-- Dialogo Delete Municipio-->
+  <DialogDeleteExento ref="dialogDeleteExento" @ActualizarTablaExento="ActualizadorTabla" />
 
   <!-- Tabla de Provincias -->
   <table_Gest_provincia
@@ -160,7 +178,7 @@
     :TextSearch="TextSearch"
   />
 
-  <!-- Tabla de Banco -->
+  <!-- Tabla de Monedas -->
   <table_Gest_monedas
     ref="tableMonedas"
     @seleccionado="handleSelection"
@@ -168,6 +186,28 @@
     @onBloquearDelete="BloquearDelete"
     @onBloquearDetalle="BloquearDetalle"
     :style="StyleFocusMO"
+    :TextSearch="TextSearch"
+  />
+
+  <!-- Tabla de Vehiculos -->
+  <table_Gest_vehiculos
+    ref="tableVehiculo"
+    @seleccionado="handleSelection"
+    @onBloquearEdit="BloquearEdit"
+    @onBloquearDelete="BloquearDelete"
+    @onBloquearDetalle="BloquearDetalle"
+    :style="StyleFocusV"
+    :TextSearch="TextSearch"
+  />
+
+  <table_Gest_exento
+    ref="tableExento"
+    @seleccionado="handleSelection"
+    @onBloquearEdit="BloquearEdit"
+    @onBloquearDelete="BloquearDelete"
+    @onBloquearDetalle="BloquearDetalle"
+    :style="StyleFocusE"
+    :TextSearch="TextSearch"
   />
 
   <!-- Tabla de Comprobante -->
@@ -184,6 +224,8 @@ import DialogoAddMunicipio from '../dialogs_insert/dialogoAddMunicipio.vue'
 import DialogoAddOrganismo from '../dialogs_insert/dialogoAddOrganismo.vue'
 import DialogoAddBanco from '../dialogs_insert/dialogoAddBanco.vue'
 import DialogoAddMoneda from '../dialogs_insert/dialogAddMoneda.vue'
+import DialogoAddVehiculo from '../dialogs_insert/dialogAddVehiculo.vue'
+import DialogoAddExento from '../dialogs_insert/dialogAddExento.vue'
 
 //Dialogs Edit
 import DialogEditProvincia from '../dialogs_edit/dialog_edit_provincia.vue'
@@ -191,6 +233,8 @@ import DialogEditMunicipio from '../dialogs_edit/dialog_edit_municipio.vue'
 import DialogEditOrganismo from '../dialogs_edit/dialog_edit_organismo.vue'
 import DialogEditBanco from '../dialogs_edit/dialog_edit_banco.vue'
 import DialogEditMoneda from '../dialogs_edit/dialog_edit_moneda.vue'
+import DialogEditVehiculo from '../dialogs_edit/dialog_edit_vehiculo.vue'
+import DialogEditExento from '../dialogs_edit/dialog_edit_exento.vue'
 
 //Dialogs Delete
 import DialogDeleteProvincia from '../dialogs_delete/dialog_delete_provincia.vue'
@@ -198,6 +242,8 @@ import DialogDeleteMunicipio from '../dialogs_delete/dialog_delete_municipio.vue
 import DialogDeleteOrganismo from '../dialogs_delete/dialog_delete_organismo.vue'
 import DialogDeleteBanco from '../dialogs_delete/dialog_delete_banco.vue'
 import DialogDeleteMoneda from '../dialogs_delete/dialog_delete_moneda.vue'
+import DialogDeleteVehiculo from '../dialogs_delete/dialog_delete_vehiculo.vue'
+import DialogDeleteExento from '../dialogs_delete/dialog_delete_exento.vue'
 
 //Tables
 import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
@@ -206,6 +252,8 @@ import table_Gest_organismo from '../tables/table_Gest_organismo.vue'
 import table_Gest_banco from '../tables/table_Gest_banco.vue'
 import table_Gest_comprobante from '../tables/table_Gest_comprobantes.vue'
 import table_Gest_monedas from '../tables/table_Gest_moneda.vue'
+import table_Gest_vehiculos from '../tables/table_Gest_vehiculos.vue'
+import table_Gest_exento from '../tables/table_Gest_exento.vue'
 
 import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
@@ -222,6 +270,8 @@ const StyleFocusO = ref('display: none')
 const StyleFocusB = ref('display: none')
 const StyleFocusMO = ref('display: none')
 const StyleFocusC = ref('display: none')
+const StyleFocusV = ref('display: none')
+const StyleFocusE = ref('display: none')
 
 //Constantes referencias de los dialogos Provincia
 const dialogoAddProvincia = ref(null)
@@ -243,9 +293,20 @@ const dialogoAddBanco = ref(null)
 const dialogEditBanco = ref(null)
 const dialogDeleteBanco = ref(null)
 
+//Constantes referencias de los dialogos Moneda
 const dialogoAddMoneda = ref(null)
 const dialogEditMoneda = ref(null)
 const dialogDeleteMoneda = ref(null)
+
+//Constantes referencias de los dialogos Vehiculos
+const dialogoAddVehiculo = ref(null)
+const dialogEditVehiculo = ref(null)
+const dialogDeleteVehiculo = ref(null)
+
+//Constantes referencias de los dialogos Exento
+const dialogoAddExento = ref(null)
+const dialogEditExento = ref(null)
+const dialogDeleteExento = ref(null)
 
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
@@ -253,12 +314,11 @@ const tableOrganismo = ref(null)
 const tableBanco = ref(null)
 const tableMonedas = ref(null)
 const tableComprobante = ref(null)
+const tableVehiculo = ref(null)
+const tableExento = ref(null)
 
+//ARRAY GLOBAL QUE SELECCIONA TODO
 var arraySelected = ref([])
-/*var arrayMunicipioSelected = ref([])
-var arrayOrganismoSelected = ref([])
-var arrayBancoSelected = ref([])
-var arrayMonedaSelected = ref([])*/
 
 //Variables a evaluar clases de tabsBotton
 const disabledEdit = ref('small-font disabled')
@@ -294,6 +354,18 @@ const handleSelection = (row) => {
     arraySelected.value['moneda'] = row['moneda']
     arraySelected.value['condor'] = row['condor']
     arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase) && row) {
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['tasa'] = row['tasa']
+    arraySelected.value['nomenclador'] = row['nomenclador']
+    arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.exentoLowercase) && row) {
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['nomenclador'] = row['nomenclador']
+    arraySelected.value['detalles'] = row['detalles']
+    arraySelected.value['_id'] = row['_id']
   } else {
     notify_error(STRINGS.fila_no_selected)
   }
@@ -316,6 +388,12 @@ const ActualizadorTabla = (value) => {
     else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
     if (value) tableMonedas.value.UpdateTable()
+    else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
+    if (value) tableVehiculo.value.UpdateTable()
+    else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
+    if (value) tableExento.value.UpdateTable()
     else ErrorUpdateTable()
   } else {
     ErrorUpdateTable()
@@ -360,6 +438,8 @@ const CambioRuta = () => {
     StyleFocusB.value = 'display: none'
     StyleFocusC.value = 'display: none'
     StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = ''
@@ -367,6 +447,8 @@ const CambioRuta = () => {
     StyleFocusB.value = 'display: none'
     StyleFocusC.value = 'display: none'
     StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = 'display: none'
@@ -374,6 +456,8 @@ const CambioRuta = () => {
     StyleFocusB.value = 'display: none'
     StyleFocusC.value = 'display: none'
     StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = 'display: none'
@@ -381,6 +465,8 @@ const CambioRuta = () => {
     StyleFocusB.value = ''
     StyleFocusC.value = 'display: none'
     StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = 'display: none'
@@ -388,6 +474,8 @@ const CambioRuta = () => {
     StyleFocusB.value = 'display: none'
     StyleFocusC.value = ''
     StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
   } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
     StyleFocusP.value = 'display: none'
     StyleFocusM.value = 'display: none'
@@ -395,6 +483,26 @@ const CambioRuta = () => {
     StyleFocusB.value = 'display: none'
     StyleFocusC.value = 'display: none'
     StyleFocusMO.value = ''
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = 'display: none'
+  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
+    StyleFocusP.value = 'display: none'
+    StyleFocusM.value = 'display: none'
+    StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = ''
+    StyleFocusE.value = 'display: none'
+  } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
+    StyleFocusP.value = 'display: none'
+    StyleFocusM.value = 'display: none'
+    StyleFocusO.value = 'display: none'
+    StyleFocusB.value = 'display: none'
+    StyleFocusC.value = 'display: none'
+    StyleFocusMO.value = 'display: none'
+    StyleFocusV.value = 'display: none'
+    StyleFocusE.value = ''
   }
 }
 
@@ -408,22 +516,27 @@ const onItemClick = (value) => {
   switch (value) {
     case 'Add':
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
-        dialogoAddProvincia.value.LevantarDialogo()
+        dialogoAddProvincia.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
-        dialogoAddMunicipio.value.LevantarDialogoAddMunicipio()
+        dialogoAddMunicipio.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-        dialogoAddOrganismo.value.LevantarDialogoAddOrganismo()
+        dialogoAddOrganismo.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
-        dialogoAddBanco.value.LevantarDialogo()
+        dialogoAddBanco.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
-        dialogoAddMoneda.value.LevantarDialogoAddMoneda()
+        dialogoAddMoneda.value.LevantarDialogoAdd()
+      } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
+        dialogoAddVehiculo.value.LevantarDialogoAdd()
+      } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
+        dialogoAddExento.value.LevantarDialogoAdd()
       }
+
       break
     case 'Edit':
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogoEditProvincia.value.LevantarDialogoEditProvincia(
+            dialogoEditProvincia.value.LevantarDialogoEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['_id'],
@@ -432,7 +545,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogoEditMunicipio.value.LevantarDialogoEditMunicipio(
+            dialogoEditMunicipio.value.LevantarDialogoEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['provincia'],
@@ -442,7 +555,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditOrganismo.value.LevantarDialogoEditOrganismo(
+            dialogEditOrganismo.value.LevantarDialogoEdit(
               arraySelected.value['name_min'],
               arraySelected.value['name'],
               arraySelected.value['_id'],
@@ -451,7 +564,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditBanco.value.LevantarDialogoEditBanco(
+            dialogEditBanco.value.LevantarDialogoEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['detalle'],
@@ -471,13 +584,35 @@ const onItemClick = (value) => {
               arraySelected.value['_id'],
             )
         }
+      } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditVehiculo.value.LevantarDialogoEdit(
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['tasa'],
+              arraySelected.value['nomenclador'],
+              arraySelected.value['_id'],
+            )
+        }
+      } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditExento.value.LevantarDialogoEdit(
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['nomenclador'],
+              arraySelected.value['detalles'],
+              arraySelected.value['_id'],
+            )
+        }
       }
 
       break
     case 'Delete':
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogoDeleteProvincia.value.LevantarDialogoDeleteProvincia(
+          dialogoDeleteProvincia.value.LevantarDialogoDelete(
             arraySelected.value['nombre'],
             arraySelected.value['codigo'],
             arraySelected.value['_id'],
@@ -485,7 +620,7 @@ const onItemClick = (value) => {
         }
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogoDeleteMunicipio.value.LevantarDialogoDeleteMunicipio(
+          dialogoDeleteMunicipio.value.LevantarDialogoDelete(
             arraySelected.value['nombre'],
             arraySelected.value['codigo'],
             arraySelected.value['provincia'],
@@ -494,14 +629,14 @@ const onItemClick = (value) => {
         }
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteOrganismo.value.LevantarDialogoDeleteOrganismo(
+          dialogDeleteOrganismo.value.LevantarDialogoDelete(
             arraySelected.value['name_min'],
             arraySelected.value['_id'],
           )
         }
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteBanco.value.LevantarDialogoDeleteBanco(
+          dialogDeleteBanco.value.LevantarDialogoDelete(
             arraySelected.value['codigo'],
             arraySelected.value['_id'],
           )
@@ -513,7 +648,20 @@ const onItemClick = (value) => {
             arraySelected.value['_id'],
           )
         }
-        dialogDeleteMoneda
+      } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
+        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
+          dialogDeleteVehiculo.value.LevantarDialogoDelete(
+            arraySelected.value['codigo'],
+            arraySelected.value['_id'],
+          )
+        }
+      } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
+        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
+          dialogDeleteExento.value.LevantarDialogoDelete(
+            arraySelected.value['codigo'],
+            arraySelected.value['_id'],
+          )
+        }
       }
 
       break

@@ -52,14 +52,11 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -91,14 +88,14 @@ const Procesar_DeleteOrganismo = async () => {
     emit('ActualizarTablaOrganismo', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
-    notify_error(STRINGS.OrganismoDeleteError)
+    notify_error(STRINGS.organismoDeleteError)
     emit('ActualizarTablaOrganismo', false)
   }
   refDialogoDeleteOrganismo.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteOrganismo = (nombreAbr, id) => {
+const LevantarDialogoDelete = (nombreAbr, id) => {
   backdropFilter.value = list
   dialogDeleteOrganismo.value = true
   nombreAbrOrganismoDelete.value = nombreAbr
@@ -106,11 +103,10 @@ const LevantarDialogoDeleteOrganismo = (nombreAbr, id) => {
 }
 
 defineExpose({
-  LevantarDialogoDeleteOrganismo,
+  LevantarDialogoDelete,
 })
 
 const dialogDeleteOrganismo = ref(false)
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 </script>

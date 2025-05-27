@@ -79,16 +79,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMunicipio.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -151,7 +148,7 @@ const Procesar_EditMunicipio = async () => {
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.MunicipioEditError)
+        notify_error(STRINGS.municipioEditError)
         emit('ActualizarTablaMunicipio', false)
       }
       refDialogoEditMunicipio.value.hide()
@@ -167,7 +164,7 @@ const CargarProvincias = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditMunicipio = (name, codigo, provincia, id) => {
+const LevantarDialogoEdit = (name, codigo, provincia, id) => {
   backdropFilter.value = list
   dialogEditMunicipio.value = true
 
@@ -232,7 +229,6 @@ const SelectNombre_prov_copy = ref('')
 const SelectNombre_prov_ref = ref(null)
 const IdMunicipio = ref('')
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 
 const textNombre_Mun = ref(null)
 const textCodigo_Mun = ref(null)
@@ -240,6 +236,6 @@ const textCodigo_Mun = ref(null)
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoEditMunicipio,
+  LevantarDialogoEdit,
 })
 </script>

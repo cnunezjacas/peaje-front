@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAddProvincia"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -74,14 +69,14 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteProvincia.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 
 const list = 'blur(4px) saturate(150%)'
 
-const refDialogoAddProvincia = ref(null)
+const refDialogoAdd = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreProvincia = [
@@ -125,14 +120,14 @@ const Procesar_Add = async () => {
 
         emit('ActualizarTablaProvincia', false)
       }
-      refDialogoAddProvincia.value.hide()
+      refDialogoAdd.value.hide()
       Reset()
     }
   }
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogo = () => {
+const LevantarDialogoAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
@@ -141,11 +136,6 @@ const LevantarDialogo = () => {
 const Reset = () => {
   TextCodigo_prov.value = ''
   TextNombre_prov.value = ''
-}
-
-const LevantarDialogoAddModelo = () => {
-  backdropFilter.value = list
-  dialogModel.value = true
 }
 
 const ComprobarEstadoInputs = () => {
@@ -160,8 +150,6 @@ const ComprobarEstadoInputs = () => {
 
 const dialog = ref(false)
 
-const dialogModel = ref(false)
-
 const TextCodigo_prov = ref('')
 const TextNombre_prov = ref('')
 const backdropFilter = ref(null)
@@ -171,7 +159,6 @@ const textCodigo_prov = ref(null)
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogo,
-  LevantarDialogoAddModelo,
+  LevantarDialogoAdd,
 })
 </script>

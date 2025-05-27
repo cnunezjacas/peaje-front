@@ -42,12 +42,24 @@ export const STRINGS = {
   editMoneda: 'Modificar moneda',
   deleteMoneda: 'Eliminar moneda',
 
+  //Vehiculo
+  addVehiculo: 'Adicionar vehículo',
+  editVehiculo: 'Modificar vehículo',
+  deleteVehiculo: 'Eliminar vehículo',
+
+  //Vehiculo
+  addExento: 'Adicionar exento',
+  editExento: 'Modificar exento',
+  deleteExento: 'Eliminar exento',
+
   //Preguntas de Eliminar
   PreguntaDeleteProvincia: '¿Está seguro de eliminar la provincia: ',
   PreguntaDeleteMunicipio: '¿Está seguro de eliminar el municipio ',
   PreguntaDeleteOrganismo: '¿Está seguro de eliminar el organismo: ',
   PreguntaDeleteBanco: '¿Está seguro de eliminar el banco: ',
   PreguntaDeleteMoneda: '¿Está seguro de eliminar la moneda: ',
+  PreguntaDeleteVehículo: '¿Está seguro de eliminar el vehículo: ',
+  PreguntaDeleteExento: '¿Está seguro de eliminar el exento: ',
 
   category: 'Categoría',
   addModelo: 'Adicionar modelo',
@@ -84,6 +96,18 @@ export const STRINGS = {
   mBase_moneda: 'Moneda base',
   detalle_moneda: 'Detalles moneda',
 
+  //Campos Vehiculo
+  nombre_vehiculo: 'Nombre del vehículo',
+  codigo_vehiculo: 'Código',
+  tasa_de_peajes_vehiculo: 'Tasa de peajes',
+  nomenclador_vehiculo: 'Nomenclador',
+
+  //Campos Exento
+  nombre_exento: 'Nombre del exento',
+  codigo_exento: 'Código',
+  nomenclador_exento: 'Nomenclador',
+  detalles_exento: 'Detalles',
+
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
   multiselección: 'Multiselección',
@@ -113,7 +137,7 @@ export const STRINGS = {
   organismoLowercase: 'organismos',
   bancoLowercase: 'bancos',
   monedasLowercase: 'monedas',
-  vehiculosLowercase: 'vehículos',
+  vehiculosLowercase: 'vehiculos',
   exentoLowercase: 'exento',
   comprobanteLowercase: 'comprobantes',
   formaDePagoLowercase: 'forma de pago',
@@ -151,10 +175,13 @@ export const STRINGS = {
   urlApiOrganismo: '/api/v1/manage/organismo',
   urlApiBanco: '/api/v1/manage/banco',
   urlApiMoneda: '/api/v1/manage/moneda',
+  urlApiVehiculo: '/api/v1/manage/vehiculo',
+  urlApiExento: '/api/v1/manage/exento',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
   onlyLetters: 'El campo solo puede contener letras',
+  FullTextAndNumber: 'El campo solo puede contener letras y números',
   onlyUppercase: 'El campo solo puede contener letras Mayúsculas',
   onlyNumbers: 'El campo solo puede contener números naturales',
   CondorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
@@ -176,14 +203,24 @@ export const STRINGS = {
   organismoDeleteSuccess: 'Organismo eliminado correctamente.',
 
   //Alertas Success Bancos
-  BancoAddSuccess: 'Banco añadido correctamente.',
-  BancoEditSuccess: 'Banco editado correctamente.',
-  BancoDeleteSuccess: 'Banco eliminado correctamente.',
+  bancoAddSuccess: 'Banco añadido correctamente.',
+  bancoEditSuccess: 'Banco editado correctamente.',
+  bancoDeleteSuccess: 'Banco eliminado correctamente.',
 
   //Alertas Success Moneda
   monedaAddSuccess: 'Moneda añadida correctamente.',
   monedaEditSuccess: 'Moneda editada correctamente.',
   monedaDeleteSuccess: 'Moneda eliminada correctamente.',
+
+  //Alertas Success Vehiculo
+  vehiculoAddSuccess: 'Vehículo añadido correctamente.',
+  vehiculoEditSuccess: 'Vehículo editado correctamente.',
+  vehiculoDeleteSuccess: 'Vehículo eliminado correctamente.',
+
+  //Alertas Success Exento
+  exentoAddSuccess: 'Exento añadido correctamente.',
+  exentoEditSuccess: 'Exento editado correctamente.',
+  exentoDeleteSuccess: 'Exento eliminado correctamente.',
 
   //Alertas Errores Provincias
   provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
@@ -191,24 +228,34 @@ export const STRINGS = {
   provinciaDeleteError: 'Error al eliminar la provincia. Por favor, intenta nuevamente.',
 
   //Alertas Errores municipios
-  MunicipioAddError: 'Error al guardar el municipio. Por favor, intenta nuevamente.',
-  MunicipioEditError: 'Error al editar el municipio. Por favor, intenta nuevamente.',
-  MunicipioDeleteError: 'Error al eliminar el municipio. Por favor, intenta nuevamente.',
+  municipioAddError: 'Error al guardar el municipio. Por favor, intenta nuevamente.',
+  municipioEditError: 'Error al editar el municipio. Por favor, intenta nuevamente.',
+  municipioDeleteError: 'Error al eliminar el municipio. Por favor, intenta nuevamente.',
 
   //Alertas Errores organismo
-  OrganismoAddError: 'Error al guardar el organismo. Por favor, intenta nuevamente.',
-  OrganismoEditError: 'Error al editar el organismo. Por favor, intenta nuevamente.',
-  OrganismoDeleteError: 'Error al eliminar el organismo. Por favor, intenta nuevamente.',
+  organismoAddError: 'Error al guardar el organismo. Por favor, intenta nuevamente.',
+  organismoEditError: 'Error al editar el organismo. Por favor, intenta nuevamente.',
+  organismoDeleteError: 'Error al eliminar el organismo. Por favor, intenta nuevamente.',
 
   //Alertas Errores Banco
-  BancoAddError: 'Error al guardar el banco. Por favor, intenta nuevamente.',
-  BancoEditError: 'Error al editar el banco. Por favor, intenta nuevamente.',
-  BancoDeleteError: 'Error al eliminar el banco. Por favor, intenta nuevamente.',
+  bancoAddError: 'Error al guardar el banco. Por favor, intenta nuevamente.',
+  bancoEditError: 'Error al editar el banco. Por favor, intenta nuevamente.',
+  bancoDeleteError: 'Error al eliminar el banco. Por favor, intenta nuevamente.',
 
   //Alertas Errores Moneda
-  MonedaAddError: 'Error al guardar la moneda. Por favor, intenta nuevamente.',
-  MonedaEditError: 'Error al editar la moneda. Por favor, intenta nuevamente.',
-  MonedaDeleteError: 'Error al eliminar la moneda. Por favor, intenta nuevamente.',
+  monedaAddError: 'Error al guardar la moneda. Por favor, intenta nuevamente.',
+  monedaEditError: 'Error al editar la moneda. Por favor, intenta nuevamente.',
+  monedaDeleteError: 'Error al eliminar la moneda. Por favor, intenta nuevamente.',
+
+  //Alertas Errores Moneda
+  vehiculoAddError: 'Error al guardar el vehículo. Por favor, intenta nuevamente.',
+  vehiculoEditError: 'Error al editar el vehículo. Por favor, intenta nuevamente.',
+  vehiculoDeleteError: 'Error al eliminar el vehículo. Por favor, intenta nuevamente.',
+
+  //Alertas Errores Moneda
+  exentoAddError: 'Error al guardar el exento. Por favor, intenta nuevamente.',
+  exentoEditError: 'Error al editar el exento. Por favor, intenta nuevamente.',
+  exentoDeleteError: 'Error al eliminar el exento. Por favor, intenta nuevamente.',
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',

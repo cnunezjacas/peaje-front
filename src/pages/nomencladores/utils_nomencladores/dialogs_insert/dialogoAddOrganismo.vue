@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialogOrganismo"
-      persistent
-      ref="refDialogoAddOrganismo"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -68,16 +63,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarSiglaExistente from 'src/utils/utils_axios/verificarSiglaExistenteOrganismo.js'
+import verificarSiglaExistente from 'src/utils/utils_axios/nomencladores/verificarSiglaExistenteOrganismo.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import imports from 'src/utils/imports.js'
 import notify_success from 'src/utils/notify/notify_success.js'
@@ -89,7 +81,7 @@ import notify_error from 'src/utils/notify/notify_error.js'
  */
 const list = 'blur(4px) saturate(150%)'
 
-const refDialogoAddOrganismo = ref(null)
+const refDialogoAdd = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreOrganismo = [
@@ -133,10 +125,10 @@ const Procesar_Add = async () => {
         emit('ActualizarTablaOrganismo', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.OrganismoAddError)
+        notify_error(STRINGS.organismoAddError)
         emit('ActualizarTablaOrganismo', false)
       }
-      refDialogoAddOrganismo.value.hide()
+      refDialogoAdd.value.hide()
       Reset()
     }
   }
@@ -153,9 +145,9 @@ const ComprobarEstadoInputsEdit = () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoAddOrganismo = () => {
+const LevantarDialogoAdd = () => {
   backdropFilter.value = list
-  dialogOrganismo.value = true
+  dialog.value = true
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -164,17 +156,16 @@ const Reset = () => {
   TextNombreAbrOrg.value = ''
 }
 
-const dialogOrganismo = ref(false)
+const dialog = ref(false)
 const textNombre_AbrOrg = ref(null)
 
 const TextNombreOrg = ref('')
 const TextNombreAbrOrg = ref('')
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoAddOrganismo,
+  LevantarDialogoAdd,
 })
 </script>

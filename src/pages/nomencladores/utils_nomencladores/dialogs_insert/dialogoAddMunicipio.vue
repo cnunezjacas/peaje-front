@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialogMunicipio"
-      persistent
-      ref="refDialogoAddMunicipio"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -79,16 +74,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMunicipio.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMunicipio.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 
@@ -108,7 +100,7 @@ onBeforeMount(() => {
   CargarProvincias()
 })
 
-const refDialogoAddMunicipio = ref(null)
+const refDialogoAdd = ref(null)
 
 /*Validaciones*/
 const rulesAddNombreMunicipio = [
@@ -164,10 +156,10 @@ const Procesar_Add = async () => {
         emit('ActualizarTablaMunicipio', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.MunicipioAddError)
+        notify_error(STRINGS.municipioAddError)
         emit('ActualizarTablaMunicipio', false)
       }
-      refDialogoAddMunicipio.value.hide()
+      refDialogoAdd.value.hide()
       Reset()
     }
   }
@@ -184,9 +176,9 @@ const ComprobarEstadoInputs = () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoAddMunicipio = () => {
+const LevantarDialogoAdd = () => {
   backdropFilter.value = list
-  dialogMunicipio.value = true
+  dialog.value = true
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -196,15 +188,13 @@ const Reset = () => {
   SelectNombre_prov.value = ''
 }
 
-const dialogMunicipio = ref(false)
+const dialog = ref(false)
+const backdropFilter = ref(null)
 
 const TextCodigo_mun = ref('')
 const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
 const selectProv = ref(null)
-
-const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 
 const textNombre_Mun = ref(null)
 const textCodigo_Mun = ref(null)
@@ -212,7 +202,6 @@ const textCodigo_Mun = ref(null)
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoAddMunicipio,
-  CargarProvincias,
+  LevantarDialogoAdd,
 })
 </script>

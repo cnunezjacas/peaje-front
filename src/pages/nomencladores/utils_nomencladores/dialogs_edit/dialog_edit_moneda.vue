@@ -58,11 +58,13 @@
               <div class="q-px-sm">
                 <q-select
                   v-model="Textnomenclador_moneda"
+                  ref="textnomenclador_moneda"
                   :options="options"
                   :rules="rulesAddNomenclador_moneda"
                   color="green"
                   :label="STRINGS.nomenclador_moneda"
                   outlined
+                  @change="ComprobarEstadoInputs"
                 >
                   <!-- Slot para agregar un botón al final del select -->
                   <template v-slot:append>
@@ -160,16 +162,13 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteMoneda.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -248,7 +247,7 @@ const Procesar_Edit = async () => {
         emit('ActualizarTablaMoneda', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.MunicipioEditError)
+        notify_error(STRINGS.municipioEditError)
         emit('ActualizarTablaMoneda', false)
       }
       refDialogoEdit.value.hide()
@@ -282,17 +281,14 @@ const LevantarDialogoEdit = (siglas, nombre, tasaCambio, nomenclador, mBase, idC
   IdMoneda.value = id
 }
 
-const isFormValid = () => {
-  const camposIguales =
+const isFormValidInput = () => {
+  let camposIguales =
     TextSiglas_moneda.value.trim() === TextSiglas_moneda_copy.value.trim() &&
     TextNombre_moneda.value.trim() === TextNombre_moneda_copy.value.trim() &&
     String(TextTasaCambio_moneda.value).trim() ===
       String(TextTasaCambio_moneda_copy.value).trim() &&
-    Textnomenclador_moneda.value === Textnomenclador_moneda_copy.value &&
     TextIdCondor_moneda.value.trim() === TextIdCondor_moneda_copy.value.trim() &&
-    TextmBase_moneda.value.trim() === TextmBase_moneda_copy.value.trim()
-
-  console.log('Los campos estan iguales:' + camposIguales)
+    console.log('Los campos estan iguales:' + camposIguales)
 
   return (
     // Verifica si al menos un campo ha cambiado
@@ -317,8 +313,17 @@ const isFormValid = () => {
   )
 }
 
+const isFormValidComponentAvz = () => {
+  let camposIguales =
+    Textnomenclador_moneda.value === Textnomenclador_moneda_copy.value &&
+    TextmBase_moneda.value.trim() === TextmBase_moneda_copy.value.trim()
+
+  return camposIguales
+}
+
 const ComprobarEstadoInputs = () => {
-  disabledBtnSaveEdit.value = isFormValid() ? '' : STRINGS.desabilitar
+  disabledBtnSaveEdit.value =
+    isFormValidInput() === true && isFormValidComponentAvz() === true ? '' : STRINGS.desabilitar
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -362,16 +367,8 @@ const textSiglas_monedas = ref(null)
 const textTasaCambio_moneda = ref(null)
 const textmBase_moneda = ref(null)
 const textIdCondor_moneda = ref(null)
+const textnomenclador_moneda = ref(null)
 //const textDetalles_moneda = ref(null)
-
-import { watch } from 'vue'
-
-watch(TextTasaCambio_moneda, (newVal, oldVal) => {
-  let aux = EvaluarTazaCambio()
-  console.log('Nuevo valor:' + newVal)
-  console.log('Viejo valor:' + oldVal)
-  console.log('Valor Adecuado:' + aux)
-})
 
 const EvaluarTazaCambio = () => {
   return parseFloat(TextTasaCambio_moneda.value) >= 0 ? true : false

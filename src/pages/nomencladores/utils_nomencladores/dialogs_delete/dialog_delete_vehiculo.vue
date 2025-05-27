@@ -11,7 +11,7 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="delete" />
           </span>
-          <span class="icon-text">{{ STRINGS.deleteMoneda.toUpperCase() }}</span>
+          <span class="icon-text">{{ STRINGS.deleteVehiculo.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
@@ -20,7 +20,7 @@
               <q-icon name="help" color="green" size="3rem" />
             </div>
             <div class="col-12 text-center q-pt-md">
-              <p>{{ STRINGS.PreguntaDeleteMoneda }} {{ siglas }} ?</p>
+              <p>{{ STRINGS.PreguntaDeleteVehículo }} {{ codigoDelete }} ?</p>
             </div>
           </div>
         </q-card-section>
@@ -66,46 +66,42 @@ const list = 'blur(4px) saturate(150%)'
 
 const refDialogoDelete = ref(null)
 
-const siglas = ref('')
+const codigoDelete = ref('')
 const idDelete = ref('')
 
-const emit = defineEmits(['ActualizarTablaMoneda'])
+const emit = defineEmits(['ActualizarTablaVehiculo'])
 
 /*Funcion de procesado de Datos*/
 const Procesar_Delete = async () => {
   //TODO: Ajax Request DELETE PROVINCIA
 
   try {
-    await api.delete(STRINGS.urlApiMoneda + '/' + idDelete.value) // DELETE /items/:id
+    await api.delete(STRINGS.urlApiVehiculo + '/' + idDelete.value) // DELETE /items/:id
 
-    notify_success(STRINGS.monedaDeleteSuccess)
+    notify_success(STRINGS.vehiculoDeleteSuccess)
 
-    emit('ActualizarTablaMoneda', true)
+    emit('ActualizarTablaVehiculo', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
-
-    notify_error(STRINGS.monedaDeleteError)
-
-    emit('ActualizarTablaMoneda', false)
+    notify_error(STRINGS.vehiculoDeleteError)
+    emit('ActualizarTablaVehiculo', false)
   }
   refDialogoDelete.value.hide()
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDelete = (_siglas, _id) => {
+const LevantarDialogoDelete = (codigo, id) => {
   backdropFilter.value = list
   dialogDelete.value = true
-  siglas.value = _siglas
-  idDelete.value = _id
+
+  codigoDelete.value = codigo
+  idDelete.value = id
 }
+
+const dialogDelete = ref(false)
+const backdropFilter = ref(null)
 
 defineExpose({
   LevantarDialogoDelete,
 })
-
-const dialogDelete = ref(false)
-
-//const dialogModel = ref(false)
-
-const backdropFilter = ref(null)
 </script>

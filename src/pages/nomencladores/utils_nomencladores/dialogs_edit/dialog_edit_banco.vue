@@ -81,8 +81,6 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
@@ -90,7 +88,7 @@ import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/verificarCodigoExistenteBanco.js'
+import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import imports from 'src/utils/imports.js'
@@ -141,12 +139,12 @@ const Procesar_EditBanco = async () => {
       try {
         await api.patch(STRINGS.urlApiBanco + '/' + _id.value, newItem) // POST /items
         // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.BancoEditSuccess)
+        notify_success(STRINGS.bancoEditSuccess)
 
         emit('ActualizarTablaBanco', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.BancoEditError)
+        notify_error(STRINGS.bancoEditError)
 
         emit('ActualizarTablaBanco', false)
       }
@@ -159,7 +157,7 @@ const Procesar_EditBanco = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoEditBanco = (nombre, codigo, detalle, id) => {
+const LevantarDialogoEdit = (nombre, codigo, detalle, id) => {
   backdropFilter.value = list
   dialogEditBanco.value = true
 
@@ -228,6 +226,6 @@ const textCodigo_banco = ref(null)
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
 
 defineExpose({
-  LevantarDialogoEditBanco,
+  LevantarDialogoEdit,
 })
 </script>

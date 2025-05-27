@@ -55,15 +55,12 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 //importaciones
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -89,7 +86,7 @@ const Procesar_DeleteMunicipio = async () => {
   } catch (error) {
     console.error('Error al eliminar item:', error)
 
-    notify_error(STRINGS.MunicipioDeleteError)
+    notify_error(STRINGS.municipioDeleteError)
 
     emit('ActualizarTablaMunicipio', false)
   }
@@ -97,7 +94,7 @@ const Procesar_DeleteMunicipio = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteMunicipio = (nombre, codigo, provincia, id) => {
+const LevantarDialogoDelete = (nombre, codigo, provincia, id) => {
   backdropFilter.value = list
   dialogDeleteMunicipio.value = true
   nombreMunicipioDelete.value = nombre
@@ -107,13 +104,12 @@ const LevantarDialogoDeleteMunicipio = (nombre, codigo, provincia, id) => {
 }
 
 defineExpose({
-  LevantarDialogoDeleteMunicipio,
+  LevantarDialogoDelete,
   // LevantarDialogoAddModelo,
 })
 
 const dialogDeleteMunicipio = ref(false)
 
 const backdropFilter = ref(null)
-const Ref_table_Gest_provincia = ref(null)
 const IdMunicipioDelete = ref('')
 </script>

@@ -52,15 +52,12 @@
       </q-card>
     </q-dialog>
   </div>
-
-  <table_Gest_provincia ref="Ref_table_Gest_provincia" style="display: none" />
 </template>
 
 <script setup>
 //importaciones
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
 import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -81,13 +78,13 @@ const Procesar_DeleteBanco = async () => {
   try {
     await api.delete(STRINGS.urlApiBanco + '/' + idBancoDelete.value) // DELETE /items/:id
 
-    notify_success(STRINGS.BancoDeleteSuccess)
+    notify_success(STRINGS.bancoDeleteSuccess)
 
     emit('ActualizarTablaBanco', true)
   } catch (error) {
     console.error('Error al eliminar item:', error)
 
-    notify_error(STRINGS.BancoDeleteError)
+    notify_error(STRINGS.bancoDeleteError)
 
     emit('ActualizarTablaBanco', false)
   }
@@ -95,7 +92,7 @@ const Procesar_DeleteBanco = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const LevantarDialogoDeleteBanco = (codigo, id) => {
+const LevantarDialogoDelete = (codigo, id) => {
   backdropFilter.value = list
   dialogDeleteBanco.value = true
 
@@ -104,7 +101,7 @@ const LevantarDialogoDeleteBanco = (codigo, id) => {
 }
 
 defineExpose({
-  LevantarDialogoDeleteBanco,
+  LevantarDialogoDelete,
 })
 
 const dialogDeleteBanco = ref(false)
