@@ -1,13 +1,6 @@
 <template>
   <div class="q-pb-sm">
     <q-toolbar class="bg-green-10 text-white shadow-2">
-      <!-- <q-btn flat label="Homepage" /> -->
-
-      <!--
-        notice shrink property since we are placing it
-        as child of QToolbar
-      -->
-
       <q-tabs v-model="tab" shrink bordered>
         <q-tab name="tab1" icon="note_add" class="small-font" @click="onItemClick('Add')"
           >Adicionar</q-tab
@@ -80,6 +73,12 @@
 
   <!-- Dialogo Add Organismo-->
   <DialogoAddExento ref="dialogoAddExento" @ActualizarTablaExento="ActualizadorTabla" />
+
+  <!-- Dialogo Add Organismo-->
+  <DialogoAddComprobante
+    ref="dialogoAddComprobante"
+    @ActualizarTablaComprobante="ActualizadorTabla"
+  />
 
   <!-- Dialogo Edit Provincia -->
   <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
@@ -216,50 +215,44 @@
 
 <script setup>
 import { ref } from 'vue'
-import { STRINGS } from '../../../../utils/string.js'
-
-//Dialogs Add
-import DialogoAddProvincia from '../dialogs_insert/dialogoAddProvincia.vue'
-import DialogoAddMunicipio from '../dialogs_insert/dialogoAddMunicipio.vue'
-import DialogoAddOrganismo from '../dialogs_insert/dialogoAddOrganismo.vue'
-import DialogoAddBanco from '../dialogs_insert/dialogoAddBanco.vue'
-import DialogoAddMoneda from '../dialogs_insert/dialogAddMoneda.vue'
-import DialogoAddVehiculo from '../dialogs_insert/dialogAddVehiculo.vue'
-import DialogoAddExento from '../dialogs_insert/dialogAddExento.vue'
-
-//Dialogs Edit
-import DialogEditProvincia from '../dialogs_edit/dialog_edit_provincia.vue'
-import DialogEditMunicipio from '../dialogs_edit/dialog_edit_municipio.vue'
-import DialogEditOrganismo from '../dialogs_edit/dialog_edit_organismo.vue'
-import DialogEditBanco from '../dialogs_edit/dialog_edit_banco.vue'
-import DialogEditMoneda from '../dialogs_edit/dialog_edit_moneda.vue'
-import DialogEditVehiculo from '../dialogs_edit/dialog_edit_vehiculo.vue'
-import DialogEditExento from '../dialogs_edit/dialog_edit_exento.vue'
-
-//Dialogs Delete
-import DialogDeleteProvincia from '../dialogs_delete/dialog_delete_provincia.vue'
-import DialogDeleteMunicipio from '../dialogs_delete/dialog_delete_municipio.vue'
-import DialogDeleteOrganismo from '../dialogs_delete/dialog_delete_organismo.vue'
-import DialogDeleteBanco from '../dialogs_delete/dialog_delete_banco.vue'
-import DialogDeleteMoneda from '../dialogs_delete/dialog_delete_moneda.vue'
-import DialogDeleteVehiculo from '../dialogs_delete/dialog_delete_vehiculo.vue'
-import DialogDeleteExento from '../dialogs_delete/dialog_delete_exento.vue'
-
-//Tables
-import table_Gest_provincia from '../tables/table_Gest_provincia.vue'
-import table_Gest_municipio from '../tables/table_Gest_municipio.vue'
-import table_Gest_organismo from '../tables/table_Gest_organismo.vue'
-import table_Gest_banco from '../tables/table_Gest_banco.vue'
-import table_Gest_comprobante from '../tables/table_Gest_comprobantes.vue'
-import table_Gest_monedas from '../tables/table_Gest_moneda.vue'
-import table_Gest_vehiculos from '../tables/table_Gest_vehiculos.vue'
-import table_Gest_exento from '../tables/table_Gest_exento.vue'
-
 import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import notify_error from 'src/utils/notify/notify_error.js'
-
 const route = useRoute()
+import {
+  STRINGS,
+  DialogoAddProvincia,
+  DialogoAddMunicipio,
+  DialogoAddOrganismo,
+  DialogoAddBanco,
+  DialogoAddMoneda,
+  DialogoAddVehiculo,
+  DialogoAddExento,
+  DialogoAddComprobante,
+  DialogEditProvincia,
+  DialogEditMunicipio,
+  DialogEditOrganismo,
+  DialogEditBanco,
+  DialogEditMoneda,
+  DialogEditVehiculo,
+  DialogEditExento,
+  DialogDeleteProvincia,
+  DialogDeleteMunicipio,
+  DialogDeleteOrganismo,
+  DialogDeleteBanco,
+  DialogDeleteMoneda,
+  DialogDeleteVehiculo,
+  DialogDeleteExento,
+  table_Gest_provincia,
+  table_Gest_municipio,
+  table_Gest_organismo,
+  table_Gest_banco,
+  table_Gest_comprobante,
+  table_Gest_monedas,
+  table_Gest_vehiculos,
+  table_Gest_exento,
+  notify_error,
+} from 'utils/import_files.js'
+import imports from 'utils/imports.js'
 
 const tab = ref('')
 const TextSearch = ref('')
@@ -272,6 +265,89 @@ const StyleFocusMO = ref('display: none')
 const StyleFocusC = ref('display: none')
 const StyleFocusV = ref('display: none')
 const StyleFocusE = ref('display: none')
+
+const routeStylesMap = {
+  [STRINGS.provinciaLowercase]: {
+    provincia: true,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.municipioLowercase]: {
+    provincia: false,
+    municipio: true,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.organismoLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: true,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.bancoLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: true,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.comprobanteLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: true,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.monedasLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: true,
+    vehiculos: false,
+    exento: false,
+  },
+  [STRINGS.vehiculosLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: true,
+    exento: false,
+  },
+  [STRINGS.exentoLowercase]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: true,
+  },
+}
 
 //Constantes referencias de los dialogos Provincia
 const dialogoAddProvincia = ref(null)
@@ -308,6 +384,7 @@ const dialogoAddExento = ref(null)
 const dialogEditExento = ref(null)
 const dialogDeleteExento = ref(null)
 
+//Constantes referencias de las tablas de Nomencladores
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
 const tableOrganismo = ref(null)
@@ -324,52 +401,6 @@ var arraySelected = ref([])
 const disabledEdit = ref('small-font disabled')
 const disabledDelete = ref('small-font disabled')
 const disabledDetalle = ref('small-font disabled')
-
-const handleSelection = (row) => {
-  var ruta = route.fullPath
-  var nuevaRuta = ruta.split('_')
-  if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.municipioLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['provincia'] = row['Texto_provincia']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
-    arraySelected.value['name_min'] = row['siglas']
-    arraySelected.value['name'] = row['nombre']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['detalle'] = row['detalle']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.monedasLowercase) && row) {
-    arraySelected.value['siglas'] = row['siglas']
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['tasa'] = row['tasa']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['moneda'] = row['moneda']
-    arraySelected.value['condor'] = row['condor']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['tasa'] = row['tasa']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.exentoLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['detalles'] = row['detalles']
-    arraySelected.value['_id'] = row['_id']
-  } else {
-    notify_error(STRINGS.fila_no_selected)
-  }
-}
 
 const ActualizadorTabla = (value) => {
   var ruta = route.fullPath
@@ -428,82 +459,45 @@ const BloquearDetalle = (variable) => {
   }
 }
 
-const CambioRuta = () => {
+//Función que Captura los datos del elemento seleccionado en las tablas
+const handleSelection = (row) => {
   var ruta = route.fullPath
-  var nuevaRuta = ruta.split('_')
-  if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
-    StyleFocusP.value = ''
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = ''
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = ''
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = ''
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = ''
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = ''
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = ''
-    StyleFocusE.value = 'display: none'
-  } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
-    StyleFocusP.value = 'display: none'
-    StyleFocusM.value = 'display: none'
-    StyleFocusO.value = 'display: none'
-    StyleFocusB.value = 'display: none'
-    StyleFocusC.value = 'display: none'
-    StyleFocusMO.value = 'display: none'
-    StyleFocusV.value = 'display: none'
-    StyleFocusE.value = ''
-  }
+  arraySelected.value =
+    imports.DataSelection(row, ruta, arraySelected) !== false
+      ? imports.DataSelection(row, ruta, arraySelected)
+      : null
+
+  if (arraySelected.value == null || arraySelected.value == undefined)
+    notify_error(STRINGS.errorSelected)
+}
+
+//Función que permite hacer los cambios de rutas
+const CambioRuta = () => {
+  const rutaActual = route.fullPath
+  const rutaParts = rutaActual.split('_')
+
+  const keyEncontrada = Object.keys(routeStylesMap).find((k) => rutaParts.includes(k))
+  const config = keyEncontrada
+    ? routeStylesMap[keyEncontrada]
+    : {
+        provincia: false,
+        municipio: false,
+        organismo: false,
+        banco: false,
+        comprobante: false,
+        monedas: false,
+        vehiculos: false,
+        exento: false,
+      }
+
+  StyleFocusP.value = config.provincia ? '' : 'display: none'
+  StyleFocusM.value = config.municipio ? '' : 'display: none'
+  StyleFocusO.value = config.organismo ? '' : 'display: none'
+  StyleFocusB.value = config.banco ? '' : 'display: none'
+  StyleFocusC.value = config.comprobante ? '' : 'display: none'
+  StyleFocusMO.value = config.monedas ? '' : 'display: none'
+  StyleFocusV.value = config.vehiculos ? '' : 'display: none'
+  StyleFocusE.value = config.exento ? '' : 'display: none'
 }
 
 watchEffect(() => {

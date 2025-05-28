@@ -8,39 +8,39 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
-        component: () => import('src/pages/nomencladores/gest_provincia.vue'),
+        component: () => import('viewsNomencladores/gest_provincia.vue'),
       },
       {
         path: '/gest_' + STRINGS.municipioLowercase,
-        component: () => import('src/pages/nomencladores/gest_municipio.vue'),
+        component: () => import('viewsNomencladores/gest_municipio.vue'),
       },
       {
         path: '/gest_' + STRINGS.organismoLowercase,
-        component: () => import('src/pages/nomencladores/gest_organismo.vue'),
+        component: () => import('viewsNomencladores/gest_organismo.vue'),
       },
       {
         path: '/gest_' + STRINGS.bancoLowercase,
-        component: () => import('src/pages/nomencladores/gest_banco.vue'),
+        component: () => import('viewsNomencladores/gest_banco.vue'),
       },
       {
         path: '/gest_' + STRINGS.monedasLowercase,
-        component: () => import('src/pages/nomencladores/gest_moneda.vue'),
+        component: () => import('viewsNomencladores/gest_moneda.vue'),
       },
       {
         path: '/gest_' + STRINGS.vehiculosLowercase,
-        component: () => import('src/pages/nomencladores/gest_vehiculos.vue'),
+        component: () => import('viewsNomencladores/gest_vehiculos.vue'),
       },
       {
         path: '/gest_' + STRINGS.exentoLowercase,
-        component: () => import('src/pages/nomencladores/gest_exento.vue'),
+        component: () => import('viewsNomencladores/gest_exento.vue'),
       },
       {
         path: '/gest_' + STRINGS.comprobanteLowercase,
-        component: () => import('src/pages/nomencladores/gest_comprobantes.vue'),
+        component: () => import('viewsNomencladores/gest_comprobantes.vue'),
       },
       {
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
-        component: () => import('src/pages/nomencladores/gest_formaDePago.vue'),
+        component: () => import('viewsNomencladores/gest_formaDePago.vue'),
       },
       {
         path: '/pageAyuda',

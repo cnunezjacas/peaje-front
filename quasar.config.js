@@ -3,6 +3,7 @@
 
 import { defineConfig } from '#q-app/wrappers'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 // import { dirname } from 'path'
 //import { fileURLToPath } from 'url'
 
@@ -41,6 +42,26 @@ export default defineConfig((/* ctx */) => {
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
+      },
+      alias: {
+        utils: fileURLToPath(new URL('./src/utils', import.meta.url)),
+        views: fileURLToPath(new URL('./src/pages', import.meta.url)),
+        viewsNomencladores: fileURLToPath(new URL('./src/pages/nomencladores/', import.meta.url)),
+        viewsUtilsNomencladores: fileURLToPath(
+          new URL('./src/pages/nomencladores/utils_nomencladores', import.meta.url),
+        ),
+        Nomencladores_Tables: fileURLToPath(
+          new URL('./src/pages/nomencladores/utils_nomencladores/tables', import.meta.url),
+        ),
+        Nomencladores_Add: fileURLToPath(
+          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_insert', import.meta.url),
+        ),
+        Nomencladores_Edit: fileURLToPath(
+          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_edit', import.meta.url),
+        ),
+        Nomencladores_Delete: fileURLToPath(
+          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_delete', import.meta.url),
+        ),
       },
 
       vite: {

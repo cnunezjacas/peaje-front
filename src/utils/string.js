@@ -168,6 +168,7 @@ export const STRINGS = {
   no_data_available: 'No hay datos disponibles',
   fila_no_selected: 'No hay fila seleccionada',
   errorUpdate: 'Operación fallida',
+  errorSelected: 'Problemas en la selección',
 
   //URL APIS
   urlApiProvincia: '/api/v1/manage/provincia',
