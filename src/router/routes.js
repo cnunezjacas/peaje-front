@@ -8,39 +8,39 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
-        component: () => import('viewsNomencladores/gest_provincia.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.municipioLowercase,
-        component: () => import('viewsNomencladores/gest_municipio.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.organismoLowercase,
-        component: () => import('viewsNomencladores/gest_organismo.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.bancoLowercase,
-        component: () => import('viewsNomencladores/gest_banco.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.monedasLowercase,
-        component: () => import('viewsNomencladores/gest_moneda.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.vehiculosLowercase,
-        component: () => import('viewsNomencladores/gest_vehiculos.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.exentoLowercase,
-        component: () => import('viewsNomencladores/gest_exento.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.comprobanteLowercase,
-        component: () => import('viewsNomencladores/gest_comprobantes.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
-        component: () => import('viewsNomencladores/gest_formaDePago.vue'),
+        component: () => import('viewsNomencladores/gest_global.vue'),
       },
       {
         path: '/pageAyuda',
