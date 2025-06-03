@@ -14,9 +14,15 @@ function capitalizeWords(str) {
     .join(' ')
 }
 
+//Permite saber la URL donde te encuentras
 const searchWebPath = (path) => {
   var newPath = path.split('_')
   return newPath
+}
+
+const getNumberForPage = () => {
+  let aux = [5, 10, 15, 20, 50, 0]
+  return aux
 }
 
 const DataSelection = (row, ruta, arraySelected) => {
@@ -124,4 +130,5 @@ export default {
   searchWebPath,
   getGestFemale,
   loadCoins,
+  getNumberForPage,
 }
