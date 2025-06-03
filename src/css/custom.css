@@ -64,17 +64,22 @@
 
 /*Animaciones*/
 /* Clase para la transición */
+/* Animación de transición suave con deslizamiento y opacidad */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
-  -webkit-transition: opacity 0.5s ease-in-out;
-  -moz-transition: opacity 0.5s ease-in-out;
-  -ms-transition: opacity 0.5s ease-in-out;
-  -o-transition: opacity 0.5s ease-in-out;
+  transition: all 0.8s ease-in-out;
+  -webkit-transition: all 0.8s ease-in-out;
+  -moz-transition: all 0.8s ease-in-out;
+  -ms-transition: all 0.8s ease-in-out;
+  -o-transition: all 0.8s ease-in-out;
 }
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 
 .icon-text {
@@ -109,3 +114,14 @@
 }
 
 /* Tamaño dialogos */
+
+.my-menu-link {
+  color: white;
+  background-color: #000;
+  font-weight: bold;
+}
+
+.q-item--active {
+  background-color: #fff;
+  color: #000;
+}
