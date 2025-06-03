@@ -101,35 +101,14 @@
   <!-- Dialogo Edit Municipio -->
   <DialogEditExento ref="dialogEditExento" @ActualizarTablaExento="ActualizadorTabla" />
 
+  <!-- Dialogo Edit Municipio -->
+  <DialogEditComprobante
+    ref="dialogEditComprobante"
+    @ActualizarTablaComprobante="ActualizadorTabla"
+  />
+
   <!-- Dialogo Delete Provincia-->
-  <DialogDeleteProvincia
-    ref="dialogoDeleteProvincia"
-    @ActualizarTablaProvincia="ActualizadorTabla"
-  />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteMunicipio
-    ref="dialogoDeleteMunicipio"
-    @ActualizarTablaMunicipio="ActualizadorTabla"
-  />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteOrganismo
-    ref="dialogDeleteOrganismo"
-    @ActualizarTablaOrganismo="ActualizadorTabla"
-  />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteBanco ref="dialogDeleteBanco" @ActualizarTablaBanco="ActualizadorTabla" />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteMoneda ref="dialogDeleteMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteVehiculo ref="dialogDeleteVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
-
-  <!-- Dialogo Delete Municipio-->
-  <DialogDeleteExento ref="dialogDeleteExento" @ActualizarTablaExento="ActualizadorTabla" />
+  <DialogDeleteGeneric ref="dialogoDelete" @ActualizarTabla="ActualizadorTabla" />
 
   <!-- Tabla de Provincias -->
   <table_Gest_provincia
@@ -210,7 +189,15 @@
   />
 
   <!-- Tabla de Comprobante -->
-  <table_Gest_comprobante ref="tableComprobante" :style="StyleFocusC" />
+  <table_Gest_comprobante
+    ref="tableComprobante"
+    @seleccionado="handleSelection"
+    @onBloquearEdit="BloquearEdit"
+    @onBloquearDelete="BloquearDelete"
+    @onBloquearDetalle="BloquearDetalle"
+    :style="StyleFocusC"
+    :TextSearch="TextSearch"
+  />
 </template>
 
 <script setup>
@@ -228,6 +215,7 @@ import {
   DialogoAddVehiculo,
   DialogoAddExento,
   DialogoAddComprobante,
+  DialogEditComprobante,
   DialogEditProvincia,
   DialogEditMunicipio,
   DialogEditOrganismo,
@@ -235,13 +223,7 @@ import {
   DialogEditMoneda,
   DialogEditVehiculo,
   DialogEditExento,
-  DialogDeleteProvincia,
-  DialogDeleteMunicipio,
-  DialogDeleteOrganismo,
-  DialogDeleteBanco,
-  DialogDeleteMoneda,
-  DialogDeleteVehiculo,
-  DialogDeleteExento,
+  DialogDeleteGeneric,
   table_Gest_provincia,
   table_Gest_municipio,
   table_Gest_organismo,
@@ -352,37 +334,37 @@ const routeStylesMap = {
 //Constantes referencias de los dialogos Provincia
 const dialogoAddProvincia = ref(null)
 const dialogoEditProvincia = ref(null)
-const dialogoDeleteProvincia = ref(null)
+
+//Generico Delete
+const dialogoDelete = ref(null)
 
 //Constantes referencias de los dialogos Municipio
 const dialogoAddMunicipio = ref(null)
 const dialogoEditMunicipio = ref(null)
-const dialogoDeleteMunicipio = ref(null)
 
 //Constantes referencias de los dialogos Organismo
 const dialogoAddOrganismo = ref(null)
 const dialogEditOrganismo = ref(null)
-const dialogDeleteOrganismo = ref(null)
 
 //Constantes referencias de los dialogos Banco
 const dialogoAddBanco = ref(null)
 const dialogEditBanco = ref(null)
-const dialogDeleteBanco = ref(null)
 
 //Constantes referencias de los dialogos Moneda
 const dialogoAddMoneda = ref(null)
 const dialogEditMoneda = ref(null)
-const dialogDeleteMoneda = ref(null)
 
 //Constantes referencias de los dialogos Vehiculos
 const dialogoAddVehiculo = ref(null)
 const dialogEditVehiculo = ref(null)
-const dialogDeleteVehiculo = ref(null)
 
 //Constantes referencias de los dialogos Exento
 const dialogoAddExento = ref(null)
 const dialogEditExento = ref(null)
-const dialogDeleteExento = ref(null)
+
+//Constantes referencias de los dialogos Comprobante
+const dialogoAddComprobante = ref(null)
+const dialogEditComprobante = ref(null)
 
 //Constantes referencias de las tablas de Nomencladores
 const tableProvincia = ref(null)
@@ -425,6 +407,9 @@ const ActualizadorTabla = (value) => {
     else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
     if (value) tableExento.value.UpdateTable()
+    else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
+    if (value) tableComprobante.value.UpdateTable()
     else ErrorUpdateTable()
   } else {
     ErrorUpdateTable()
@@ -471,12 +456,20 @@ const handleSelection = (row) => {
     notify_error(STRINGS.errorSelected)
 }
 
+const getPath = () => {
+  const rutaActual = route.fullPath
+  if (typeof rutaActual !== 'string') {
+    console.warn('route.fullPath no es un string:', rutaActual)
+    return []
+  }
+  return rutaActual.split('_')
+}
+
 //Función que permite hacer los cambios de rutas
 const CambioRuta = () => {
-  const rutaActual = route.fullPath
-  const rutaParts = rutaActual.split('_')
+  const path = getPath()
 
-  const keyEncontrada = Object.keys(routeStylesMap).find((k) => rutaParts.includes(k))
+  const keyEncontrada = Object.keys(routeStylesMap).find((k) => path.includes(k))
   const config = keyEncontrada
     ? routeStylesMap[keyEncontrada]
     : {
@@ -523,6 +516,8 @@ const onItemClick = (value) => {
         dialogoAddVehiculo.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
         dialogoAddExento.value.LevantarDialogoAdd()
+      } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
+        dialogoAddComprobante.value.LevantarDialogoAdd()
       }
 
       break
@@ -550,7 +545,7 @@ const onItemClick = (value) => {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
             dialogEditOrganismo.value.LevantarDialogoEdit(
-              arraySelected.value['name_min'],
+              arraySelected.value['nombre'],
               arraySelected.value['name'],
               arraySelected.value['_id'],
             )
@@ -600,19 +595,29 @@ const onItemClick = (value) => {
               arraySelected.value['_id'],
             )
         }
+      } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditComprobante.value.LevantarDialogoEdit(
+              arraySelected.value['nombre'],
+              arraySelected.value['codigo'],
+              arraySelected.value['moneda'],
+              arraySelected.value['valor'],
+              arraySelected.value['_id'],
+            )
+        }
       }
 
       break
     case 'Delete':
-      if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogoDeleteProvincia.value.LevantarDialogoDelete(
-            arraySelected.value['nombre'],
-            arraySelected.value['codigo'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
+      if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
+        dialogoDelete.value.LevantarDialogoDelete(
+          arraySelected.value['nombre'],
+          arraySelected.value['_id'],
+          getPath(),
+        )
+      }
+      /*} else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogoDeleteMunicipio.value.LevantarDialogoDelete(
             arraySelected.value['nombre'],
@@ -624,7 +629,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
           dialogDeleteOrganismo.value.LevantarDialogoDelete(
-            arraySelected.value['name_min'],
+            arraySelected.value['nombre'],
             arraySelected.value['_id'],
           )
         }
@@ -656,7 +661,7 @@ const onItemClick = (value) => {
             arraySelected.value['_id'],
           )
         }
-      }
+      }*/
 
       break
     case 'Export':

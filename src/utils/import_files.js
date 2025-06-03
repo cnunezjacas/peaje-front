@@ -18,15 +18,10 @@ import DialogEditBanco from 'Nomencladores_Edit/dialog_edit_banco.vue'
 import DialogEditMoneda from 'Nomencladores_Edit/dialog_edit_moneda.vue'
 import DialogEditVehiculo from 'Nomencladores_Edit/dialog_edit_vehiculo.vue'
 import DialogEditExento from 'Nomencladores_Edit/dialog_edit_exento.vue'
+import DialogEditComprobante from 'Nomencladores_Edit/dialog_edit_comprobante.vue'
 
 //Dialogs Delete
-import DialogDeleteProvincia from 'Nomencladores_Delete/dialog_delete_provincia.vue'
-import DialogDeleteMunicipio from 'Nomencladores_Delete/dialog_delete_municipio.vue'
-import DialogDeleteOrganismo from 'Nomencladores_Delete/dialog_delete_organismo.vue'
-import DialogDeleteBanco from 'Nomencladores_Delete/dialog_delete_banco.vue'
-import DialogDeleteMoneda from 'Nomencladores_Delete/dialog_delete_moneda.vue'
-import DialogDeleteVehiculo from 'Nomencladores_Delete/dialog_delete_vehiculo.vue'
-import DialogDeleteExento from 'Nomencladores_Delete/dialog_delete_exento.vue'
+import DialogDeleteGeneric from 'Nomencladores_Delete/dialog_delete_generic.vue'
 
 //Tables
 import table_Gest_provincia from 'Nomencladores_Tables/table_Gest_provincia.vue'
@@ -49,6 +44,7 @@ export {
   DialogoAddVehiculo,
   DialogoAddExento,
   DialogoAddComprobante,
+  DialogEditComprobante,
   DialogEditProvincia,
   DialogEditMunicipio,
   DialogEditOrganismo,
@@ -56,13 +52,7 @@ export {
   DialogEditMoneda,
   DialogEditVehiculo,
   DialogEditExento,
-  DialogDeleteProvincia,
-  DialogDeleteMunicipio,
-  DialogDeleteOrganismo,
-  DialogDeleteBanco,
-  DialogDeleteMoneda,
-  DialogDeleteVehiculo,
-  DialogDeleteExento,
+  DialogDeleteGeneric,
   table_Gest_provincia,
   table_Gest_municipio,
   table_Gest_organismo,

@@ -1,14 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-green-5">
-      <!-- <q-toolbar class="bg-green-6">
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>{{ STRINGS.tittleSite }} </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar> -->
-
       <q-toolbar class="bg-green-5 text-white q-my-md">
         <q-btn flat round dense icon="menu" class="q-mr-sm" @click="toggleLeftDrawer" />
         <q-separator dark vertical inset />
@@ -103,29 +95,41 @@ const linksNavLeft = [
     label: STRINGS.gestionNomencladores,
     icon: 'folder',
     children: [
-      { id: 'gest_' + STRINGS.provinciaLowercase, label: STRINGS.name_provincia, icon: 'post_add' },
-      { id: 'gest_' + STRINGS.municipioLowercase, label: STRINGS.name_municipio, icon: 'post_add' },
-      { id: 'gest_' + STRINGS.organismoLowercase, label: STRINGS.name_organismo, icon: 'post_add' },
-      { id: 'gest_' + STRINGS.bancoLowercase, label: STRINGS.name_bancos, icon: 'post_add' },
-      { id: 'gest_' + STRINGS.monedasLowercase, label: STRINGS.name_monedas, icon: 'post_add' },
+      {
+        id: 'gest_' + STRINGS.provinciaLowercase,
+        label: STRINGS.provinciaLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.municipioLowercase,
+        label: STRINGS.municipioLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.organismoLowercase,
+        label: STRINGS.organismoLowercase,
+        icon: 'post_add',
+      },
+      { id: 'gest_' + STRINGS.bancoLowercase, label: STRINGS.bancoLowercase, icon: 'post_add' },
+      { id: 'gest_' + STRINGS.monedasLowercase, label: STRINGS.monedasLowercase, icon: 'post_add' },
       {
         id: 'gest_' + STRINGS.vehiculosLowercase,
-        label: STRINGS.name_vehiculos,
+        label: STRINGS.vehiculosLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.exentoLowercase,
-        label: STRINGS.name_exento,
+        label: STRINGS.exentoLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.comprobanteLowercase,
-        label: STRINGS.name_comprobantes,
+        label: STRINGS.comprobanteLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.formaDePagoLowercaseURL,
-        label: STRINGS.name_formaDePago,
+        label: STRINGS.formaDePagoLowercase,
         icon: 'post_add',
       },
     ],

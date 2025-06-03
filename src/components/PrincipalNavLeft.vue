@@ -2,13 +2,7 @@
   <div class="text-uppercase small-font">
     <q-list padding class="rounded-borders text-white">
       <div v-for="(item, index) in menuItems" :key="index">
-        <q-item
-          clickable
-          active-class="my-menu-link"
-          v-ripple
-          :active="link === item.id"
-          @click="handleItemClick(item)"
-        >
+        <q-item clickable active-class="my-menu-link" v-ripple @click="() => handleItemClick(item)">
           <q-item-section avatar>
             <q-icon :name="item.icon" />
           </q-item-section>
@@ -19,31 +13,35 @@
               <q-icon
                 v-if="item.children && item.children.length"
                 :name="isExpanded(item) ? 'expand_less' : 'expand_more'"
-                @click.stop="toggleExpand(item)"
+                @click.stop="() => toggleExpand(item)"
                 style="cursor: pointer"
               />
             </div>
           </q-item-section>
         </q-item>
-        <!-- Renderizar subitems si está expandido -->
-        <q-list v-if="item.children && item.children.length && isExpanded(item)">
-          <q-item
-            v-for="(child, cIndex) in item.children"
-            :key="cIndex"
-            clickable
-            v-ripple
-            class="itemsChildrens"
-            active-class="my-menu-link"
-            :active="link === child.id"
-            @click="link = child.id"
-            @click.stop="handleChildClick(child)"
+        <!-- Renderizar subitems con transición de acordeón -->
+        <transition name="accordion">
+          <q-list
+            v-if="item.children && item.children.length && isExpanded(item)"
+            class="collapse-list"
           >
-            <q-item-section avatar>
-              <q-icon :name="child.icon" />
-            </q-item-section>
-            <q-item-section>{{ child.label }}</q-item-section>
-          </q-item>
-        </q-list>
+            <q-item
+              v-for="(child, cIndex) in item.children"
+              :key="cIndex"
+              clickable
+              v-ripple
+              class="itemsChildrens"
+              active-class="my-menu-link"
+              :active="isActiveItem(child)"
+              @click="() => handleChildClick(child)"
+            >
+              <q-item-section avatar>
+                <q-icon :name="child.icon" />
+              </q-item-section>
+              <q-item-section>{{ child.label }}</q-item-section>
+            </q-item>
+          </q-list>
+        </transition>
       </div>
     </q-list>
   </div>
@@ -51,7 +49,7 @@
 
 <script>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   props: {
@@ -62,23 +60,28 @@ export default {
   },
   setup() {
     const router = useRouter()
-    const link = ref('inbox')
-    // Estado para rastrear qué elementos están expandido
+    const route = useRoute()
+    // Eliminamos link, ya que usaremos route para determinar la selección
+    // const link = ref('inbox') // no necesario ahora
+
     const expandedItems = ref(new Set())
+
+    // Función para determinar si un item está activo basado en la ruta
+    const isActiveItem = (item) => {
+      // Asumiendo que la ruta se construye con '/' + item.id
+      return route.path === '/' + item.id
+    }
 
     const handleItemClick = (item) => {
       if (item.children && item.children.length) {
         toggleExpand(item)
       } else {
-        link.value = item.id
-        // Si 'item.id' es un ID y necesitas construir la ruta, haz algo como:
-        router.replace('/' + item.id)
-        //router.push({ path: '/' + item.id })
+        // router.replace también funciona, pero usualmente router.push es mejor para navegación
+        router.push('/' + item.id)
       }
     }
 
     const handleChildClick = (child) => {
-      link.value = child.id
       router.push('/' + child.id)
     }
 
@@ -95,11 +98,12 @@ export default {
     }
 
     return {
-      link,
+      // link: no necesario
       handleItemClick,
       handleChildClick,
       toggleExpand,
       isExpanded,
+      isActiveItem,
     }
   },
 }
@@ -110,7 +114,33 @@ export default {
   color: green
   background: white
 
-  .small-font
-    font-size: 11px
-    font-weight: bold
+.small-font
+  font-size: 11px
+  font-weight: bold
+
+/* Estilos para la transición de acordeón */
+.accordion-enter-active,
+.accordion-leave-active
+  transition: max-height 0.3s ease, opacity 0.3s ease
+  overflow: hidden
+
+/* Estado inicial al entrar (colapsado) */
+.accordion-enter-from,
+.accordion-leave-to
+  max-height: 0
+  opacity: 0
+
+/* Estado final al terminar la entrada (expandido) */
+.accordion-enter-to,
+.accordion-leave-from
+  max-height: 500px  /* ajusta según la cantidad de contenido */
+  opacity: 1
+
+/* Estilo para la lista colapsada */
+.collapse-list
+  overflow: hidden
+
+/* estilos adicionales si quieres ajustar el estilo de los items hijos */
+.itemsChildrens
+  padding-left: 50px
 </style>
