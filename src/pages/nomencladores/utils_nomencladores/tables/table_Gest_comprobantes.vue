@@ -14,9 +14,171 @@
         </q-breadcrumbs>
       </div>
     </div>
+
+    <!-- Mostrar spinner cuando está cargando -->
+    <div v-if="isLoading" class="flex justify-center items-center" style="height: 300px">
+      <q-spinner size="50px" color="green" />
+    </div>
+    <!-- Mostrar la tabla cuando no está cargando -->
+
+    <q-table
+      v-else
+      class="shadow-6"
+      bordered
+      table-header-class="bg-green-10 text-white"
+      ref="tableAddProvincia"
+      :rows-per-page-label="STRINGS.record_page"
+      :rows="filteredRows"
+      :columns="columns"
+      :rows-per-page-options="nomberForPage"
+      :no-data-label="STRINGS.no_data_available"
+      row-key="codigo"
+      :separator="separator"
+      selection="single"
+      :selected-rows-label="customSelectedLabel"
+      v-model:selected="selectedRows"
+      @update:selected="onSelectedRowsChange"
+    />
   </div>
 </template>
 
 <script setup>
-import { STRINGS } from '../../../../utils/string.js'
+import { ref, computed } from 'vue'
+import { STRINGS } from 'utils/string.js'
+import api from 'src/axios.js'
+import { onBeforeMount } from 'vue'
+import notify_error from 'src/utils/notify/notify_error.js'
+import imports from 'src/utils/imports'
+
+const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
+const isLoading = ref(true)
+
+const columns = [
+  {
+    name: 'codigo',
+    align: 'center',
+    label: STRINGS.codigo_comprobante,
+    field: 'codigo',
+    sortable: true,
+  },
+  {
+    name: 'nombre',
+    required: true,
+    label: STRINGS.nombre_comprobante,
+    align: 'center',
+    field: (rows) => rows.nombre,
+    format: (val) => `${val}`,
+    sortable: true,
+  },
+  {
+    name: 'valor',
+    required: true,
+    label: STRINGS.valor_comprobante,
+    field: 'valor',
+    align: 'center',
+    sortable: true,
+  },
+  {
+    name: STRINGS.moneda_comprobante.toLowerCase(),
+    required: true,
+    label: STRINGS.moneda_comprobante,
+    align: 'center',
+    field: STRINGS.moneda_comprobante.toLowerCase(),
+    sortable: true,
+  },
+  {
+    name: '_id',
+    field: '_id',
+    label: '_id',
+    visible: false, // Esta propiedad oculta la columna en la vista
+    hidden: true,
+  },
+]
+
+// Función para personalizar la etiqueta del número de filas seleccionadas
+
+const customSelectedLabel = (count) => {
+  return `${count} fila${count > 1 ? 's' : ''} seleccionada${count > 1 ? 's' : ''}`
+}
+
+const InitDataTable = async () => {
+  isLoading.value = true
+  try {
+    const response = await api.get(STRINGS.urlApiComprobante)
+
+    const responseMoneda = await imports.getCoin()
+
+    response.data.forEach((element) => {
+      responseMoneda.data.forEach((item) => {
+        if (item['_id'] === element['moneda']) {
+          element['moneda'] = item['siglas']
+        }
+      })
+    })
+
+    rows.value = response.data
+  } catch (error) {
+    console.error('Error cargando datos:', error)
+    notify_error(STRINGS.loadingTablesError)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onBeforeMount(() => {
+  InitDataTable()
+})
+
+const rows = ref([])
+const separator = ref('vertical')
+const selectedRows = ref([])
+
+const props = defineProps({
+  TextSearch: String,
+})
+
+// Reacción a cambios en TextSearch
+const filteredRows = computed(() => {
+  if (!props.TextSearch) {
+    return rows.value
+  }
+  const searchTerm = props.TextSearch.toLowerCase()
+  return rows.value.filter((row) => {
+    return (
+      row.nombre.toLowerCase().includes(searchTerm) ||
+      row.codigo.toLowerCase().includes(searchTerm) ||
+      row.moneda.toLowerCase().includes(searchTerm)
+    )
+  })
+})
+
+//Manejador de los botones de la navBottom
+var BloquearEdit = ref(true)
+var BloquearDelete = ref(true)
+var BloquearDetalle = ref(true)
+
+// Para emitir eventos
+const emit = defineEmits(['seleccionado'])
+
+const onSelectedRowsChange = (newSelected) => {
+  if (newSelected.length > 0) {
+    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
+    emit('onBloquearEdit', (BloquearEdit.value = false))
+    emit('onBloquearDelete', (BloquearDelete.value = false))
+    emit('onBloquearDetalle', (BloquearDetalle.value = false))
+  } else {
+    emit('onBloquearEdit', (BloquearEdit.value = true))
+    emit('onBloquearDelete', (BloquearDelete.value = true))
+    emit('onBloquearDetalle', (BloquearDetalle.value = true))
+  }
+}
+
+const UpdateTable = async () => {
+  InitDataTable()
+}
+
+defineExpose({
+  filteredRows,
+  UpdateTable,
+})
 </script>

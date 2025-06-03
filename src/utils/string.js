@@ -52,6 +52,11 @@ export const STRINGS = {
   editExento: 'Modificar exento',
   deleteExento: 'Eliminar exento',
 
+  //Comprobante
+  addComprobante: 'Adicionar comprobante',
+  editComprobante: 'Modificar comprobante',
+  deleteComprobante: 'Eliminar comprobante',
+
   //Preguntas de Eliminar
   PreguntaDeleteProvincia: '¿Está seguro de eliminar la provincia: ',
   PreguntaDeleteMunicipio: '¿Está seguro de eliminar el municipio ',
@@ -60,6 +65,10 @@ export const STRINGS = {
   PreguntaDeleteMoneda: '¿Está seguro de eliminar la moneda: ',
   PreguntaDeleteVehículo: '¿Está seguro de eliminar el vehículo: ',
   PreguntaDeleteExento: '¿Está seguro de eliminar el exento: ',
+
+  PreguntaDeleteMasculino: '¿Está seguro de eliminar el ',
+
+  PreguntaDeleteFemenino: '¿Está seguro de eliminar la ',
 
   category: 'Categoría',
   addModelo: 'Adicionar modelo',
@@ -108,6 +117,18 @@ export const STRINGS = {
   nomenclador_exento: 'Nomenclador',
   detalles_exento: 'Detalles',
 
+  //Campos Exento
+  nombre_comprobante: 'Nombre del comprobante',
+  codigo_comprobante: 'Código',
+  nomenclador_comprobante: 'Nomenclador',
+  valor_comprobante: 'Valor',
+  moneda_comprobante: 'Moneda',
+
+  //Campos Formas de Pago
+  descripcion_formas_pago: 'Descripción',
+  nomenclador_formas_pago: 'Nomenclador',
+  detalles_formas_pago: 'Detalles',
+
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
   multiselección: 'Multiselección',
@@ -134,12 +155,12 @@ export const STRINGS = {
   //NOMBRES MODULO NOMENCLADORES MINUSCULAS
   provinciaLowercase: 'provincia',
   municipioLowercase: 'municipio',
-  organismoLowercase: 'organismos',
-  bancoLowercase: 'bancos',
-  monedasLowercase: 'monedas',
-  vehiculosLowercase: 'vehiculos',
+  organismoLowercase: 'organismo',
+  bancoLowercase: 'banco',
+  monedasLowercase: 'moneda',
+  vehiculosLowercase: 'vehiculo',
   exentoLowercase: 'exento',
-  comprobanteLowercase: 'comprobantes',
+  comprobanteLowercase: 'comprobante',
   formaDePagoLowercase: 'forma de pago',
   formaDePagoLowercaseURL: 'formaDePago',
 
@@ -162,6 +183,7 @@ export const STRINGS = {
   tramitadorLowercase: 'tramitador',
 
   search: 'Buscar...',
+  delete: 'Eliminar',
   desabilitar: 'disabled',
   help: 'Ayuda',
   close_seccion: 'Cerrar Sección',
@@ -178,12 +200,14 @@ export const STRINGS = {
   urlApiMoneda: '/api/v1/manage/moneda',
   urlApiVehiculo: '/api/v1/manage/vehiculo',
   urlApiExento: '/api/v1/manage/exento',
+  urlApiComprobante: '/api/v1/manage/comprobante',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
   onlyLetters: 'El campo solo puede contener letras',
   FullTextAndNumber: 'El campo solo puede contener letras y números',
   onlyUppercase: 'El campo solo puede contener letras Mayúsculas',
+  uppercaseAndNumber: 'El campo solo puede contener letras mayúsculas y números',
   onlyNumbers: 'El campo solo puede contener números naturales',
   CondorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
   decimalPositive: 'Ingrese un decimal positivo',
@@ -223,6 +247,11 @@ export const STRINGS = {
   exentoEditSuccess: 'Exento editado correctamente.',
   exentoDeleteSuccess: 'Exento eliminado correctamente.',
 
+  //Alertas Success Exento
+  comprobanteAddSuccess: 'Comprobante añadido correctamente.',
+  comprobanteEditSuccess: 'Comprobante editado correctamente.',
+  comprobanteDeleteSuccess: 'Comprobante eliminado correctamente.',
+
   //Alertas Errores Provincias
   provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
   provinciaEditError: 'Error al editar la provincia. Por favor, intenta nuevamente.',
@@ -248,15 +277,20 @@ export const STRINGS = {
   monedaEditError: 'Error al editar la moneda. Por favor, intenta nuevamente.',
   monedaDeleteError: 'Error al eliminar la moneda. Por favor, intenta nuevamente.',
 
-  //Alertas Errores Moneda
+  //Alertas Errores Vehiculo
   vehiculoAddError: 'Error al guardar el vehículo. Por favor, intenta nuevamente.',
   vehiculoEditError: 'Error al editar el vehículo. Por favor, intenta nuevamente.',
   vehiculoDeleteError: 'Error al eliminar el vehículo. Por favor, intenta nuevamente.',
 
-  //Alertas Errores Moneda
+  //Alertas Errores Exento
   exentoAddError: 'Error al guardar el exento. Por favor, intenta nuevamente.',
   exentoEditError: 'Error al editar el exento. Por favor, intenta nuevamente.',
   exentoDeleteError: 'Error al eliminar el exento. Por favor, intenta nuevamente.',
+
+  //Alertas Errores Comprobante
+  comprobanteAddError: 'Error al guardar el comprobante. Por favor, intenta nuevamente.',
+  comprobanteEditError: 'Error al editar el comprobante. Por favor, intenta nuevamente.',
+  comprobanteDeleteError: 'Error al eliminar el comprobante. Por favor, intenta nuevamente.',
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',

@@ -2,6 +2,7 @@
 
 import { STRINGS } from 'utils/string'
 //import { notify_error } from 'utils/notify/notify_error.js'
+import api from 'src/axios'
 
 function capitalizeWords(str) {
   return str
@@ -13,9 +14,13 @@ function capitalizeWords(str) {
     .join(' ')
 }
 
+const searchWebPath = (path) => {
+  var newPath = path.split('_')
+  return newPath
+}
+
 const DataSelection = (row, ruta, arraySelected) => {
-  //console.log('Selected:' + JSON.stringify(row))
-  var nuevaRuta = ruta.split('_')
+  var nuevaRuta = searchWebPath(ruta)
   if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
     arraySelected.value['nombre'] = row['nombre']
     arraySelected.value['codigo'] = row['codigo']
@@ -26,7 +31,7 @@ const DataSelection = (row, ruta, arraySelected) => {
     arraySelected.value['provincia'] = row['Texto_provincia']
     arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
-    arraySelected.value['name_min'] = row['siglas']
+    arraySelected.value['nombre'] = row['siglas']
     arraySelected.value['name'] = row['nombre']
     arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
@@ -54,6 +59,12 @@ const DataSelection = (row, ruta, arraySelected) => {
     arraySelected.value['nomenclador'] = row['nomenclador']
     arraySelected.value['detalles'] = row['detalles']
     arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase) && row) {
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['valor'] = row['valor']
+    arraySelected.value['moneda'] = row['moneda']
+    arraySelected.value['_id'] = row['_id']
   } else {
     //notify_error(STRINGS.fila_no_selected)
     return null
@@ -62,4 +73,55 @@ const DataSelection = (row, ruta, arraySelected) => {
   return arraySelected.value
 }
 
-export default { capitalizeWords, DataSelection }
+//TODO: Función para traer id de tabla monedas
+const getIdCoin = async (moneda) => {
+  let coinId = ''
+  try {
+    const response = await api.get(STRINGS.urlApiMoneda)
+    // Asumiendo que response.data es un array
+    response.data.forEach((element) => {
+      if (element.siglas === moneda) {
+        coinId = element._id
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching coin ID:', error)
+  }
+  return coinId
+}
+
+//TODO: Función para realizar FROM * tabla monedas
+const getCoin = async () => {
+  try {
+    const response = await api.get(STRINGS.urlApiMoneda)
+    return response
+    // Asumiendo que response.data es un array
+  } catch (error) {
+    console.error('Error fetching coin ID:', error)
+  }
+}
+
+const getGestFemale = () => {
+  var gestFemale = [STRINGS.provinciaLowercase, STRINGS.monedasLowercase]
+  return gestFemale
+}
+
+const loadCoins = async () => {
+  const response = await api.get(STRINGS.urlApiMoneda)
+  var optionsMoneda = response.data.map((element) => element['siglas'])
+
+  if (optionsMoneda.value === null) {
+    console.error('Problemas de carga de datos..')
+  }
+  return optionsMoneda !== null ? optionsMoneda : (optionsMoneda = ['Empty'])
+}
+
+export default {
+  capitalizeWords,
+  DataSelection,
+  getIdCoin,
+  getCoin,
+  searchWebPath,
+  getGestFemale,
+  loadCoins,
+}
