@@ -93,7 +93,7 @@ const columns = [
 import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 
-const InicializarDatosTabla = async () => {
+const InitDataTable = async () => {
   isLoading.value = true
   try {
     const response = await api.get(STRINGS.urlApiVehiculo)
@@ -107,7 +107,7 @@ const InicializarDatosTabla = async () => {
 }
 
 onBeforeMount(() => {
-  InicializarDatosTabla()
+  InitDataTable()
 })
 
 const rows = ref([])

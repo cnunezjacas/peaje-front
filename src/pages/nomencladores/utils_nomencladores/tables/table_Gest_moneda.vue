@@ -104,7 +104,7 @@ const columns = [
 
 import { onBeforeMount } from 'vue'
 
-const InicializarDatosTabla = async () => {
+const InitDataTable = async () => {
   isLoading.value = true
   try {
     const responseMoneda = await api.get(STRINGS.urlApiMoneda)
@@ -118,7 +118,7 @@ const InicializarDatosTabla = async () => {
 }
 
 onBeforeMount(() => {
-  InicializarDatosTabla()
+  InitDataTable()
 })
 
 const rows = ref([])
@@ -175,7 +175,7 @@ const filteredRows = computed(() => {
 })
 
 const UpdateTable = async () => {
-  InicializarDatosTabla()
+  InitDataTable()
 }
 
 defineExpose({

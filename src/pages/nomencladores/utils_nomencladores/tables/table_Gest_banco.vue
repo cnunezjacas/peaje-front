@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { STRINGS } from '../../../../utils/string.js'
+import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
 
 const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
@@ -86,7 +86,7 @@ const columns = [
 import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 
-const InicializarDatosTabla = async () => {
+const InitDataTable = async () => {
   isLoading.value = true
   try {
     const response = await api.get(STRINGS.urlApiBanco)
@@ -100,7 +100,7 @@ const InicializarDatosTabla = async () => {
 }
 
 onBeforeMount(() => {
-  InicializarDatosTabla()
+  InitDataTable()
 })
 
 const rows = ref([])

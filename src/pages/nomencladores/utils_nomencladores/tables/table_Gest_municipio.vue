@@ -45,7 +45,8 @@
 import { ref } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
-
+import { computed } from 'vue'
+import notify_error from 'src/utils/notify/notify_error.js'
 var numberForPage = [5, 7, 10, 15, 20, 50, 0]
 const isLoading = ref(true)
 
@@ -77,7 +78,7 @@ const columns = [
 
 import { onBeforeMount } from 'vue'
 
-const InicializarDatosTabla = async () => {
+const InitDataTable = async () => {
   isLoading.value = true
   try {
     const responseMun = await api.get(STRINGS.urlApiMunicipio)
@@ -101,7 +102,7 @@ const InicializarDatosTabla = async () => {
 }
 
 onBeforeMount(() => {
-  InicializarDatosTabla()
+  InitDataTable()
 })
 
 const rows = ref([])
@@ -114,10 +115,6 @@ const selectedRows = ref([])
 var BloquearEdit = ref(true)
 var BloquearDelete = ref(true)
 var BloquearDetalle = ref(true)
-
-//Provincia a Eliminar
-//var ProvinciaDelete = ref('')
-//var ProvinciaCodigoDelete = ref('')
 
 // Para emitir eventos
 const emit = defineEmits(['seleccionado'])
@@ -134,9 +131,6 @@ const onSelectedRowsChange = (newSelected) => {
     emit('onBloquearDetalle', (BloquearDetalle.value = true))
   }
 }
-
-import { computed } from 'vue'
-import notify_error from 'src/utils/notify/notify_error.js'
 
 // Props
 const props = defineProps({
@@ -159,7 +153,7 @@ const filteredRows = computed(() => {
 })
 
 const UpdateTable = async () => {
-  InicializarDatosTabla()
+  InitDataTable()
 }
 
 defineExpose({

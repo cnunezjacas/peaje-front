@@ -78,7 +78,7 @@ const rows = ref([])
 
 import { onBeforeMount } from 'vue'
 
-const InicializarDatosTabla = async () => {
+const InitDataTable = async () => {
   isLoading.value = true
   try {
     const response = await api.get(STRINGS.urlApiOrganismo)
@@ -91,7 +91,7 @@ const InicializarDatosTabla = async () => {
 }
 
 onBeforeMount(() => {
-  InicializarDatosTabla()
+  InitDataTable()
 })
 
 const separator = ref('vertical')
