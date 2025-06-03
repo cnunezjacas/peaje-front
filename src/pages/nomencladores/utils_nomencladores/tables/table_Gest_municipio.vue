@@ -23,7 +23,7 @@
 
     <q-table
       v-else
-      class="shadow-6"
+      class="shadow-2"
       bordered
       table-header-class="bg-green-10 text-white"
       ref="tableAddMunicipio"
@@ -47,7 +47,10 @@ import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
 import { computed } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
-var numberForPage = [5, 7, 10, 15, 20, 50, 0]
+import imports from 'src/utils/imports.js'
+
+// Datos
+const numberForPage = imports.getNumberForPage()
 const isLoading = ref(true)
 
 const columns = [

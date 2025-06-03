@@ -23,14 +23,14 @@
 
     <q-table
       v-else
-      class="shadow-6"
+      class="shadow-2"
       bordered
       table-header-class="bg-green-10 text-white"
       ref="tableAddProvincia"
       :rows-per-page-label="STRINGS.record_page"
       :rows="filteredRows"
       :columns="columns"
-      :rows-per-page-options="nomberForPage"
+      :rows-per-page-options="numberForPage"
       :no-data-label="STRINGS.no_data_available"
       row-key="codigo"
       :separator="separator"
@@ -45,8 +45,9 @@
 import { ref, computed } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
+import imports from 'src/utils/imports'
 
-const nomberForPage = [5, 7, 10, 15, 20, 50, 0]
+const numberForPage = imports.getNumberForPage()
 const isLoading = ref(true)
 
 const columns = [
