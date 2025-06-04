@@ -34,6 +34,7 @@
               />
             </div>
 
+            <!-- TODO: Al realizar un cambio en los select disabled btnSend -->
             <div class="col-12 q-mt-md">
               <q-select
                 v-model="SelectNombre_prov"
@@ -77,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMunicipio.js'
@@ -121,7 +122,6 @@ const emit = defineEmits(['ActualizarTablaMunicipio'])
 /*Funcion de procesado de Datos*/
 const Procesar_Add = async () => {
   if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
-    //TODO: Ajax Request ADD_MUNICIPIO
     var aux = ''
 
     // Verificar si el código ya existe
@@ -165,12 +165,36 @@ const Procesar_Add = async () => {
   }
 }
 
+const InputEmpty = () => {
+  if (
+    TextNombre_mun.value.trim() === '' ||
+    TextCodigo_mun.value.trim() === '' ||
+    SelectNombre_prov.value === ''
+  )
+    return true
+  else return false
+}
+
+const InputRegularExpressions = () => {
+  let InputValidated =
+    expRegulares.onlyNumber.test(TextCodigo_mun.value) &&
+    expRegulares.FullText.test(TextNombre_mun.value) &&
+    SelectNombre_prov.value !== null
+
+  return InputValidated
+}
+
 const ComprobarEstadoInputs = () => {
-  if (TextCodigo_mun.value != '' && expRegulares.onlyNumber.test(TextCodigo_mun.value))
-    if (TextNombre_mun.value != '' && expRegulares.FullText.test(TextNombre_mun.value))
-      disabledBtnSave.value = ''
-    else disabledBtnSave.value = STRINGS.desabilitar
-  else disabledBtnSave.value = STRINGS.desabilitar
+  var isEmpty = InputEmpty()
+  var InputValidated = InputRegularExpressions()
+
+  if (isEmpty) {
+    disabledBtnSave.value = STRINGS.desabilitar
+  } else if (!InputValidated) {
+    disabledBtnSave.value = STRINGS.desabilitar
+  } else {
+    disabledBtnSave.value = ''
+  }
 
   return disabledBtnSave.value
 }
@@ -183,9 +207,11 @@ const LevantarDialogoAdd = () => {
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
+  dialog.value = false
   TextCodigo_mun.value = ''
   TextNombre_mun.value = ''
   SelectNombre_prov.value = ''
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
 const dialog = ref(false)
@@ -200,6 +226,10 @@ const textNombre_Mun = ref(null)
 const textCodigo_Mun = ref(null)
 
 const disabledBtnSave = ref(STRINGS.desabilitar)
+
+watch(SelectNombre_prov, () => {
+  ComprobarEstadoInputs()
+})
 
 defineExpose({
   LevantarDialogoAdd,

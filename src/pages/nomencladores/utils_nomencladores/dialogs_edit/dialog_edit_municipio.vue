@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <q-dialog
-      v-model="dialogEditMunicipio"
+      v-model="dialogEdit"
       persistent
       ref="refDialogoEditMunicipio"
       :backdrop-filter="backdropFilter"
@@ -69,7 +69,7 @@
                 flat
                 icon="close"
                 :label="STRINGS.close"
-                @click="DevolverEstadoInputsEdit"
+                @click="Reset"
                 color="dark"
                 v-close-popup
               />
@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMunicipio.js'
@@ -113,8 +113,6 @@ const emit = defineEmits(['ActualizarTablaMunicipio'])
 /*Funcion de procesado de Datos*/
 const Procesar_EditMunicipio = async () => {
   if (ComprobarEstadoInputsEdit() != STRINGS.desabilitar) {
-    //TODO: Ajax Request EDIT_MUNICIPIO
-
     var aux = ''
     var existeCodigo = false
 
@@ -166,7 +164,7 @@ const CargarProvincias = async () => {
 /*Función que levanta el dialogo*/
 const LevantarDialogoEdit = (name, codigo, provincia, id) => {
   backdropFilter.value = list
-  dialogEditMunicipio.value = true
+  dialogEdit.value = true
 
   CargarProvincias()
 
@@ -181,22 +179,43 @@ const LevantarDialogoEdit = (name, codigo, provincia, id) => {
   IdMunicipio.value = id
 }
 
-const ComprobarEstadoInputsEdit = () => {
-  // Si ambos campos son iguales a sus valores originales, deshabilitar
-  const noHaCambiado =
-    TextNombre_mun.value.trim() === TextNombre_mun_copy.value.trim() &&
-    TextCodigo_mun.value.trim() === TextCodigo_mun_copy.value.trim() &&
-    SelectNombre_prov.value.trim() === SelectNombre_prov_copy.value.trim()
+const InputEmpty = () => {
+  if (
+    TextNombre_mun.value.trim() == '' ||
+    TextCodigo_mun.value.trim() == '' ||
+    SelectNombre_prov.value == null
+  )
+    return true
+  else return false
+}
 
-  if (TextNombre_mun.value.trim() == '' || TextCodigo_mun.value.trim() == '') {
-    // Si algún campo está vacío, deshabilitar
+const InputDifferent = () => {
+  let HaCambiado =
+    TextNombre_mun.value !== TextNombre_mun_copy.value ||
+    TextCodigo_mun.value !== TextCodigo_mun_copy.value ||
+    SelectNombre_prov.value !== SelectNombre_prov_copy.value
+
+  return HaCambiado
+}
+
+const InputRegularExpressions = () => {
+  let InputValidated =
+    expRegulares.onlyNumber.test(TextCodigo_mun.value) &&
+    expRegulares.FullText.test(TextNombre_mun.value)
+
+  return InputValidated
+}
+
+const ComprobarEstadoInputsEdit = () => {
+  var isEmpty = InputEmpty()
+  var noChange = InputDifferent()
+  var InputValidated = InputRegularExpressions()
+
+  if (isEmpty) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (noHaCambiado) {
+  } else if (!noChange) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (
-    !expRegulares.onlyNumber.test(TextCodigo_mun.value) ||
-    !expRegulares.FullText.test(TextNombre_mun.value)
-  ) {
+  } else if (!InputValidated) {
     disabledBtnSaveEdit.value = STRINGS.desabilitar
   } else {
     disabledBtnSaveEdit.value = ''
@@ -204,17 +223,15 @@ const ComprobarEstadoInputsEdit = () => {
   return disabledBtnSaveEdit.value
 }
 
-const DevolverEstadoInputsEdit = () => {
+/*Función para limpiar los campos del dialogo luego del submit*/
+const Reset = () => {
+  dialogEdit.value = false
+  TextCodigo_mun.value = ''
+  TextNombre_mun.value = ''
   disabledBtnSaveEdit.value = STRINGS.desabilitar
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
-const Reset = () => {
-  TextCodigo_mun.value = ''
-  TextNombre_mun.value = ''
-}
-
-const dialogEditMunicipio = ref(false)
+const dialogEdit = ref(false)
 
 //Campos Originales
 const TextCodigo_mun = ref('')
@@ -234,6 +251,10 @@ const textNombre_Mun = ref(null)
 const textCodigo_Mun = ref(null)
 
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+
+watch(SelectNombre_prov, () => {
+  ComprobarEstadoInputsEdit()
+})
 
 defineExpose({
   LevantarDialogoEdit,
