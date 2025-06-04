@@ -69,6 +69,7 @@
                   :rules="rulesAddNomenclador_moneda"
                   color="green"
                   :label="STRINGS.nomenclador_moneda"
+                  @onchange="ComprobarEstadoInputs"
                   outlined
                 >
                   <!-- Slot para agregar un botón al final del select -->
@@ -89,6 +90,7 @@
                   ref="textmBase_moneda"
                   checked-icon="task_alt"
                   unchecked-icon="panorama_fish_eye"
+                  @onchange="ComprobarEstadoInputs"
                   :val="STRINGS.yes"
                   :label="STRINGS.yes"
                 />
@@ -97,6 +99,7 @@
                   ref="textmBase_moneda"
                   checked-icon="task_alt"
                   unchecked-icon="panorama_fish_eye"
+                  @onchange="ComprobarEstadoInputs"
                   :val="STRINGS.no"
                   :label="STRINGS.no"
                 />
@@ -143,7 +146,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
+                :class="disabledBtnSave"
                 @click="Procesar_Add()"
                 :label="STRINGS.save"
                 color="green"
@@ -168,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
@@ -266,32 +269,57 @@ const LevantarDialogoAdd = () => {
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
+  dialog.value = false
   TextSiglas_moneda.value = ''
   TextNombre_moneda.value = ''
   TextTasaCambio_moneda.value = ''
   Textnomenclador_moneda.value = ''
   TextmBase_moneda.value = ''
   TextIdCondor_moneda.value = ''
-  TextDetalles_moneda.value = ''
+  disabledBtnSave.value = STRINGS.desabilitar
+  //TextDetalles_moneda.value = ''
 }
 
-const isFormValid = () => {
-  return (
-    TextNombre_moneda.value.trim() !== '' &&
-    expRegulares.FullText.test(TextNombre_moneda.value) &&
-    TextSiglas_moneda.value.trim() !== '' &&
-    expRegulares.onlyUppercase.test(TextSiglas_moneda.value) &&
-    EvaluarTazaCambio() &&
-    String(Textnomenclador_moneda.value).trim() !== '' &&
-    TextIdCondor_moneda.value.trim() !== '' &&
-    expRegulares.CondorTextID.test(TextIdCondor_moneda.value.trim())
+const InputEmpty = () => {
+  if (
+    TextNombre_moneda.value.trim() === '' ||
+    TextSiglas_moneda.value.trim() === '' ||
+    TextTasaCambio_moneda.value === '' ||
+    Textnomenclador_moneda.value === '' ||
+    TextmBase_moneda.value === '' ||
+    TextIdCondor_moneda.value.trim() === ''
   )
+    return true
+  else return false
+}
+
+const InputRegularExpressions = () => {
+  let TazaCambio = EvaluarTazaCambio()
+
+  let InputValidated =
+    expRegulares.FullText.test(TextNombre_moneda.value) &&
+    expRegulares.onlyUppercase.test(TextSiglas_moneda.value) &&
+    Textnomenclador_moneda.value !== null &&
+    expRegulares.CondorTextID.test(TextIdCondor_moneda.value) &&
+    TazaCambio === true &&
+    TextmBase_moneda.value !== null
+
+  return InputValidated
 }
 
 const ComprobarEstadoInputs = () => {
-  return isFormValid()
-    ? (disabledBtnSaveEdit.value = '')
-    : (disabledBtnSaveEdit.value = STRINGS.desabilitar)
+  var isEmpty = InputEmpty()
+  var InputValidated = InputRegularExpressions()
+
+  if (isEmpty) {
+    disabledBtnSave.value = STRINGS.desabilitar
+  } else if (!InputValidated) {
+    disabledBtnSave.value = STRINGS.desabilitar
+  } else {
+    disabledBtnSave.value = ''
+  }
+
+  return disabledBtnSave.value
 }
 
 const dialog = ref(false)
@@ -302,7 +330,7 @@ const TextTasaCambio_moneda = ref('')
 const Textnomenclador_moneda = ref('')
 const TextmBase_moneda = ref('')
 const TextIdCondor_moneda = ref('')
-const TextDetalles_moneda = ref('')
+//const TextDetalles_moneda = ref('')
 
 const options = [1, 2, 3, 4]
 
@@ -315,7 +343,7 @@ const textmBase_moneda = ref(null)
 const textIdCondor_moneda = ref(null)
 //const textDetalles_moneda = ref(null)
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
 const EvaluarTazaCambio = () => {
   return !isNaN(parseFloat(TextTasaCambio_moneda.value)) &&
@@ -323,6 +351,14 @@ const EvaluarTazaCambio = () => {
     ? true
     : false
 }
+
+watch(TextmBase_moneda, () => {
+  ComprobarEstadoInputs()
+})
+
+watch(Textnomenclador_moneda, () => {
+  ComprobarEstadoInputs()
+})
 
 defineExpose({
   LevantarDialogoAdd,

@@ -165,7 +165,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from '../../../../utils/string.js'
 import api from 'src/axios.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
@@ -215,8 +215,6 @@ const emit = defineEmits(['ActualizarTablaMoneda'])
 /*Funcion de procesado de Datos*/
 const Procesar_Edit = async () => {
   if (ComprobarEstadoInputs() != STRINGS.desabilitar) {
-    //TODO: Ajax Request EDIT_MUNICIPIO
-
     var existeCodigo = false
 
     // Verificar si el código ya existe
@@ -256,10 +254,6 @@ const Procesar_Edit = async () => {
   }
 }
 
-const DevolverEstadoInputsEdit = () => {
-  disabledBtnSaveEdit.value = STRINGS.desabilitar
-}
-
 /*Función que levanta el dialogo*/
 const LevantarDialogoEdit = (siglas, nombre, tasaCambio, nomenclador, mBase, idCondor, id) => {
   backdropFilter.value = list
@@ -267,76 +261,87 @@ const LevantarDialogoEdit = (siglas, nombre, tasaCambio, nomenclador, mBase, idC
 
   TextSiglas_moneda.value = siglas
   TextNombre_moneda.value = nombre
-  TextTasaCambio_moneda.value = tasaCambio
+  TextTasaCambio_moneda.value = String(tasaCambio)
   Textnomenclador_moneda.value = nomenclador
   TextmBase_moneda.value = mBase
   TextIdCondor_moneda.value = idCondor
 
   TextSiglas_moneda_copy.value = siglas
   TextNombre_moneda_copy.value = nombre
-  TextTasaCambio_moneda_copy.value = tasaCambio
+  TextTasaCambio_moneda_copy.value = String(tasaCambio)
   Textnomenclador_moneda_copy.value = nomenclador
   TextmBase_moneda_copy.value = mBase
   TextIdCondor_moneda_copy.value = idCondor
   IdMoneda.value = id
 }
 
-const isFormValidInput = () => {
-  let camposIguales =
-    TextSiglas_moneda.value.trim() === TextSiglas_moneda_copy.value.trim() &&
-    TextNombre_moneda.value.trim() === TextNombre_moneda_copy.value.trim() &&
-    String(TextTasaCambio_moneda.value).trim() ===
-      String(TextTasaCambio_moneda_copy.value).trim() &&
-    TextIdCondor_moneda.value.trim() === TextIdCondor_moneda_copy.value.trim() &&
-    console.log('Los campos estan iguales:' + camposIguales)
-
-  return (
-    // Verifica si al menos un campo ha cambiado
-    (TextSiglas_moneda.value.trim() !== '' ||
-      TextNombre_moneda.value.trim() !== '' ||
-      String(TextTasaCambio_moneda.value).trim() !== '' ||
-      String(Textnomenclador_moneda.value).trim() !== '' ||
-      TextIdCondor_moneda.value.trim() !== '' ||
-      // O si hay cambios en los campos respecto a las copias
-      TextSiglas_moneda.value !== TextSiglas_moneda_copy.value ||
-      TextNombre_moneda.value !== TextNombre_moneda_copy.value ||
-      TextTasaCambio_moneda.value !== TextTasaCambio_moneda_copy.value ||
-      String(Textnomenclador_moneda.value) !== String(Textnomenclador_moneda_copy.value) ||
-      TextIdCondor_moneda.value !== TextIdCondor_moneda_copy.value) &&
-    // Y además, que los campos no sean iguales a sus copias (para deshabilitar si no hay cambios)
-    !camposIguales &&
-    // Además, verifica las reglas de validación
-    (expRegulares.FullText.test(TextNombre_moneda.value) || false) &&
-    (expRegulares.onlyUppercase.test(TextSiglas_moneda.value) || false) &&
-    EvaluarTazaCambio() &&
-    (expRegulares.CondorTextID.test(TextIdCondor_moneda.value) || false)
+const InputEmpty = () => {
+  if (
+    TextNombre_moneda.value.trim() === '' ||
+    TextSiglas_moneda.value.trim() === '' ||
+    TextTasaCambio_moneda.value === '' ||
+    Textnomenclador_moneda.value === '' ||
+    TextmBase_moneda.value === '' ||
+    TextIdCondor_moneda.value.trim() === ''
   )
+    return true
+  else return false
 }
 
-const isFormValidComponentAvz = () => {
-  let camposIguales =
-    Textnomenclador_moneda.value === Textnomenclador_moneda_copy.value &&
-    TextmBase_moneda.value.trim() === TextmBase_moneda_copy.value.trim()
+const InputDifferent = () => {
+  let HaCambiado =
+    TextNombre_moneda.value !== TextNombre_moneda_copy.value ||
+    TextSiglas_moneda.value !== TextSiglas_moneda_copy.value ||
+    TextTasaCambio_moneda.value !== TextTasaCambio_moneda_copy.value ||
+    Textnomenclador_moneda.value !== Textnomenclador_moneda_copy.value ||
+    TextmBase_moneda.value !== TextmBase_moneda_copy.value ||
+    TextIdCondor_moneda.value !== TextIdCondor_moneda_copy.value
 
-  return camposIguales
+  return HaCambiado
+}
+
+const InputRegularExpressions = () => {
+  let TazaCambio = EvaluarTazaCambio()
+
+  let InputValidated =
+    expRegulares.FullText.test(TextNombre_moneda.value) &&
+    expRegulares.onlyUppercase.test(TextSiglas_moneda.value) &&
+    Textnomenclador_moneda.value !== null &&
+    expRegulares.CondorTextID.test(TextIdCondor_moneda.value) &&
+    TazaCambio === true &&
+    TextmBase_moneda.value !== null
+
+  return InputValidated
 }
 
 const ComprobarEstadoInputs = () => {
-  disabledBtnSaveEdit.value =
-    isFormValidInput() === true && isFormValidComponentAvz() === true ? '' : STRINGS.desabilitar
+  var isEmpty = InputEmpty()
+  var noChange = InputDifferent()
+  var InputValidated = InputRegularExpressions()
+
+  if (isEmpty) {
+    disabledBtnSaveEdit.value = STRINGS.desabilitar
+  } else if (!noChange) {
+    disabledBtnSaveEdit.value = STRINGS.desabilitar
+  } else if (!InputValidated) {
+    disabledBtnSaveEdit.value = STRINGS.desabilitar
+  } else {
+    disabledBtnSaveEdit.value = ''
+  }
+
+  return disabledBtnSaveEdit.value
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
-  refDialogoEdit.value.hide()
+  dialog.value = false
   TextSiglas_moneda.value = ''
   TextNombre_moneda.value = ''
   TextTasaCambio_moneda.value = ''
   Textnomenclador_moneda.value = ''
   TextmBase_moneda.value = ''
   TextIdCondor_moneda.value = ''
-
-  DevolverEstadoInputsEdit()
+  disabledBtnSaveEdit.value = STRINGS.desabilitar
 }
 
 const dialog = ref(false)
@@ -375,6 +380,14 @@ const EvaluarTazaCambio = () => {
 }
 
 const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+
+watch(TextmBase_moneda, () => {
+  ComprobarEstadoInputs()
+})
+
+watch(Textnomenclador_moneda, () => {
+  ComprobarEstadoInputs()
+})
 
 defineExpose({
   LevantarDialogoEdit,
