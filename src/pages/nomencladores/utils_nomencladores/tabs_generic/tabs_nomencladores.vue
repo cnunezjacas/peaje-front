@@ -130,22 +130,16 @@
   <table_Gest_provincia
     ref="tableProvincia"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusP"
     :TextSearch="TextSearch"
-    :rows="rows"
   ></table_Gest_provincia>
 
   <!-- Tabla de Municipio -->
   <table_Gest_municipio
     ref="tableMunicipio"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
-    @oNMunicipioDeleteGestMunicipio="ProcesoDeleteMunicipio"
+    @onEnable="EnableTabs"
     :style="StyleFocusM"
     :TextSearch="TextSearch"
   />
@@ -154,9 +148,7 @@
   <table_Gest_organismo
     ref="tableOrganismo"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusO"
     :TextSearch="TextSearch"
   />
@@ -165,9 +157,7 @@
   <table_Gest_banco
     ref="tableBanco"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusB"
     :TextSearch="TextSearch"
   />
@@ -176,9 +166,7 @@
   <table_Gest_monedas
     ref="tableMonedas"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusMO"
     :TextSearch="TextSearch"
   />
@@ -187,9 +175,7 @@
   <table_Gest_vehiculos
     ref="tableVehiculo"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusV"
     :TextSearch="TextSearch"
   />
@@ -197,9 +183,7 @@
   <table_Gest_exento
     ref="tableExento"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusE"
     :TextSearch="TextSearch"
   />
@@ -208,9 +192,7 @@
   <table_Gest_comprobante
     ref="tableComprobante"
     @seleccionado="handleSelection"
-    @onBloquearEdit="BloquearEdit"
-    @onBloquearDelete="BloquearDelete"
-    @onBloquearDetalle="BloquearDetalle"
+    @onEnable="EnableTabs"
     :style="StyleFocusC"
     :TextSearch="TextSearch"
   />
@@ -438,7 +420,19 @@ const ErrorUpdateTable = () => {
   notify_error(STRINGS.errorUpdate)
 }
 
-const BloquearEdit = (variable) => {
+const EnableTabs = (variable) => {
+  if (variable) {
+    disabledEdit.value = 'small-font disabled'
+    disabledDelete.value = 'small-font disabled'
+    disabledDetalle.value = 'small-font disabled'
+  } else {
+    disabledEdit.value = 'small-font'
+    disabledDelete.value = 'small-font'
+    disabledDetalle.value = 'small-font'
+  }
+}
+
+/*const BloquearEdit = (variable) => {
   if (variable) {
     disabledEdit.value = 'small-font disabled'
   } else {
@@ -460,7 +454,7 @@ const BloquearDetalle = (variable) => {
   } else {
     disabledDetalle.value = 'small-font'
   }
-}
+}*/
 
 //Función que Captura los datos del elemento seleccionado en las tablas
 const handleSelection = (row) => {

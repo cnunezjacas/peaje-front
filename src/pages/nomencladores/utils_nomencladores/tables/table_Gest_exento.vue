@@ -157,8 +157,8 @@ const onSelectedRowsChange = (newSelected) => {
 }
 
 const UpdateTable = async () => {
-  const response = await api.get(STRINGS.urlApiExento)
-  rows.value = response.data
+  InitDataTable()
+  selectedRows.value = []
 }
 
 // Exponemos `filteredRows` si el padre necesita acceder directamente

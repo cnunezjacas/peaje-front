@@ -153,24 +153,17 @@ const filteredRows = computed(() => {
   })
 })
 
-//Manejador de los botones de la navBottom
-var BloquearEdit = ref(true)
-var BloquearDelete = ref(true)
-var BloquearDetalle = ref(true)
-
-// Para emitir eventos
 const emit = defineEmits(['seleccionado'])
+//Manejador de los botones de la navBottom
+var EnableItemsTabs = ref(true)
 
+// Manejador de selección
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onBloquearEdit', (BloquearEdit.value = false))
-    emit('onBloquearDelete', (BloquearDelete.value = false))
-    emit('onBloquearDetalle', (BloquearDetalle.value = false))
+    emit('onEnable', (EnableItemsTabs.value = false))
   } else {
-    emit('onBloquearEdit', (BloquearEdit.value = true))
-    emit('onBloquearDelete', (BloquearDelete.value = true))
-    emit('onBloquearDetalle', (BloquearDetalle.value = true))
+    emit('onEnable', (EnableItemsTabs.value = true))
   }
 }
 
