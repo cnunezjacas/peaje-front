@@ -2,24 +2,40 @@
   <div class="q-pb-sm">
     <q-toolbar class="bg-green-10 text-white shadow-2">
       <q-tabs v-model="tab" shrink bordered>
-        <q-tab name="tab1" icon="note_add" class="small-font" @click="onItemClick('Add')"
-          >Adicionar</q-tab
+        <q-tab name="tab1" icon="note_add" class="small-font" @click="onItemClick(STRINGS.add)">{{
+          STRINGS.add
+        }}</q-tab>
+        <q-tab name="tab2" icon="edit" :class="disabledEdit" @click="onItemClick(STRINGS.edit)">{{
+          STRINGS.edit
+        }}</q-tab>
+        <q-tab
+          name="tab3"
+          icon="delete"
+          :class="disabledDelete"
+          @click="onItemClick(STRINGS.delete)"
+          >{{ STRINGS.delete }}</q-tab
         >
-        <q-tab name="tab2" icon="edit" :class="disabledEdit" @click="onItemClick('Edit')"
-          >Modificar</q-tab
-        >
-        <q-tab name="tab3" icon="delete" :class="disabledDelete" @click="onItemClick('Delete')"
-          >Eliminar</q-tab
-        >
-        <q-tab name="tab6" icon="picture_as_pdf" class="small-font" @click="onItemClick('Export')"
-          >Exportar</q-tab
+        <q-tab
+          name="tab6"
+          icon="picture_as_pdf"
+          class="small-font"
+          @click="onItemClick(STRINGS.export)"
+          >{{ STRINGS.export }}</q-tab
         >
         <q-tab
           name="tab7"
           icon="receipt_long"
           :class="disabledDetalle"
-          @click="onItemClick('Details')"
-          >Detalle</q-tab
+          @click="onItemClick(STRINGS.details)"
+          >{{ STRINGS.details }}</q-tab
+        >
+
+        <q-tab
+          name="tab8"
+          icon="update"
+          :class="disabledUpdate"
+          @click="onItemClick(STRINGS.update)"
+          >{{ STRINGS.update }}</q-tab
         >
       </q-tabs>
 
@@ -235,6 +251,7 @@ import {
   notify_error,
 } from 'utils/import_files.js'
 import imports from 'utils/imports.js'
+import notify_success from 'src/utils/notify/notify_success'
 
 const tab = ref('')
 const TextSearch = ref('')
@@ -383,6 +400,7 @@ var arraySelected = ref([])
 const disabledEdit = ref('small-font disabled')
 const disabledDelete = ref('small-font disabled')
 const disabledDetalle = ref('small-font disabled')
+const disabledUpdate = ref('small-font')
 
 const ActualizadorTabla = (value) => {
   var ruta = route.fullPath
@@ -501,7 +519,7 @@ const onItemClick = (value) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
   switch (value) {
-    case 'Add':
+    case STRINGS.add:
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         dialogoAddProvincia.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
@@ -521,7 +539,7 @@ const onItemClick = (value) => {
       }
 
       break
-    case 'Edit':
+    case STRINGS.edit:
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
@@ -609,7 +627,7 @@ const onItemClick = (value) => {
       }
 
       break
-    case 'Delete':
+    case STRINGS.delete:
       if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
         dialogoDelete.value.LevantarDialogoDelete(
           arraySelected.value['nombre'],
@@ -617,60 +635,18 @@ const onItemClick = (value) => {
           getPath(),
         )
       }
-      /*} else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogoDeleteMunicipio.value.LevantarDialogoDelete(
-            arraySelected.value['nombre'],
-            arraySelected.value['codigo'],
-            arraySelected.value['provincia'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteOrganismo.value.LevantarDialogoDelete(
-            arraySelected.value['nombre'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteBanco.value.LevantarDialogoDelete(
-            arraySelected.value['codigo'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteMoneda.value.LevantarDialogoDelete(
-            arraySelected.value['siglas'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteVehiculo.value.LevantarDialogoDelete(
-            arraySelected.value['codigo'],
-            arraySelected.value['_id'],
-          )
-        }
-      } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
-        if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-          dialogDeleteExento.value.LevantarDialogoDelete(
-            arraySelected.value['codigo'],
-            arraySelected.value['_id'],
-          )
-        }
-      }*/
-
       break
-    case 'Export':
+    case STRINGS.export:
       notify_error('TODO: Exportar')
       break
-    case 'Details':
+    case STRINGS.details:
       if (!disabledDetalle.value.includes(STRINGS.desabilitar)) {
         notify_error('TODO: Detalles')
       }
+      break
+    case STRINGS.update:
+      ActualizadorTabla(true)
+      notify_success(STRINGS.updateTable)
       break
 
     default:
