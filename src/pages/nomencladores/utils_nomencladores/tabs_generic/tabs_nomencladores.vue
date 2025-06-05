@@ -78,23 +78,26 @@
   <!-- Dialogo Add Organismo-->
   <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
 
-  <!-- Dialogo Add Organismo-->
-  <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTablaBanco="ActualizadorTabla" />
+  <!-- Dialogo Add Banco-->
+  <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTabla="ActualizadorTabla" />
 
-  <!-- Dialogo Add Organismo-->
+  <!-- Dialogo Add Moneda-->
   <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
 
-  <!-- Dialogo Add Organismo-->
+  <!-- Dialogo Add Vehiculo-->
   <DialogoAddVehiculo ref="dialogoAddVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
 
-  <!-- Dialogo Add Organismo-->
+  <!-- Dialogo Add Exento-->
   <DialogoAddExento ref="dialogoAddExento" @ActualizarTablaExento="ActualizadorTabla" />
 
-  <!-- Dialogo Add Organismo-->
+  <!-- Dialogo Add Comprobante-->
   <DialogoAddComprobante
     ref="dialogoAddComprobante"
     @ActualizarTablaComprobante="ActualizadorTabla"
   />
+
+  <!-- Dialogo Add Forma de Pago-->
+  <DialogoAddFormaDePago ref="dialogoAddFormaDePago" @ActualizarTabla="ActualizadorTabla" />
 
   <!-- Dialogo Edit Provincia -->
   <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
@@ -102,28 +105,31 @@
   <!-- Dialogo Edit Municipio -->
   <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
+  <!-- Dialogo Edit Organismo -->
   <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
-  <DialogEditBanco ref="dialogEditBanco" @ActualizarTablaBanco="ActualizadorTabla" />
+  <!-- Dialogo Edit Banco -->
+  <DialogEditBanco ref="dialogEditBanco" @ActualizarTabla="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
+  <!-- Dialogo Edit Moneda -->
   <DialogEditMoneda ref="dialogEditMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
+  <!-- Dialogo Edit Vehiculo -->
   <DialogEditVehiculo ref="dialogEditVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
+  <!-- Dialogo Edit Exento -->
   <DialogEditExento ref="dialogEditExento" @ActualizarTablaExento="ActualizadorTabla" />
 
-  <!-- Dialogo Edit Municipio -->
+  <!-- Dialogo Edit Comprobante -->
   <DialogEditComprobante
     ref="dialogEditComprobante"
     @ActualizarTablaComprobante="ActualizadorTabla"
   />
 
-  <!-- Dialogo Delete Provincia-->
+  <!-- Dialogo Edit Comprobante -->
+  <DialogEditFdp ref="dialogEditFdp" @ActualizarTabla="ActualizadorTabla" />
+
+  <!-- Dialogo Delete Generico-->
   <DialogDeleteGeneric ref="dialogoDelete" @ActualizarTabla="ActualizadorTabla" />
 
   <!-- Tabla de Provincias -->
@@ -180,6 +186,7 @@
     :TextSearch="TextSearch"
   />
 
+  <!-- Tabla de Exebto -->
   <table_Gest_exento
     ref="tableExento"
     @seleccionado="handleSelection"
@@ -194,6 +201,14 @@
     @seleccionado="handleSelection"
     @onEnable="EnableTabs"
     :style="StyleFocusC"
+    :TextSearch="TextSearch"
+  />
+
+  <table_Gest_fdp
+    ref="tableFdp"
+    @seleccionado="handleSelection"
+    @onEnable="EnableTabs"
+    :style="StyleFocusFdp"
     :TextSearch="TextSearch"
   />
 </template>
@@ -213,6 +228,7 @@ import {
   DialogoAddVehiculo,
   DialogoAddExento,
   DialogoAddComprobante,
+  DialogoAddFormaDePago,
   DialogEditComprobante,
   DialogEditProvincia,
   DialogEditMunicipio,
@@ -221,6 +237,7 @@ import {
   DialogEditMoneda,
   DialogEditVehiculo,
   DialogEditExento,
+  DialogEditFdp,
   DialogDeleteGeneric,
   table_Gest_provincia,
   table_Gest_municipio,
@@ -230,6 +247,7 @@ import {
   table_Gest_monedas,
   table_Gest_vehiculos,
   table_Gest_exento,
+  table_Gest_fdp,
   notify_error,
 } from 'utils/import_files.js'
 import imports from 'utils/imports.js'
@@ -246,6 +264,7 @@ const StyleFocusMO = ref('display: none')
 const StyleFocusC = ref('display: none')
 const StyleFocusV = ref('display: none')
 const StyleFocusE = ref('display: none')
+const StyleFocusFdp = ref('display: none')
 
 const routeStylesMap = {
   [STRINGS.provinciaLowercase]: {
@@ -257,6 +276,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.municipioLowercase]: {
     provincia: false,
@@ -267,6 +287,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.organismoLowercase]: {
     provincia: false,
@@ -277,6 +298,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.bancoLowercase]: {
     provincia: false,
@@ -287,6 +309,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.comprobanteLowercase]: {
     provincia: false,
@@ -297,6 +320,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.monedasLowercase]: {
     provincia: false,
@@ -307,6 +331,7 @@ const routeStylesMap = {
     monedas: true,
     vehiculos: false,
     exento: false,
+    fdp: false,
   },
   [STRINGS.vehiculosLowercase]: {
     provincia: false,
@@ -317,6 +342,7 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: true,
     exento: false,
+    fdp: false,
   },
   [STRINGS.exentoLowercase]: {
     provincia: false,
@@ -327,6 +353,18 @@ const routeStylesMap = {
     monedas: false,
     vehiculos: false,
     exento: true,
+    fdp: false,
+  },
+  [STRINGS.formaDePagoLowercaseURL]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+    fdp: true,
   },
 }
 
@@ -365,6 +403,10 @@ const dialogEditExento = ref(null)
 const dialogoAddComprobante = ref(null)
 const dialogEditComprobante = ref(null)
 
+//Constantes referencias de los dialogos Forma de Pago
+const dialogoAddFormaDePago = ref(null)
+const dialogEditFdp = ref(null)
+
 //Constantes referencias de las tablas de Nomencladores
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
@@ -374,6 +416,7 @@ const tableMonedas = ref(null)
 const tableComprobante = ref(null)
 const tableVehiculo = ref(null)
 const tableExento = ref(null)
+const tableFdp = ref(null)
 
 //ARRAY GLOBAL QUE SELECCIONA TODO
 var arraySelected = ref([])
@@ -411,6 +454,9 @@ const ActualizadorTabla = (value) => {
   } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
     if (value) tableComprobante.value.UpdateTable()
     else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
+    if (value) tableFdp.value.UpdateTable()
+    else ErrorUpdateTable()
   } else {
     ErrorUpdateTable()
   }
@@ -431,30 +477,6 @@ const EnableTabs = (variable) => {
     disabledDetalle.value = 'small-font'
   }
 }
-
-/*const BloquearEdit = (variable) => {
-  if (variable) {
-    disabledEdit.value = 'small-font disabled'
-  } else {
-    disabledEdit.value = 'small-font'
-  }
-}
-
-const BloquearDelete = (variable) => {
-  if (variable) {
-    disabledDelete.value = 'small-font disabled'
-  } else {
-    disabledDelete.value = 'small-font'
-  }
-}
-
-const BloquearDetalle = (variable) => {
-  if (variable) {
-    disabledDetalle.value = 'small-font disabled'
-  } else {
-    disabledDetalle.value = 'small-font'
-  }
-}*/
 
 //Función que Captura los datos del elemento seleccionado en las tablas
 const handleSelection = (row) => {
@@ -493,6 +515,7 @@ const CambioRuta = () => {
         monedas: false,
         vehiculos: false,
         exento: false,
+        fdp: false,
       }
 
   StyleFocusP.value = config.provincia ? '' : 'display: none'
@@ -503,6 +526,7 @@ const CambioRuta = () => {
   StyleFocusMO.value = config.monedas ? '' : 'display: none'
   StyleFocusV.value = config.vehiculos ? '' : 'display: none'
   StyleFocusE.value = config.exento ? '' : 'display: none'
+  StyleFocusFdp.value = config.fdp ? '' : 'display: none'
 }
 
 watchEffect(() => {
@@ -530,6 +554,8 @@ const onItemClick = (value) => {
         dialogoAddExento.value.LevantarDialogoAdd()
       } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
         dialogoAddComprobante.value.LevantarDialogoAdd()
+      } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
+        dialogoAddFormaDePago.value.LevantarDialogoAdd()
       }
 
       break
@@ -615,6 +641,16 @@ const onItemClick = (value) => {
               arraySelected.value['codigo'],
               arraySelected.value['moneda'],
               arraySelected.value['valor'],
+              arraySelected.value['_id'],
+            )
+        }
+      } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditFdp.value.LevantarDialogoEdit(
+              arraySelected.value['nombre'],
+              arraySelected.value['nomenclador'],
+              arraySelected.value['detalles'],
               arraySelected.value['_id'],
             )
         }

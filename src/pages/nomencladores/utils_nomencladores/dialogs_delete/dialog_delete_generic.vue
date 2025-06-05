@@ -59,7 +59,7 @@
 <script setup>
 //importaciones
 import { ref } from 'vue'
-import { STRINGS } from '../../../../utils/string.js'
+import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
@@ -74,13 +74,14 @@ const idDelete = ref('')
 const Ruta = ref([])
 const titleContent = ref('')
 const CategoryItemDelete = ref('')
+const AutenticCategoryItemDelete = ref('')
 
-const emit = defineEmits(['ActualizarTablaBanco'])
+const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
 const Procesar_Delete = async () => {
   try {
-    switch (CategoryItemDelete.value) {
+    switch (AutenticCategoryItemDelete.value) {
       //Caso Provincia
       case STRINGS.provinciaLowercase:
         await api.delete(STRINGS.urlApiProvincia + '/' + idDelete.value) // DELETE /items/:id
@@ -138,16 +139,16 @@ const Procesar_Delete = async () => {
         break
 
       //Caso Forma de Pago
-      /*case STRINGS.formaDePagoLowercaseURL:
-        await api.delete(STRINGS.urlApiMunicipio + '/' + idDelete.value) // DELETE /items/:id
-        notify_success(STRINGS.municipioDeleteSuccess)
+      case STRINGS.formaDePagoLowercaseURL:
+        await api.delete(STRINGS.urlApiFormaDePago + '/' + idDelete.value) // DELETE /items/:id
+        notify_success(STRINGS.fdp_DeleteSuccess)
         emit('ActualizarTabla', true)
-        break*/
+        break
     }
   } catch (error) {
     console.error('Error al eliminar item:', error)
 
-    switch (CategoryItemDelete.value) {
+    switch (AutenticCategoryItemDelete.value) {
       //Caso Provincia
       case STRINGS.provinciaLowercase:
         notify_error(STRINGS.provinciaDeleteError)
@@ -197,11 +198,10 @@ const Procesar_Delete = async () => {
         break
 
       //Caso Forma de Pago
-      /*case STRINGS.formaDePagoLowercaseURL:
-        await api.delete(STRINGS.urlApiMunicipio + '/' + idDelete.value) // DELETE /items/:id
-        notify_success(STRINGS.municipioDeleteSuccess)
-        emit('ActualizarTabla', true)
-        break*/
+      case STRINGS.formaDePagoLowercaseURL:
+        notify_success(STRINGS.fdp_DeleteError)
+        emit('ActualizarTabla', false)
+        break
     }
   }
   refDialogoDelete.value.hide()
@@ -213,10 +213,13 @@ const LevantarDialogoDelete = (codigo, id, path) => {
   idDelete.value = id
   Ruta.value = path
   CategoryItemDelete.value = Ruta.value[1]
+  AutenticCategoryItemDelete.value = Ruta.value[1]
+
+  CategoryItemDelete.value = imports.JoinCamelCase(CategoryItemDelete.value)
 
   //identificar si la ruta es una cadena femenina o masculina
   var gestFemale = imports.getGestFemale()
-  if (gestFemale.includes(CategoryItemDelete.value)) {
+  if (gestFemale.includes(CategoryItemDelete.value.toUpperCase())) {
     titleContent.value = STRINGS.PreguntaDeleteFemenino
   } else {
     titleContent.value = STRINGS.PreguntaDeleteMasculino
