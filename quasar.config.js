@@ -46,21 +46,24 @@ export default defineConfig((/* ctx */) => {
       alias: {
         utils: fileURLToPath(new URL('./src/utils', import.meta.url)),
         views: fileURLToPath(new URL('./src/pages', import.meta.url)),
-        viewsNomencladores: fileURLToPath(new URL('./src/pages/nomencladores/', import.meta.url)),
-        viewsUtilsNomencladores: fileURLToPath(
-          new URL('./src/pages/nomencladores/utils_nomencladores', import.meta.url),
+        viewsManage: fileURLToPath(new URL('./src/pages/manage/', import.meta.url)),
+        viewsUtilsNomenclator: fileURLToPath(
+          new URL('./src/pages/manage/manage_nomenclator', import.meta.url),
         ),
-        Nomencladores_Tables: fileURLToPath(
-          new URL('./src/pages/nomencladores/utils_nomencladores/tables', import.meta.url),
+        viewsUtilsEntity: fileURLToPath(
+          new URL('./src/pages/manage/manage_entity', import.meta.url),
         ),
-        Nomencladores_Add: fileURLToPath(
-          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_insert', import.meta.url),
+        NomenclatorTables: fileURLToPath(
+          new URL('./src/pages/manage/manage_nomenclator/tables', import.meta.url),
         ),
-        Nomencladores_Edit: fileURLToPath(
-          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_edit', import.meta.url),
+        NomenclatorAdd: fileURLToPath(
+          new URL('./src/pages/manage/manage_nomenclator/dialogs_insert', import.meta.url),
         ),
-        Nomencladores_Delete: fileURLToPath(
-          new URL('./src/pages/nomencladores/utils_nomencladores/dialogs_delete', import.meta.url),
+        NomenclatorEdit: fileURLToPath(
+          new URL('./src/pages/manage/manage_nomenclator/dialogs_edit', import.meta.url),
+        ),
+        NomenclatorDelete: fileURLToPath(
+          new URL('./src/pages/manage/manage_nomenclator/dialogs_delete', import.meta.url),
         ),
       },
 

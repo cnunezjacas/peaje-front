@@ -8,39 +8,39 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.municipioLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.organismoLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.bancoLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.monedasLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.vehiculosLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.exentoLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.comprobanteLowercase,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
-        component: () => import('viewsNomencladores/gest_global.vue'),
+        component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/pageAyuda',

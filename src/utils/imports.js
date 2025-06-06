@@ -71,6 +71,11 @@ const DataSelection = (row, ruta, arraySelected) => {
     arraySelected.value['valor'] = row['valor']
     arraySelected.value['moneda'] = row['moneda']
     arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL) && row) {
+    arraySelected.value['nombre'] = row['descripcion']
+    arraySelected.value['nomenclador'] = row['nomenclador']
+    arraySelected.value['detalles'] = row['detalles']
+    arraySelected.value['_id'] = row['_id']
   } else {
     //notify_error(STRINGS.fila_no_selected)
     return null
@@ -79,7 +84,7 @@ const DataSelection = (row, ruta, arraySelected) => {
   return arraySelected.value
 }
 
-//TODO: Función para traer id de tabla monedas
+//Función para traer id de tabla monedas
 const getIdCoin = async (moneda) => {
   let coinId = ''
   try {
@@ -96,7 +101,7 @@ const getIdCoin = async (moneda) => {
   return coinId
 }
 
-//TODO: Función para realizar FROM * tabla monedas
+//Función para realizar FROM * tabla monedas
 const getCoin = async () => {
   try {
     const response = await api.get(STRINGS.urlApiMoneda)
@@ -108,7 +113,11 @@ const getCoin = async () => {
 }
 
 const getGestFemale = () => {
-  var gestFemale = [STRINGS.provinciaLowercase, STRINGS.monedasLowercase]
+  var gestFemale = [
+    STRINGS.provinciaLowercase.toUpperCase(),
+    STRINGS.monedasLowercase.toUpperCase(),
+    STRINGS.formaDePagoLowercase.toUpperCase(),
+  ]
   return gestFemale
 }
 
@@ -122,6 +131,29 @@ const loadCoins = async () => {
   return optionsMoneda !== null ? optionsMoneda : (optionsMoneda = ['Empty'])
 }
 
+const isCamelCase = (str) => {
+  const isCamelCase = /[a-z][A-Z]/.test(str)
+  return isCamelCase
+}
+
+// Si quieres separar las palabras
+const JoinCamelCase = (str) => {
+  // Verifica si la cadena está en camelCase usando una expresión regular
+  const WordisCamelCase = isCamelCase(str)
+
+  if (!WordisCamelCase) {
+    // Si no está en camelCase, devuelve la cadena original
+    return str
+  }
+
+  // Reemplaza las mayúsculas precedidas por minúsculas por un espacio y la letra en mayúscula
+  const result = str.replace(/([a-z])([A-Z])/g, '$1 $2')
+
+  // Opcional: convertir la primera letra a minúscula y las demás en mayúscula si quieres un formato específico
+  // Aquí, simplemente convertir la primera letra de toda la frase a minúscula
+  return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase()
+}
+
 export default {
   capitalizeWords,
   DataSelection,
@@ -131,4 +163,6 @@ export default {
   getGestFemale,
   loadCoins,
   getNumberForPage,
+  JoinCamelCase,
+  isCamelCase,
 }
