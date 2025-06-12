@@ -1,36 +1,28 @@
 <template>
   <q-page>
-    <!-- TODO: Poder realizar el v-show con ambos tabs -->
     <div>
       <div id="boxNom" class="col-12 d-none">
-        <tabs_nomencladores />
+        <tabs_nomencladores ref="RefNom" />
       </div>
     </div>
-
-    <!-- Table -->
 
     <div>
       <div id="boxEnt" class="col-12 d-none">
         <tabs_entity />
       </div>
     </div>
-
-    <!-- Table -->
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUpdate, ref } from 'vue'
 
 import tabs_nomencladores from 'viewsManage/tabs_generic/tabs_nomencladores.vue'
 import tabs_entity from 'viewsManage/tabs_generic/tabs_entity.vue'
 import { STRINGS } from 'src/utils/string'
 
-//import { STRINGS } from 'src/utils/string'
-
-//const showNomencladores = ref(true)
-//const showNomAux = ref(false)
-//const showEntAux = ref(false)
+//Const REF
+const RefNom = ref(null)
 
 // Ejemplo de uso:
 const idBuscado = ref('')
@@ -43,7 +35,27 @@ const CheckItemFather = async (item) => {
   }
 }
 
+// Cuando quieras llamar a la función:
+const callEmptySelectedTwo = () => {
+  // Espera a que Vue actualice el DOM y las referencias
+  if (RefNom.value) {
+    RefNom.value.EmptySelectedTwo()
+  } else {
+    console.warn('La referencia RefNom aún no está disponible')
+  }
+}
+
+/*onMounted(() => {
+  alert('onMounted')
+})*/
+
+onBeforeUpdate(() => {
+  callEmptySelectedTwo()
+})
+
 const CheckItemChildren = async (item) => {
+  console.log('RefNom')
+  console.log(RefNom)
   idBuscado.value = item[1]
   if (objeto.value && objeto.value.children) {
     // const aux = tieneHijoConId(objeto.value, idBuscado.value)
@@ -55,6 +67,7 @@ const CheckItemChildren = async (item) => {
 
         elementTwo.classList.add('d-none')
         elementoOne.classList.remove('d-none')
+
         break
 
       case STRINGS.gestionEntidadLowercase:
@@ -63,6 +76,7 @@ const CheckItemChildren = async (item) => {
 
         elementoOne.classList.add('d-none')
         elementTwo.classList.remove('d-none')
+
         break
     }
   }
