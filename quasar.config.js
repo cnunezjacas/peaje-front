@@ -65,6 +65,18 @@ export default defineConfig((/* ctx */) => {
         NomenclatorDelete: fileURLToPath(
           new URL('./src/pages/manage/manage_nomenclator/dialogs_delete', import.meta.url),
         ),
+        EntityAdd: fileURLToPath(
+          new URL('./src/pages/manage/manage_entity/dialogs_insert', import.meta.url),
+        ),
+        EntityEdit: fileURLToPath(
+          new URL('./src/pages/manage/manage_entity/dialogs_edit', import.meta.url),
+        ),
+        EntityDelete: fileURLToPath(
+          new URL('./src/pages/manage/manage_entity/dialogs_edit', import.meta.url),
+        ),
+        EntityTables: fileURLToPath(
+          new URL('./src/pages/manage/manage_entity/tables', import.meta.url),
+        ),
       },
 
       vite: {

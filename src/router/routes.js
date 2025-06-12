@@ -6,6 +6,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
+      //nomenclator
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
         component: () => import('viewsManage/gest_global.vue'),
@@ -40,6 +41,19 @@ const routes = [
       },
       {
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      //Entity
+      {
+        path: '/gest_' + STRINGS.estacionesLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.areasDeTrabajoLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.puntosDeVentasLowercase,
         component: () => import('viewsManage/gest_global.vue'),
       },
       {

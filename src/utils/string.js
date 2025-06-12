@@ -6,16 +6,20 @@ export const STRINGS = {
   gestionEntidad: 'Gestión entidad',
   gestionPeaje: 'Acciones de peaje',
 
+  //manage
+  gestionNomencladoresLowercase: 'gestion_nomencladores',
+  gestionEntidadLowercase: 'gestion_entidad',
+
+  //Text of Tabs
+  add: 'Adicionar',
+  edit: 'Modificar',
+  delete: 'Eliminar',
+  details: 'Detalle',
+  export: 'Exportar',
+  update: 'Actualizar',
+
   //ERRORES
   errorMessage: 'Ha ocurrido un error, por favor intenta de nuevo.',
-
-  //TEXTOS OPERACIONES
-  adicionarModelo: 'Adicionar modelo',
-  actualizarDatos: 'Actualizar datos',
-  ExpandirContrear: 'Expandir o contraer nodos',
-  renameCategoria: 'Renombrar categoría',
-  deleteCategoria: 'Eliminar categoría',
-  addCategoria: 'Adicionar categoría',
 
   //PROVINCIA
   addProvincia: 'Adicionar provincia',
@@ -56,6 +60,11 @@ export const STRINGS = {
   addComprobante: 'Adicionar comprobante',
   editComprobante: 'Modificar comprobante',
   deleteComprobante: 'Eliminar comprobante',
+
+  //Forma de Pago
+  addFormaDePago: 'Adicionar Forma de pago',
+  editFormaDePago: 'Modificar Forma de pago',
+  deleteFormaDePago: 'Eliminar Forma de pago',
 
   //Preguntas de Eliminar
   PreguntaDeleteProvincia: '¿Está seguro de eliminar la provincia: ',
@@ -129,6 +138,27 @@ export const STRINGS = {
   nomenclador_formas_pago: 'Nomenclador',
   detalles_formas_pago: 'Detalles',
 
+  //Campos Entidad
+
+  //Campos Estacion
+  codigo_estacion: 'Código',
+  nombre_estacion: 'Nombre estación',
+  direccion_estacion: 'Dirección',
+  telefonos_estacion: 'Teléfonos',
+  NIT_estacion: 'NIT',
+  banco_cuenta: 'Banco',
+  titular_de_la_cuenta: 'Titular cuenta',
+  cuenta: 'Número de cuenta',
+  registro_comercial: 'Registro Comercial',
+  registro_mercantil: 'Registro mercantil',
+  detalles_estacion: 'Detalles',
+  bancoCUC: 'Banco CUC:',
+  bancoCUP: 'Banco CUP:',
+  parametros: 'Parámetros:',
+  abonados_locales_estacion: 'Abonados Locales',
+  comprobante_estacion: 'Comprobante',
+  tarjetas_estacion: 'Tarjetas',
+
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
   multiselección: 'Multiselección',
@@ -183,7 +213,6 @@ export const STRINGS = {
   tramitadorLowercase: 'tramitador',
 
   search: 'Buscar...',
-  delete: 'Eliminar',
   desabilitar: 'disabled',
   help: 'Ayuda',
   close_seccion: 'Cerrar Sección',
@@ -201,6 +230,7 @@ export const STRINGS = {
   urlApiVehiculo: '/api/v1/manage/vehiculo',
   urlApiExento: '/api/v1/manage/exento',
   urlApiComprobante: '/api/v1/manage/comprobante',
+  urlApiFormaDePago: '/api/v1/manage/formasdepago',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
@@ -209,8 +239,13 @@ export const STRINGS = {
   onlyUppercase: 'El campo solo puede contener letras Mayúsculas',
   uppercaseAndNumber: 'El campo solo puede contener letras mayúsculas y números',
   onlyNumbers: 'El campo solo puede contener números naturales',
+  numberAndGuion: 'El campo solo puede contener números y guiones',
+  onlyAddress: 'El campo no puede contener simbolos, ejemplo de algunos [@$&%=¿?ç|º¡!]',
   CondorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
+  cardOfBank: 'El campo solo puede contener 4 bloques de 4 números separados por guiones o juntos',
   decimalPositive: 'Ingrese un decimal positivo',
+  numberPhone:
+    'El campo solo puede contener números de teléfonos separados por comas(,) en caso de ser más de uno.',
 
   //Alertas Success Provincias
   provinciaAddSuccess: 'Provincia añadida correctamente.',
@@ -252,6 +287,11 @@ export const STRINGS = {
   comprobanteEditSuccess: 'Comprobante editado correctamente.',
   comprobanteDeleteSuccess: 'Comprobante eliminado correctamente.',
 
+  //Alertas Success Exento
+  fdp_AddSuccess: 'Forma de pago añadida correctamente.',
+  fdp_EditSuccess: 'Forma de pago editada correctamente.',
+  fdp_DeleteSuccess: 'Forma de pago eliminada correctamente.',
+
   //Alertas Errores Provincias
   provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
   provinciaEditError: 'Error al editar la provincia. Por favor, intenta nuevamente.',
@@ -292,13 +332,23 @@ export const STRINGS = {
   comprobanteEditError: 'Error al editar el comprobante. Por favor, intenta nuevamente.',
   comprobanteDeleteError: 'Error al eliminar el comprobante. Por favor, intenta nuevamente.',
 
+  //Alertas Errores Formas de Pago
+  fdp_AddError: 'Error al guardar la forma de pago. Por favor, intenta nuevamente.',
+  fdp_EditError: 'Error al editar la forma de pago. Por favor, intenta nuevamente.',
+  fdp_DeleteError: 'Error al eliminar la forma de pago. Por favor, intenta nuevamente.',
+
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
   loadingTablesError: 'Problemas al intentar cargar las tablas. Por favor, intenta nuevamente.',
 
+  updateTable: 'Tabla actualizada correctemente!',
+
   //Tamaño Botones
   SizeBottom: '16px',
+
+  //Tamaño Botones
+  TableAlign: 'left',
   // Agrega más textos según sea necesario
 
   //Opciones Lógicas

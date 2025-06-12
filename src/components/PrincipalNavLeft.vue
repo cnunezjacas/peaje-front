@@ -2,7 +2,7 @@
   <div class="text-uppercase small-font">
     <q-list padding class="rounded-borders text-white">
       <div v-for="(item, index) in menuItems" :key="index">
-        <q-item clickable active-class="my-menu-link" v-ripple @click="() => handleItemClick(item)">
+        <q-item clickable active-class="my-menu-link" v-ripple @click="handleItemClick(item)">
           <q-item-section avatar>
             <q-icon :name="item.icon" />
           </q-item-section>
@@ -13,7 +13,7 @@
               <q-icon
                 v-if="item.children && item.children.length"
                 :name="isExpanded(item) ? 'expand_less' : 'expand_more'"
-                @click.stop="() => toggleExpand(item)"
+                @click.stop="toggleExpand(item)"
                 style="cursor: pointer"
               />
             </div>
@@ -45,67 +45,87 @@
       </div>
     </q-list>
   </div>
+
+  <gestGlobal ref="gestGlobalRef" style="display: none" />
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import gestGlobal from 'viewsManage/gest_global.vue'
 
-export default {
-  props: {
-    menuItems: {
-      type: Array,
-      required: true,
-    },
+// Props
+defineProps({
+  menuItems: {
+    type: Array,
+    required: true,
   },
-  setup() {
-    const router = useRouter()
-    const route = useRoute()
-    // Eliminamos link, ya que usaremos route para determinar la selección
-    // const link = ref('inbox') // no necesario ahora
+})
 
-    const expandedItems = ref(new Set())
+// Refs y hooks
+const router = useRouter()
+const route = useRoute()
+const expandedId = ref(null) // Usaremos un id único para identificar el item expandido
 
-    // Función para determinar si un item está activo basado en la ruta
-    const isActiveItem = (item) => {
-      // Asumiendo que la ruta se construye con '/' + item.id
-      return route.path === '/' + item.id
-    }
+// Referencia al componente gestGlobal
+const gestGlobalRef = ref(null)
 
-    const handleItemClick = (item) => {
-      if (item.children && item.children.length) {
-        toggleExpand(item)
-      } else {
-        // router.replace también funciona, pero usualmente router.push es mejor para navegación
-        router.push('/' + item.id)
-      }
-    }
+// Conjunto para mantener los items expandidos
+//const expandedItems = ref(new Set())
+//const expandedItem = ref(null)
 
-    const handleChildClick = (child) => {
-      router.push('/' + child.id)
-    }
+// Función para determinar si un item está activo
+const isActiveItem = (item) => {
+  //console.log(route.path)
+  if (route.path === '/' + item.id) {
+    gestGlobalRef.value.CheckItemChildren(route.path.split('/'))
+    return route.path === '/' + item.id
+  }
+}
 
-    const toggleExpand = (item) => {
-      if (expandedItems.value.has(item)) {
-        expandedItems.value.delete(item)
-      } else {
-        expandedItems.value.add(item)
-      }
-    }
+// Función para manejar clic en un item
+const handleItemClick = (item) => {
+  if (item.children && item.children.length) {
+    gestGlobalRef.value.CheckItemFather(item)
+    toggleExpand(item)
+  } else {
+    router.push('/' + item.id)
+  }
+}
 
-    const isExpanded = (item) => {
-      return expandedItems.value.has(item)
-    }
+// Función para manejar clic en un hijo
+const handleChildClick = (child) => {
+  //console.log('Entro en handleChildClick:')
 
-    return {
-      // link: no necesario
-      handleItemClick,
-      handleChildClick,
-      toggleExpand,
-      isExpanded,
-      isActiveItem,
-    }
-  },
+  //console.log(child)
+  router.push('/' + child.id)
+}
+
+// Función para expandir o colapsar un item
+/*const toggleExpand = (item) => {
+  if (expandedItems.value.has(item)) {
+    expandedItems.value.delete(item)
+  } else {
+    expandedItems.value.add(item)
+  }
+}*/
+
+// Función para expandir o colapsar un item
+const toggleExpand = (item) => {
+  if (isExpanded(item)) {
+    expandedId.value = null
+  } else {
+    expandedId.value = item.id
+  }
+}
+
+// Función para verificar si un item está expandido
+/*const isExpanded = (item) => {
+  return expandedItems.value.has(item)
+}*/
+// Función para verificar si un item está expandido
+const isExpanded = (item) => {
+  return expandedId.value === item.id
 }
 </script>
 

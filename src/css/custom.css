@@ -9,6 +9,18 @@
   flex-direction: column; /* Opcional */
 }
 
+.border-box-bank {
+  border: 1px solid rgb(45, 149, 13);
+  padding-bottom: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.border-box-radio {
+  border: 1px solid rgb(45, 149, 13);
+  padding: 10px !important;
+}
+
 .dialog-md {
   width: 50% !important;
 }
@@ -60,6 +72,10 @@
 
 .padding_minimo {
   margin-bottom: 7px !important;
+}
+
+.d-none {
+  display: none !important;
 }
 
 /*Animaciones*/

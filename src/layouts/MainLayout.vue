@@ -87,11 +87,11 @@
 import { ref } from 'vue'
 // import EssentialLink from 'components/EssentialLink.vue'
 import PrincipalNavLeft from 'components/PrincipalNavLeft.vue'
-import { STRINGS } from '../utils/string.js'
+import { STRINGS } from 'utils/string.js'
 
 const linksNavLeft = [
   {
-    id: STRINGS.gestionNomencladores,
+    id: STRINGS.gestionNomencladoresLowercase,
     label: STRINGS.gestionNomencladores,
     icon: 'folder',
     children: [
@@ -136,7 +136,7 @@ const linksNavLeft = [
   },
 
   {
-    id: STRINGS.gestionEntidad,
+    id: STRINGS.gestionEntidadLowercase,
     label: STRINGS.gestionEntidad,
     icon: 'folder',
     children: [
