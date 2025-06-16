@@ -1,4 +1,4 @@
-import { STRINGS } from '../utils/string.js'
+import { STRINGS } from 'utils/string.js'
 
 const routes = [
   {
@@ -43,7 +43,15 @@ const routes = [
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
         component: () => import('viewsManage/gest_global.vue'),
       },
+      {
+        path: '/gest_' + STRINGS.tipoCuentaLowercaseURL,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
       //Entity
+      {
+        path: '/gest_' + STRINGS.cuentaLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
       {
         path: '/gest_' + STRINGS.estacionesLowercase,
         component: () => import('viewsManage/gest_global.vue'),

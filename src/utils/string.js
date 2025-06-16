@@ -4,11 +4,13 @@ export const STRINGS = {
   gestion: 'Gestión',
   gestionNomencladores: 'Gestión nomencladores',
   gestionEntidad: 'Gestión entidad',
+  gestionBanco: 'Gestión Banco',
   gestionPeaje: 'Acciones de peaje',
 
   //manage
   gestionNomencladoresLowercase: 'gestion_nomencladores',
   gestionEntidadLowercase: 'gestion_entidad',
+  gestionBancoLowercase: 'gestion_banco',
 
   //Text of Tabs
   add: 'Adicionar',
@@ -138,6 +140,10 @@ export const STRINGS = {
   nomenclador_formas_pago: 'Nomenclador',
   detalles_formas_pago: 'Detalles',
 
+  //Campos Tipo de cuenta
+  nombre_tipoCuenta: 'Nombre',
+  codigo_tipoCuenta: 'Código',
+
   //Campos Entidad
 
   //Campos Estacion
@@ -158,6 +164,13 @@ export const STRINGS = {
   abonados_locales_estacion: 'Abonados Locales',
   comprobante_estacion: 'Comprobante',
   tarjetas_estacion: 'Tarjetas',
+
+  //Campos Areas de Trabajo
+  nombre_ADT: 'Nombre',
+  codigo_ADT: 'Código',
+  detalles_ADT: 'Detalles',
+  tarjetas_producidas_ADT: 'Tarjetas producidas',
+  balance_ADT: 'Balance',
 
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
@@ -193,6 +206,8 @@ export const STRINGS = {
   comprobanteLowercase: 'comprobante',
   formaDePagoLowercase: 'forma de pago',
   formaDePagoLowercaseURL: 'formaDePago',
+  tipoCuentaLowercase: 'tipo de cuenta',
+  tipoCuentaLowercaseURL: 'tipoCuenta',
 
   //NOMBRES MODULO ENTIDAD MAYUSCULAS
   name_estaciones: 'Estaciones',
@@ -204,6 +219,7 @@ export const STRINGS = {
   name_tramitador: 'Tramitador',
 
   //NOMBRES MODULO ENTIDAD MINUSCULAS
+  cuentaLowercase: 'cuenta',
   estacionesLowercase: 'estaciones',
   areasDeTrabajoLowercase: 'areasDeTrabajo',
   puntosDeVentasLowercase: 'puntosDeVentas',
@@ -221,7 +237,7 @@ export const STRINGS = {
   errorUpdate: 'Operación fallida',
   errorSelected: 'Problemas en la selección',
 
-  //URL APIS
+  //URL APIS NOMENCLADOR
   urlApiProvincia: '/api/v1/manage/provincia',
   urlApiMunicipio: '/api/v1/manage/municipio',
   urlApiOrganismo: '/api/v1/manage/organismo',
@@ -231,6 +247,11 @@ export const STRINGS = {
   urlApiExento: '/api/v1/manage/exento',
   urlApiComprobante: '/api/v1/manage/comprobante',
   urlApiFormaDePago: '/api/v1/manage/formasdepago',
+  urlApiTipoCuenta: '/api/v1/manage/tipocuenta',
+
+  //URL APIS ENTIDAD
+  urlApiCuenta: '/api/v1/manage/estaciones',
+  urlApiEstacion: '/api/v1/manage/estaciones',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
@@ -336,6 +357,20 @@ export const STRINGS = {
   fdp_AddError: 'Error al guardar la forma de pago. Por favor, intenta nuevamente.',
   fdp_EditError: 'Error al editar la forma de pago. Por favor, intenta nuevamente.',
   fdp_DeleteError: 'Error al eliminar la forma de pago. Por favor, intenta nuevamente.',
+
+  /**
+   * Alertas ENTIDAD
+   */
+
+  //Alertas Success Estacion
+  estacion_AddSuccess: 'Estación añadida correctamente.',
+  estacion_EditSuccess: 'Estación editada correctamente.',
+  estacion_DeleteSuccess: 'Estación eliminada correctamente.',
+
+  //Alertas Success Estacion
+  estacion_AddError: 'Error al guardar la estación. Por favor, intenta nuevamente.',
+  estacion_EditError: 'Error al editar la estación. Por favor, intenta nuevamente.',
+  estacion_DeleteError: 'Error al eliminar la estación. Por favor, intenta nuevamente.',
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',

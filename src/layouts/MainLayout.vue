@@ -110,7 +110,23 @@ const linksNavLeft = [
         label: STRINGS.organismoLowercase,
         icon: 'post_add',
       },
-      { id: 'gest_' + STRINGS.bancoLowercase, label: STRINGS.bancoLowercase, icon: 'post_add' },
+      {
+        id: STRINGS.gestionBancoLowercase,
+        label: STRINGS.gestionBanco,
+        icon: 'folder',
+        children: [
+          {
+            id: 'gest_' + STRINGS.tipoCuentaLowercaseURL,
+            label: STRINGS.tipoCuentaLowercase,
+            icon: 'post_add',
+          },
+          {
+            id: 'gest_' + STRINGS.bancoLowercase,
+            label: STRINGS.bancoLowercase,
+            icon: 'post_add',
+          },
+        ],
+      },
       { id: 'gest_' + STRINGS.monedasLowercase, label: STRINGS.monedasLowercase, icon: 'post_add' },
       {
         id: 'gest_' + STRINGS.vehiculosLowercase,
@@ -140,6 +156,11 @@ const linksNavLeft = [
     label: STRINGS.gestionEntidad,
     icon: 'folder',
     children: [
+      {
+        id: 'gest_' + STRINGS.cuentaLowercase,
+        label: STRINGS.cuentaLowercase,
+        icon: 'post_add',
+      },
       {
         id: 'gest_' + STRINGS.estacionesLowercase,
         label: STRINGS.name_estaciones,
