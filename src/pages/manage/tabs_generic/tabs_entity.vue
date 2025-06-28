@@ -173,7 +173,7 @@ const getPath = () => {
 }
 
 //Función que permite hacer los cambios de rutas
-const CambioRuta = () => {
+const changeRoute = () => {
   const path = getPath()
 
   const keyEncontrada = Object.keys(routeStylesMap).find((k) => path.includes(k))
@@ -191,7 +191,7 @@ const CambioRuta = () => {
 }
 
 watchEffect(() => {
-  CambioRuta()
+  changeRoute()
 })
 
 //ARRAY GLOBAL QUE SELECCIONA TODO
@@ -273,12 +273,12 @@ const handleSelection = (row) => {
 }*/
 
 //Función que permite hacer los cambios de rutas
-/*const CambioRuta = () => {
-  //TODO: CambioRuta
+/*const changeRoute = () => {
+  //TODO: changeRoute
 }*/
 
 /*watchEffect(() => {
-  CambioRuta()
+  changeRoute()
 })*/
 
 const onItemClick = (value) => {

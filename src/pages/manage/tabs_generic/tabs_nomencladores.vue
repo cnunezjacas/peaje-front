@@ -70,67 +70,67 @@
   </div>
 
   <!-- Dialogo Add Provincia-->
-  <DialogoAddProvincia ref="dialogoAddProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
+  <DialogoAddProvincia ref="dialogoAddProvincia" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Municipio-->
-  <DialogoAddMunicipio ref="dialogoAddMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
+  <DialogoAddMunicipio ref="dialogoAddMunicipio" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Organismo-->
-  <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
+  <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Banco-->
-  <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTabla="ActualizadorTabla" />
+  <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Moneda-->
-  <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+  <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Vehiculo-->
-  <DialogoAddVehiculo ref="dialogoAddVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
+  <DialogoAddVehiculo ref="dialogoAddVehiculo" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Exento-->
-  <DialogoAddExento ref="dialogoAddExento" @ActualizarTablaExento="ActualizadorTabla" />
+  <DialogoAddExento ref="dialogoAddExento" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Comprobante-->
-  <DialogoAddComprobante
-    ref="dialogoAddComprobante"
-    @ActualizarTablaComprobante="ActualizadorTabla"
-  />
+  <DialogoAddComprobante ref="dialogoAddComprobante" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Add Forma de Pago-->
-  <DialogoAddFormaDePago ref="dialogoAddFormaDePago" @ActualizarTabla="ActualizadorTabla" />
+  <DialogoAddFormaDePago ref="dialogoAddFormaDePago" @ActualizarTabla="tableUpdater" />
+
+  <!-- Dialogo Add Forma de Pago-->
+  <DialogoAddTipoCuenta ref="dialogoAddTipoCuenta" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Provincia -->
-  <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTablaProvincia="ActualizadorTabla" />
+  <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Municipio -->
-  <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTablaMunicipio="ActualizadorTabla" />
+  <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Organismo -->
-  <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTablaOrganismo="ActualizadorTabla" />
+  <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Banco -->
-  <DialogEditBanco ref="dialogEditBanco" @ActualizarTabla="ActualizadorTabla" />
+  <DialogEditBanco ref="dialogEditBanco" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Moneda -->
-  <DialogEditMoneda ref="dialogEditMoneda" @ActualizarTablaMoneda="ActualizadorTabla" />
+  <DialogEditMoneda ref="dialogEditMoneda" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Vehiculo -->
-  <DialogEditVehiculo ref="dialogEditVehiculo" @ActualizarTablaVehiculo="ActualizadorTabla" />
+  <DialogEditVehiculo ref="dialogEditVehiculo" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Exento -->
-  <DialogEditExento ref="dialogEditExento" @ActualizarTablaExento="ActualizadorTabla" />
+  <DialogEditExento ref="dialogEditExento" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Edit Comprobante -->
-  <DialogEditComprobante
-    ref="dialogEditComprobante"
-    @ActualizarTablaComprobante="ActualizadorTabla"
-  />
+  <DialogEditComprobante ref="dialogEditComprobante" @ActualizarTabla="tableUpdater" />
 
-  <!-- Dialogo Edit Comprobante -->
-  <DialogEditFdp ref="dialogEditFdp" @ActualizarTabla="ActualizadorTabla" />
+  <!-- Dialogo Edit FDP -->
+  <DialogEditFdp ref="dialogEditFdp" @ActualizarTabla="tableUpdater" />
+
+  <!-- Dialogo Edit Tipo cuenta -->
+  <DialogEditTipoCuenta ref="dialogEditTipoCuenta" @ActualizarTabla="tableUpdater" />
 
   <!-- Dialogo Delete Generico-->
-  <DialogDeleteGeneric ref="dialogoDelete" @ActualizarTabla="ActualizadorTabla" />
+  <DialogDeleteGeneric ref="dialogoDelete" @ActualizarTabla="tableUpdater" />
 
   <!-- Tabla de Provincias -->
   <table_Gest_provincia
@@ -211,6 +211,14 @@
     :style="StyleFocusFdp"
     :TextSearch="TextSearch"
   />
+
+  <table_Gest_tipo_cuenta
+    ref="tableTipoCuenta"
+    @seleccionado="handleSelection"
+    @onEnable="EnableTabs"
+    :style="StyleFocusTC"
+    :TextSearch="TextSearch"
+  />
 </template>
 
 <script setup>
@@ -229,6 +237,7 @@ import {
   DialogoAddExento,
   DialogoAddComprobante,
   DialogoAddFormaDePago,
+  DialogoAddTipoCuenta,
   DialogEditComprobante,
   DialogEditProvincia,
   DialogEditMunicipio,
@@ -238,6 +247,7 @@ import {
   DialogEditVehiculo,
   DialogEditExento,
   DialogEditFdp,
+  DialogEditTipoCuenta,
   DialogDeleteGeneric,
   table_Gest_provincia,
   table_Gest_municipio,
@@ -248,6 +258,7 @@ import {
   table_Gest_vehiculos,
   table_Gest_exento,
   table_Gest_fdp,
+  table_Gest_tipo_cuenta,
   notify_error,
 } from 'src/utils/import_files_nomenclador.js'
 import imports from 'utils/imports.js'
@@ -265,6 +276,7 @@ const StyleFocusC = ref('display: none')
 const StyleFocusV = ref('display: none')
 const StyleFocusE = ref('display: none')
 const StyleFocusFdp = ref('display: none')
+const StyleFocusTC = ref('display: none')
 
 const routeStylesMap = {
   [STRINGS.provinciaLowercase]: {
@@ -277,6 +289,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.municipioLowercase]: {
     provincia: false,
@@ -288,6 +301,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.organismoLowercase]: {
     provincia: false,
@@ -299,6 +313,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.bancoLowercase]: {
     provincia: false,
@@ -310,6 +325,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.comprobanteLowercase]: {
     provincia: false,
@@ -321,6 +337,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.monedasLowercase]: {
     provincia: false,
@@ -332,6 +349,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.vehiculosLowercase]: {
     provincia: false,
@@ -343,6 +361,7 @@ const routeStylesMap = {
     vehiculos: true,
     exento: false,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.exentoLowercase]: {
     provincia: false,
@@ -354,6 +373,7 @@ const routeStylesMap = {
     vehiculos: false,
     exento: true,
     fdp: false,
+    tipoCuenta: false,
   },
   [STRINGS.formaDePagoLowercaseURL]: {
     provincia: false,
@@ -365,6 +385,19 @@ const routeStylesMap = {
     vehiculos: false,
     exento: false,
     fdp: true,
+    tipoCuenta: false,
+  },
+  [STRINGS.tipoCuentaLowercaseURL]: {
+    provincia: false,
+    municipio: false,
+    organismo: false,
+    banco: false,
+    comprobante: false,
+    monedas: false,
+    vehiculos: false,
+    exento: false,
+    fdp: false,
+    tipoCuenta: true,
   },
 }
 
@@ -407,6 +440,10 @@ const dialogEditComprobante = ref(null)
 const dialogoAddFormaDePago = ref(null)
 const dialogEditFdp = ref(null)
 
+//Constantes referencias de los dialogos Forma de Pago
+const dialogoAddTipoCuenta = ref(null)
+const dialogEditTipoCuenta = ref(null)
+
 //Constantes referencias de las tablas de Nomencladores
 const tableProvincia = ref(null)
 const tableMunicipio = ref(null)
@@ -417,6 +454,7 @@ const tableComprobante = ref(null)
 const tableVehiculo = ref(null)
 const tableExento = ref(null)
 const tableFdp = ref(null)
+const tableTipoCuenta = ref(null)
 
 //ARRAY GLOBAL QUE SELECCIONA TODO
 var arraySelected = ref([])
@@ -427,7 +465,7 @@ const disabledDelete = ref('small-font disabled')
 const disabledDetalle = ref('small-font disabled')
 const disabledUpdate = ref('small-font')
 
-const ActualizadorTabla = (value) => {
+const tableUpdater = (value) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
   if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
@@ -456,6 +494,9 @@ const ActualizadorTabla = (value) => {
     else ErrorUpdateTable()
   } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
     if (value) tableFdp.value.UpdateTable()
+    else ErrorUpdateTable()
+  } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL)) {
+    if (value) tableTipoCuenta.value.UpdateTable()
     else ErrorUpdateTable()
   } else {
     ErrorUpdateTable()
@@ -500,7 +541,7 @@ const getPath = () => {
 }
 
 //Función que permite hacer los cambios de rutas
-const CambioRuta = () => {
+const changeRoute = () => {
   const path = getPath()
 
   const keyEncontrada = Object.keys(routeStylesMap).find((k) => path.includes(k))
@@ -516,6 +557,7 @@ const CambioRuta = () => {
         vehiculos: false,
         exento: false,
         fdp: false,
+        tipoCuenta: false,
       }
 
   StyleFocusP.value = config.provincia ? '' : 'display: none'
@@ -527,10 +569,11 @@ const CambioRuta = () => {
   StyleFocusV.value = config.vehiculos ? '' : 'display: none'
   StyleFocusE.value = config.exento ? '' : 'display: none'
   StyleFocusFdp.value = config.fdp ? '' : 'display: none'
+  StyleFocusTC.value = config.tipoCuenta ? '' : 'display: none'
 }
 
 watchEffect(() => {
-  CambioRuta()
+  changeRoute()
 })
 
 const onItemClick = (value) => {
@@ -539,23 +582,25 @@ const onItemClick = (value) => {
   switch (value) {
     case STRINGS.add:
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
-        dialogoAddProvincia.value.LevantarDialogoAdd()
+        dialogoAddProvincia.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
-        dialogoAddMunicipio.value.LevantarDialogoAdd()
+        dialogoAddMunicipio.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
-        dialogoAddOrganismo.value.LevantarDialogoAdd()
+        dialogoAddOrganismo.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
-        dialogoAddBanco.value.LevantarDialogoAdd()
+        dialogoAddBanco.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
-        dialogoAddMoneda.value.LevantarDialogoAdd()
+        dialogoAddMoneda.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
-        dialogoAddVehiculo.value.LevantarDialogoAdd()
+        dialogoAddVehiculo.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
-        dialogoAddExento.value.LevantarDialogoAdd()
+        dialogoAddExento.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
-        dialogoAddComprobante.value.LevantarDialogoAdd()
+        dialogoAddComprobante.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
-        dialogoAddFormaDePago.value.LevantarDialogoAdd()
+        dialogoAddFormaDePago.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL)) {
+        dialogoAddTipoCuenta.value.getUpDialogAdd()
       }
 
       break
@@ -654,6 +699,15 @@ const onItemClick = (value) => {
               arraySelected.value['_id'],
             )
         }
+      } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL)) {
+        if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
+          if (arraySelected.value != null)
+            dialogEditTipoCuenta.value.LevantarDialogoEdit(
+              arraySelected.value['codigo'],
+              arraySelected.value['nombre'],
+              arraySelected.value['_id'],
+            )
+        }
       }
 
       break
@@ -675,7 +729,7 @@ const onItemClick = (value) => {
       }
       break
     case STRINGS.update:
-      ActualizadorTabla(true)
+      tableUpdater(true)
       notify_success(STRINGS.updateTable)
       break
 
@@ -699,6 +753,7 @@ const EmptySelectedTwo = () => {
   tableExento.value.EmptySelected()
   tableComprobante.value.EmptySelected()
   tableFdp.value.EmptySelected()
+  tableTipoCuenta.value.EmptySelected()
 }
 
 defineExpose({
