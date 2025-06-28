@@ -3,6 +3,13 @@ export const expRegulares = {
   uppercaseAndNumber: /^[A-ZÁÉÍÓÚÑÜ0-9\s]+$/,
   FullText: /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü\s]+$/,
   FullTextAndNumber: /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü0-9\s]+$/,
+  onlyAddress: /^[a-zA-ZÁÉÍÓÚÑÜáéíóúñü0-9#,\s.-]+$/,
   CondorTextID: /^[SN0-9\s]+$/,
   onlyNumber: /^[0-9\s]+$/,
+  camelCase: /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/,
+  numberAndGuion: /^(\d+-)*\d+$/,
+  cardOfBank: /^(?:\d{4}-){3}\d{4}$|^\d{16}$/,
+  numberPhone: /^(\+?\d[\d\s-]*)(\s*,\s*(\+?\d[\d\s-]*))*$/,
+  nickName: /^[a-zA-Z0-9_-]{3,15}$/,
+  ip: /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
 }
