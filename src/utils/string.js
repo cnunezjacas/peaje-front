@@ -144,7 +144,10 @@ export const STRINGS = {
   nombre_tipoCuenta: 'Nombre',
   codigo_tipoCuenta: 'Código',
 
-  //Campos Entidad
+  //*********** Campos Entidad **************
+
+  //Campos Tipo de cuenta
+  tipoCuenta: 'Tipo de cuenta',
 
   //Campos Estacion
   codigo_estacion: 'Código',
@@ -160,6 +163,9 @@ export const STRINGS = {
   detalles_estacion: 'Detalles',
   bancoCUC: 'Banco CUC:',
   bancoCUP: 'Banco CUP:',
+  CUC: 'CUC:',
+  CUP: 'CUP:',
+  bancoCuenta: 'Banco',
   parametros: 'Parámetros:',
   abonados_locales_estacion: 'Abonados Locales',
   comprobante_estacion: 'Comprobante',
@@ -171,6 +177,37 @@ export const STRINGS = {
   detalles_ADT: 'Detalles',
   tarjetas_producidas_ADT: 'Tarjetas producidas',
   balance_ADT: 'Balance',
+
+  //Campos Terminal
+  numero_terminal: 'No. Terminal',
+  numeroInventario_terminal: 'No. Inventario',
+  estado_terminal: 'Estado:',
+  estadoActivo_terminal: 'Activo',
+  estadoInactivo_terminal: 'Inactivo',
+  estadoRoto_terminal: 'Roto',
+  puntoDeVenta_terminal: 'Punto de Venta',
+  ultimaColecta_terminal: 'Última colecta',
+  diasSinColecta_terminal: 'Días sin colecta',
+  codigoAcceso_terminal: 'Código de acceso',
+  detalles_terminal: 'Detalles:',
+
+  //Campos OPERADORES
+  nombreApellidos_operador: 'Nombre y apellidos',
+  alias_operador: 'Alias',
+  rol_operador: 'Rol',
+  estado_operador: 'Estado',
+  codigo_operador: 'Código',
+  detalles_operador: 'Detalles',
+
+  //Campos PUNTOS DE VENTAS
+  codigo_PDV: 'Código',
+  descripcion_PDV: 'Descripción',
+  cabina_PDV: 'Cabina',
+  ipGaveta_PDV: 'IP de la Gaveta',
+  ipBarrera_PDV: 'IP de Barrera',
+  parametros_PDV: 'Parámetros:',
+  maxDiasSinColectar_PDV: 'Máximo días sin colectar',
+  DuracionMaximaDelTurno_PDV: 'Duración máxima del turno(h)',
 
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
@@ -230,6 +267,8 @@ export const STRINGS = {
 
   search: 'Buscar...',
   desabilitar: 'disabled',
+  active: 'Activo',
+  noActive: 'Inactivo',
   help: 'Ayuda',
   close_seccion: 'Cerrar Sección',
   no_data_available: 'No hay datos disponibles',
@@ -250,8 +289,9 @@ export const STRINGS = {
   urlApiTipoCuenta: '/api/v1/manage/tipocuenta',
 
   //URL APIS ENTIDAD
-  urlApiCuenta: '/api/v1/manage/estaciones',
-  urlApiEstacion: '/api/v1/manage/estaciones',
+
+  urlApiCuenta: '/api/v1/entities/cuenta',
+  urlApiEstacion: '/api/v1/entities/estaciones',
 
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
@@ -267,6 +307,9 @@ export const STRINGS = {
   decimalPositive: 'Ingrese un decimal positivo',
   numberPhone:
     'El campo solo puede contener números de teléfonos separados por comas(,) en caso de ser más de uno.',
+  nickName:
+    'Este campo solo asepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
+  ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
 
   //Alertas Success Provincias
   provinciaAddSuccess: 'Provincia añadida correctamente.',
@@ -313,6 +356,11 @@ export const STRINGS = {
   fdp_EditSuccess: 'Forma de pago editada correctamente.',
   fdp_DeleteSuccess: 'Forma de pago eliminada correctamente.',
 
+  //Alertas Success Tipo de cuenta
+  tipoCuenta_AddSuccess: 'Tipo de cuenta añadida correctamente.',
+  tipoCuenta_EditSuccess: 'Tipo de cuenta editada correctamente.',
+  tipoCuenta_DeleteSuccess: 'Tipo de cuenta eliminada correctamente.',
+
   //Alertas Errores Provincias
   provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
   provinciaEditError: 'Error al editar la provincia. Por favor, intenta nuevamente.',
@@ -358,14 +406,28 @@ export const STRINGS = {
   fdp_EditError: 'Error al editar la forma de pago. Por favor, intenta nuevamente.',
   fdp_DeleteError: 'Error al eliminar la forma de pago. Por favor, intenta nuevamente.',
 
+  //Alertas Errores Tipo de cuenta
+  tipoCuenta_AddError: 'Error al guardar el tipo de cuenta. Por favor, intenta nuevamente.',
+  tipoCuenta_EditError: 'Error al editar el tipo de cuenta. Por favor, intenta nuevamente.',
+  tipoCuenta_DeleteError: 'Error al eliminar el tipo de cuenta. Por favor, intenta nuevamente.',
+
   /**
    * Alertas ENTIDAD
    */
 
-  //Alertas Success Estacion
+  //Alertas Success Cuenta
+  cuenta_AddSuccess: 'Cuenta añadida correctamente.',
+  cuenta_EditSuccess: 'Cuenta editada correctamente.',
+  cuenta_DeleteSuccess: 'Cuenta eliminada correctamente.',
+
   estacion_AddSuccess: 'Estación añadida correctamente.',
   estacion_EditSuccess: 'Estación editada correctamente.',
   estacion_DeleteSuccess: 'Estación eliminada correctamente.',
+
+  //Alertas Success Cuenta
+  cuenta_AddError: 'Error al guardar la cuenta. Por favor, intenta nuevamente.',
+  cuenta_EditError: 'Error al editar la cuenta. Por favor, intenta nuevamente.',
+  cuenta_DeleteError: 'Error al eliminar la cuenta. Por favor, intenta nuevamente.',
 
   //Alertas Success Estacion
   estacion_AddError: 'Error al guardar la estación. Por favor, intenta nuevamente.',
@@ -376,8 +438,11 @@ export const STRINGS = {
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
   loadingTablesError: 'Problemas al intentar cargar las tablas. Por favor, intenta nuevamente.',
-
   updateTable: 'Tabla actualizada correctemente!',
+
+  //Alertas Warning
+  cardOfBankNoExistent: 'Tarjeta de banco no vinculada a ninguna cuenta.',
+  NoLoadMunicipality: 'No hay existencia de municipios para la provincia',
 
   //Tamaño Botones
   SizeBottom: '16px',
