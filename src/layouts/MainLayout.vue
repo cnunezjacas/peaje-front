@@ -8,41 +8,39 @@
 
         <q-space />
 
-        <q-btn-dropdown stretch flat :label="STRINGS.gestionNomencladores">
+        <q-btn-dropdown class="small-font" stretch flat :label="STRINGS.gestion">
           <q-list>
-            <q-item-label header>Folders</q-item-label>
-            <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
-              <q-item-section avatar>
-                <q-avatar icon="folder" color="secondary" text-color="white" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Photos</q-item-label>
-                <q-item-label caption>February 22, 2016</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="info" />
-              </q-item-section>
-            </q-item>
-            <q-separator inset spaced />
-            <q-item-label header>Files</q-item-label>
-            <q-item v-for="n in 4" :key="`y.${n}`" clickable v-close-popup tabindex="0">
-              <q-item-section avatar>
-                <q-avatar icon="assignment" color="primary" text-color="white" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Vacation</q-item-label>
-                <q-item-label caption>February 22, 2016</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="info" />
-              </q-item-section>
-            </q-item>
+            <template v-for="item in linksNavLeft" :key="item.id">
+              <treeItems :item="item" @navigate="handleNavigation" />
+            </template>
           </q-list>
         </q-btn-dropdown>
+
         <q-separator dark vertical />
-        <q-btn stretch flat>
-          <q-icon name="settings" :left="true" /> {{ STRINGS.textConfig }}</q-btn
-        >
+
+        <q-btn-dropdown class="small-font" stretch flat :label="STRINGS.textConfig">
+          <div class="bg-green-10">
+            <div class="row flex justify-start">
+              <div class="q-pa-md">
+                <q-avatar color="green-5" text-color="white" icon="person" />
+              </div>
+
+              <div class="q-pa-md text-white">
+                <p class="noStyle small-font-user">Alex Jacas</p>
+                <q-separator color="green-5" horizontal />
+                <p class="noStyle textSubtittle">Administrador</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="q-ma-sm">
+                <p><q-icon name="code" /> v0.01</p>
+              </div>
+            </div>
+          </div>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -64,9 +62,11 @@
     </q-drawer>
 
     <q-page-container>
-      <transition name="fade" mode="out-in">
-        <router-view />
-      </transition>
+      <q-page>
+        <transition name="fade" mode="out-in">
+          <router-view />
+        </transition>
+      </q-page>
     </q-page-container>
     <!-- Footer con mismo color que la toolbar -->
     <q-footer class="bg-green-5 text-white">
@@ -84,9 +84,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineComponent, h } from 'vue'
+import treeItems from 'layouts/treeItems.vue'
+
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+function handleNavigation(id) {
+  // Aquí puedes definir cómo navegar
+  // Por ejemplo, si los IDs son URLs completas o rutas
+  router.push({ path: id }) // ajusta esto según tu lógica
+}
+
+/*import { useQuasar } from 'quasar'
+
+const $q = useQuasar()*/
+
 // import EssentialLink from 'components/EssentialLink.vue'
 import PrincipalNavLeft from 'components/PrincipalNavLeft.vue'
+
 import { STRINGS } from 'utils/string.js'
 
 const linksNavLeft = [
@@ -97,55 +114,70 @@ const linksNavLeft = [
     children: [
       {
         id: 'gest_' + STRINGS.provinciaLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         label: STRINGS.provinciaLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.municipioLowercase,
         label: STRINGS.municipioLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.organismoLowercase,
         label: STRINGS.organismoLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
       {
         id: STRINGS.gestionBancoLowercase,
         label: STRINGS.gestionBanco,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'folder',
         children: [
           {
             id: 'gest_' + STRINGS.tipoCuentaLowercaseURL,
+            idPadre: STRINGS.gestionNomencladoresLowercase,
             label: STRINGS.tipoCuentaLowercase,
             icon: 'post_add',
           },
           {
             id: 'gest_' + STRINGS.bancoLowercase,
             label: STRINGS.bancoLowercase,
+            idPadre: STRINGS.gestionNomencladoresLowercase,
             icon: 'post_add',
           },
         ],
       },
-      { id: 'gest_' + STRINGS.monedasLowercase, label: STRINGS.monedasLowercase, icon: 'post_add' },
+      {
+        id: 'gest_' + STRINGS.monedasLowercase,
+        label: STRINGS.monedasLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
+        icon: 'post_add',
+      },
       {
         id: 'gest_' + STRINGS.vehiculosLowercase,
         label: STRINGS.vehiculosLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.exentoLowercase,
         label: STRINGS.exentoLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.comprobanteLowercase,
         label: STRINGS.comprobanteLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.formaDePagoLowercaseURL,
         label: STRINGS.formaDePagoLowercase,
+        idPadre: STRINGS.gestionNomencladoresLowercase,
         icon: 'post_add',
       },
     ],
@@ -159,41 +191,49 @@ const linksNavLeft = [
       {
         id: 'gest_' + STRINGS.cuentaLowercase,
         label: STRINGS.cuentaLowercase,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.estacionesLowercase,
         label: STRINGS.name_estaciones,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.areasDeTrabajoLowercase,
         label: STRINGS.name_areas_trabajo,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.puntosDeVentasLowercase,
         label: STRINGS.name_puntos_venta,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.terminalLowercase,
         label: STRINGS.name_terminal,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.operadoresLowercase,
         label: STRINGS.name_operadores,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.clientesLowercase,
         label: STRINGS.name_clientes,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.tramitadorLowercase,
         label: STRINGS.name_tramitador,
+        idPadre: STRINGS.gestionEntidadLowercase,
         icon: 'post_add',
       },
     ],
@@ -210,11 +250,46 @@ const linksNavLeft = [
     icon: 'help',
   },
   {
-    id: 'pageAyuda',
+    id: 'pageLogin',
     label: STRINGS.close_seccion,
     icon: 'door_back',
   },
 ]
+
+// Componente recursivo para renderizar items
+
+const RenderItem = defineComponent({
+  name: 'RenderItem',
+  props: {
+    item: Object,
+  },
+  setup(props) {
+    const hasChildren = () => props.item.children && props.item.children.length > 0
+
+    return () => {
+      if (hasChildren()) {
+        return h(
+          'q-expansion-item',
+          {
+            icon: props.item.icon,
+            label: props.item.label,
+            'expand-separator': true,
+            'default-expanded': false,
+          },
+          {
+            default: () =>
+              props.item.children.map((child) => h(RenderItem, { item: child, key: child.id })),
+          },
+        )
+      } else {
+        return h('q-item', { clickable: true }, [
+          h('q-item-section', { avatar: true }, [h('q-icon', { name: props.item.icon })]),
+          h('q-item-section', {}, props.item.label),
+        ])
+      }
+    }
+  },
+})
 
 const leftDrawerOpen = ref(false)
 
