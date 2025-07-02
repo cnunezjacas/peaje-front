@@ -44,6 +44,7 @@ export default defineConfig((/* ctx */) => {
         node: 'node20',
       },
       alias: {
+        layouts: fileURLToPath(new URL('./src/layouts', import.meta.url)),
         utils: fileURLToPath(new URL('./src/utils', import.meta.url)),
         views: fileURLToPath(new URL('./src/pages', import.meta.url)),
         viewsManage: fileURLToPath(new URL('./src/pages/manage/', import.meta.url)),

@@ -65,6 +65,22 @@ const routes = [
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
+        path: '/gest_' + STRINGS.terminalLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.operadoresLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.clientesLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.tramitadorLowercase,
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
         path: '/pageAyuda',
         component: () => import('pages/pageAyuda.vue'),
       },
