@@ -10,6 +10,7 @@ import DialogoAddVehiculo from 'NomenclatorAdd/dialogAddVehiculo.vue'
 import DialogoAddExento from 'NomenclatorAdd/dialogAddExento.vue'
 import DialogoAddComprobante from 'NomenclatorAdd/dialogAddComprobante.vue'
 import DialogoAddFormaDePago from 'NomenclatorAdd/dialogAddFormaDePago.vue'
+import DialogoAddTipoCuenta from 'NomenclatorAdd/dialogAddTipoCuenta.vue'
 
 //Dialogs Edit
 import DialogEditProvincia from 'NomenclatorEdit/dialog_edit_provincia.vue'
@@ -21,6 +22,7 @@ import DialogEditVehiculo from 'NomenclatorEdit/dialog_edit_vehiculo.vue'
 import DialogEditExento from 'NomenclatorEdit/dialog_edit_exento.vue'
 import DialogEditComprobante from 'NomenclatorEdit/dialog_edit_comprobante.vue'
 import DialogEditFdp from 'NomenclatorEdit/dialog_edit_fdp.vue'
+import DialogEditTipoCuenta from 'NomenclatorEdit/dialog_edit_tipo_cuenta.vue'
 
 //Dialogs Delete
 import DialogDeleteGeneric from 'NomenclatorDelete/dialog_delete_generic.vue'
@@ -35,6 +37,7 @@ import table_Gest_monedas from 'NomenclatorTables/table_Gest_moneda.vue'
 import table_Gest_vehiculos from 'NomenclatorTables/table_Gest_vehiculos.vue'
 import table_Gest_exento from 'NomenclatorTables/table_Gest_exento.vue'
 import table_Gest_fdp from 'NomenclatorTables/table_Gest_fdp.vue'
+import table_Gest_tipo_cuenta from 'NomenclatorTables/table_Gest_tipo_cuenta.vue'
 
 import notify_error from 'utils/notify/notify_error.js'
 
@@ -49,6 +52,7 @@ export {
   DialogoAddExento,
   DialogoAddComprobante,
   DialogoAddFormaDePago,
+  DialogoAddTipoCuenta,
   DialogEditComprobante,
   DialogEditProvincia,
   DialogEditMunicipio,
@@ -58,6 +62,7 @@ export {
   DialogEditVehiculo,
   DialogEditExento,
   DialogEditFdp,
+  DialogEditTipoCuenta,
   DialogDeleteGeneric,
   table_Gest_provincia,
   table_Gest_municipio,
@@ -68,5 +73,6 @@ export {
   table_Gest_vehiculos,
   table_Gest_exento,
   table_Gest_fdp,
+  table_Gest_tipo_cuenta,
   notify_error,
 }
