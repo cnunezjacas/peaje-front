@@ -14,9 +14,8 @@
             <div class="col-5">
               <q-input
                 v-model="TextNombre_prov"
-                ref="textNombre_prov"
                 color="green"
-                :rules="rulesAddNombreProvincia"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_prov"
                 @keyup="checkStatusInputs"
@@ -28,7 +27,7 @@
                 v-model="TextCodigo_prov"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigoProvincia"
+                :rules="validaciones_generales.rulesOnlyNumbers"
                 :label="STRINGS.codigo_prov"
                 @keyup="checkStatusInputs"
               />
@@ -41,7 +40,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
+                :class="disabledBtnSave"
                 @click="SendData()"
                 :label="STRINGS.save"
                 color="green"
@@ -69,34 +68,18 @@
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js'
+import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-
-const list = 'blur(4px) saturate(150%)'
-
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreProvincia = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddCodigoProvincia = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
-]
-/*Validaciones*/
+import validaciones_generales from 'src/utils/validaciones_generales'
+validaciones_generales
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
     // Verificar si el código ya existe
     const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
     if (existeCodigo) {
@@ -120,7 +103,7 @@ const SendData = async () => {
 
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
+      dialog.value = false
       Reset()
     }
   }
@@ -134,29 +117,50 @@ const getUpDialogAdd = () => {
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
+  dialog.value = false
   TextCodigo_prov.value = ''
   TextNombre_prov.value = ''
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
+//Función para comprobar que los campos no estén vacíos
+const InputEmpty = () => {
+  if (TextCodigo_prov.value.trim() !== '' && TextNombre_prov.value.trim() !== '') return true
+  else return false
+}
+
+//Función para comprobar que los campos sean válidos
+const InputRegularExpressions = () => {
+  if (
+    expRegulares.onlyNumber.test(TextCodigo_prov.value) &&
+    expRegulares.onlyText.test(TextNombre_prov.value)
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  if (TextCodigo_prov.value != '' && expRegulares.onlyNumber.test(TextCodigo_prov.value))
-    if (TextNombre_prov.value != '' && expRegulares.onlyText.test(TextNombre_prov.value))
-      disabledBtnSaveEdit.value = ''
-    else disabledBtnSaveEdit.value = STRINGS.desabilitar
-  else disabledBtnSaveEdit.value = STRINGS.desabilitar
-
-  return disabledBtnSaveEdit.value
+  const isValid = InputEmpty() && InputRegularExpressions()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
 }
 
+//Ref dialogo
 const dialog = ref(false)
+const list = 'blur(4px) saturate(150%)'
+const refDialogoAdd = ref(null)
 
+//Ref Variables
 const TextCodigo_prov = ref('')
 const TextNombre_prov = ref('')
 const backdropFilter = ref(null)
 
-const textNombre_prov = ref(null)
+//Ref key
 const textCodigo_prov = ref(null)
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+
+//Ref BtnSave
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
 defineExpose({
   getUpDialogAdd,
