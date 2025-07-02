@@ -209,6 +209,19 @@ export const STRINGS = {
   maxDiasSinColectar_PDV: 'Máximo días sin colectar',
   DuracionMaximaDelTurno_PDV: 'Duración máxima del turno(h)',
 
+  //Campos PUNTOS DE VENTAS
+  categoria_cliente: 'Categoría',
+  codigo_cliente: 'Código',
+  nombre_cliente: 'Nombre',
+  siglas_cliente: 'Siglas',
+  estacion_cliente: 'Estación',
+  organismo_cliente: 'Organismo:',
+  idTributaria_cliente: 'ID Tributaria',
+  registroComercial_cliente: 'Registro Comercial',
+  registroMercantil_cliente: 'Registro mercantil',
+  numerosTelefonicos_cliente: 'Números Telefónicos',
+  direccion_cliente: 'Dirección',
+
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
   multiselección: 'Multiselección',
@@ -296,17 +309,16 @@ export const STRINGS = {
   //Alertas de inputs
   inputEmpty: 'El campo no puede estar vacío',
   onlyLetters: 'El campo solo puede contener letras',
-  FullTextAndNumber: 'El campo solo puede contener letras y números',
+  TextAndNumber: 'El campo solo puede contener letras y números',
   onlyUppercase: 'El campo solo puede contener letras Mayúsculas',
   uppercaseAndNumber: 'El campo solo puede contener letras mayúsculas y números',
   onlyNumbers: 'El campo solo puede contener números naturales',
-  numberAndGuion: 'El campo solo puede contener números y guiones',
+  numberAndHyphen: 'El campo solo puede contener números y guiones',
   onlyAddress: 'El campo no puede contener simbolos, ejemplo de algunos [@$&%=¿?ç|º¡!]',
-  CondorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
+  condorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
   cardOfBank: 'El campo solo puede contener 4 bloques de 4 números separados por guiones o juntos',
   decimalPositive: 'Ingrese un decimal positivo',
-  numberPhone:
-    'El campo solo puede contener números de teléfonos separados por comas(,) en caso de ser más de uno.',
+  numberPhone: 'El campo solo puede contener números así cono operador (+) al inicio',
   nickName:
     'Este campo solo asepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
   ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
