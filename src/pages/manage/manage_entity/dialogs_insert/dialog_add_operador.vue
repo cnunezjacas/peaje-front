@@ -187,9 +187,9 @@ const InputEmpty = () => {
 
 const InputRegularExpressions = () => {
   if (
-    expRegulares.FullText.test(TextNombreApellido_operador.value) &&
+    expRegulares.onlyText.test(TextNombreApellido_operador.value) &&
     expRegulares.nickName.test(TextAlias_operador.value) &&
-    expRegulares.FullTextAndNumber.test(TextCodigo_operador.value)
+    expRegulares.TextAndNumber.test(TextCodigo_operador.value)
   )
     return true
   else return false

@@ -205,7 +205,7 @@ const InputEmpty = () => {
 const InputRegularExpressions = () => {
   if (
     expRegulares.onlyNumber.test(TextCodigo_PDV.value) &&
-    expRegulares.FullTextAndNumber.test(TextDescripcion_PDV.value) &&
+    expRegulares.TextAndNumber.test(TextDescripcion_PDV.value) &&
     expRegulares.ip.test(TextIPGaveta_PDV.value) &&
     expRegulares.ip.test(TextIPBarrera_PDV.value) &&
     expRegulares.onlyNumber.test(TextMaxDiasSinColectar_PDV.value)
