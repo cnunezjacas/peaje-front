@@ -76,6 +76,19 @@ const DataSelection = (row, ruta, arraySelected) => {
     arraySelected.value['nomenclador'] = row['nomenclador']
     arraySelected.value['detalles'] = row['detalles']
     arraySelected.value['_id'] = row['_id']
+  } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL) && row) {
+    arraySelected.value['nombre'] = row['codigo']
+    arraySelected.value['codigo'] = row['nombre']
+    arraySelected.value['_id'] = row['_id']
+  }
+  //ENTIDAD
+  else if (nuevaRuta.includes(STRINGS.estacionesLowercase) && row) {
+    arraySelected.value['nombre'] = row['nombre']
+    arraySelected.value['codigo'] = row['codigo']
+    arraySelected.value['direccion'] = row['direccion']
+    arraySelected.value['provincia'] = row['provincia']
+    arraySelected.value['municipio'] = row['municipio']
+    arraySelected.value['_id'] = row['_id']
   } else {
     //notify_error(STRINGS.fila_no_selected)
     return null
@@ -154,6 +167,20 @@ const JoinCamelCase = (str) => {
   return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase()
 }
 
+const cardOfBankToNumber = (card) => {
+  var numero
+  if (card.includes('-')) {
+    // Elimina los guiones
+    const sinGuiones = card.replace(/-/g, '')
+    // Convierte la cadena sin guiones a número
+    numero = Number(sinGuiones)
+  } else {
+    return Number(card)
+  }
+
+  return numero
+}
+
 export default {
   capitalizeWords,
   DataSelection,
@@ -165,4 +192,5 @@ export default {
   getNumberForPage,
   JoinCamelCase,
   isCamelCase,
+  cardOfBankToNumber,
 }
