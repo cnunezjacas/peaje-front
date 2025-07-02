@@ -12,7 +12,7 @@ const rulesOnlyUppercase = [
   (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
 ]
 
-const rulesFullText = [
+const rulesOnlyText = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
 ]
@@ -60,7 +60,7 @@ export default {
   rulesOnlyNumbers,
   rulesNoEmpty,
   rulesOnlyUppercase,
-  rulesFullText,
+  rulesOnlyText,
   rulesFullTextAndNumber,
   rulesNickName,
   rulesIP,
