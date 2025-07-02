@@ -90,7 +90,7 @@ import notify_success from 'src/utils/notify/notify_success.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 const options = ref([])
 
 const refDialogoEdit = ref(null)

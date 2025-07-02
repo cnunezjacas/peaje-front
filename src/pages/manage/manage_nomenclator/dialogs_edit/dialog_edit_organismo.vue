@@ -82,7 +82,7 @@ import notify_error from 'src/utils/notify/notify_error.js'
  * Values for backdrop-filter are the same as in the CSS specs.
  * The following list is not an exhaustive one.
  */
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 
 const refDialogoEditOrganismo = ref(null)
 

@@ -466,4 +466,8 @@ export const STRINGS = {
   //Opciones Lógicas
   yes: 'SI',
   no: 'NO',
+
+  OpacityDialog: 'blur(4px) saturate(150%)',
+  /* OpacityDialog: 'grayscale(100%)', */
+  /* OpacityDialog: 'saturate(80%)', */
 }

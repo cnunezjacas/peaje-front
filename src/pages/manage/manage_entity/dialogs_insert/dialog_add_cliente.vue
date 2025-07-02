@@ -26,7 +26,7 @@
                 v-model="TextNombre_cliente"
                 color="green"
                 type="text"
-                :rules="validacionesGenerales.rulesFullText"
+                :rules="validacionesGenerales.rulesOnlyText"
                 lazy-rules
                 :label="STRINGS.nombre_cliente"
                 @keyup="checkStatusInputs"
@@ -392,7 +392,7 @@ const disabledBtnSave = ref(STRINGS.desabilitar)
 //Ref Dialog
 const dialog = ref(false)
 const refDialogoAdd = ref(null)
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
 
 //Casos Especiales

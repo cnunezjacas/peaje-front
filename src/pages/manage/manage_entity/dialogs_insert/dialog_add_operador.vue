@@ -26,7 +26,7 @@
                 v-model="TextNombreApellido_operador"
                 color="green"
                 type="text"
-                :rules="validacionesGenerales.rulesFullText"
+                :rules="validacionesGenerales.rulesOnlyText"
                 :label="STRINGS.nombreApellidos_operador"
                 lazy-rules
                 @keyup="checkStatusInputs"
@@ -143,7 +143,7 @@ import notify_success from 'src/utils/notify/notify_success.js'
 //import imports from 'src/utils/imports'
 
 //import imports from 'src/utils/imports'
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 
 const refDialogoAdd = ref(null)
 

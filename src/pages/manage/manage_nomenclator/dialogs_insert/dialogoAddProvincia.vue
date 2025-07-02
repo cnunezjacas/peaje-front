@@ -148,7 +148,7 @@ const checkStatusInputs = () => {
 
 //Ref dialogo
 const dialog = ref(false)
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 const refDialogoAdd = ref(null)
 
 //Ref Variables

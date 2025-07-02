@@ -223,7 +223,7 @@ const checkStatusInputs = () => {
 //Ref Dialog
 const dialog = ref(false)
 const backdropFilter = ref(null)
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 const refDialogoAdd = ref(null)
 
 //Variables Banco

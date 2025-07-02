@@ -86,7 +86,7 @@ import notify_success from 'src/utils/notify/notify_success.js'
 import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 
 const options = ref([])
 

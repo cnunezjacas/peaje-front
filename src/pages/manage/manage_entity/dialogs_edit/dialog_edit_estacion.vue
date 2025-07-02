@@ -275,7 +275,7 @@ const refDialogoEdit = ref(null)
 
 //import notify_error from 'src/utils/notify/notify_error.js'
 import { onBeforeMount } from 'vue'
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 
 const optionsProvince = ref([])
 const optionsBanco = ref([])

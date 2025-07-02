@@ -221,7 +221,7 @@ import validaciones_generales from 'src/utils/validaciones_generales'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 import Phone from 'src/pages/manage/manage_entity/template/PhoneNumberInput.vue'
 
-const list = 'blur(4px) saturate(150%)'
+const list = STRINGS.OpacityDialog
 
 const refDialogoAdd = ref(null)
 
