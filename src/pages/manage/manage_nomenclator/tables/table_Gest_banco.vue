@@ -7,7 +7,7 @@
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
           <q-breadcrumbs-el :label="STRINGS.bancoLowercase" icon="post_add" />
@@ -23,8 +23,7 @@
 
     <q-table
       v-else
-      class="shadow-2"
-      bordered
+      class="shadow-2 custom-horizontal-lines"
       table-header-class="bg-green-10 text-white"
       ref="tableAddProvincia"
       :rows-per-page-label="STRINGS.record_page"
@@ -75,6 +74,12 @@ const columns = [
     field: STRINGS.detalles_banco.toLocaleLowerCase(),
     sortable: true,
   },
+  {
+    name: '_id',
+    label: 'id',
+    field: '_id',
+    sortable: true,
+  },
 ]
 
 import { onBeforeMount } from 'vue'
@@ -115,7 +120,7 @@ const filteredRows = computed(() => {
     return (
       row.nombre.toLowerCase().includes(searchTerm) ||
       row.codigo.toLowerCase().includes(searchTerm) ||
-      row.detalles.toLowerCase().includes(searchTerm)
+      row._id.toLowerCase().includes(searchTerm)
     )
   })
 })

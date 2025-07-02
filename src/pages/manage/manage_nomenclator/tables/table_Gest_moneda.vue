@@ -7,7 +7,7 @@
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
           <q-breadcrumbs-el :label="STRINGS.monedasLowercase" icon="post_add" />
@@ -23,8 +23,7 @@
 
     <q-table
       v-else
-      class="shadow-2"
-      bordered
+      class="shadow-2 custom-horizontal-lines"
       table-header-class="bg-green-10 text-white"
       ref="tableMoneda"
       :rows-per-page-label="STRINGS.record_page"

@@ -2,15 +2,15 @@
   <div class="q-px-md">
     <div class="flex justify-between padding_minimo">
       <div class="text-center bg-green-10 rounded-borders my-cell">
-        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.comprobanteLowercase }}</p>
+        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ Titulo.toLowerCase() }}</p>
       </div>
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" to="/" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
-          <q-breadcrumbs-el :label="STRINGS.comprobanteLowercase" icon="post_add" />
+          <q-breadcrumbs-el :label="Titulo.toLowerCase()" icon="post_add" />
         </q-breadcrumbs>
       </div>
     </div>
@@ -34,7 +34,6 @@
       row-key="codigo"
       :separator="separator"
       selection="single"
-      :selected-rows-label="customSelectedLabel"
       v-model:selected="selectedRows"
       @update:selected="onSelectedRowsChange"
     />
@@ -45,11 +44,10 @@
 import { ref, computed } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
+import imports from 'src/utils/imports'
 import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
-import imports from 'src/utils/imports.js'
 
-// Datos
 const numberForPage = imports.getNumberForPage()
 const isLoading = ref(true)
 
@@ -57,59 +55,27 @@ const columns = [
   {
     name: 'codigo',
     align: STRINGS.TableAlign,
-    label: STRINGS.codigo_comprobante,
+    label: STRINGS.codigo_tipoCuenta,
     field: 'codigo',
     sortable: true,
   },
   {
     name: 'nombre',
     required: true,
-    label: STRINGS.nombre_comprobante,
+    label: STRINGS.nombre_tipoCuenta,
     align: STRINGS.TableAlign,
     field: (rows) => rows.nombre,
     format: (val) => `${val}`,
     sortable: true,
   },
-  {
-    name: 'valor',
-    required: true,
-    label: STRINGS.valor_comprobante,
-    field: 'valor',
-    align: STRINGS.TableAlign,
-    format: (val) => `${val} $`,
-    sortable: true,
-  },
-  {
-    name: STRINGS.moneda_comprobante.toLowerCase(),
-    required: true,
-    label: STRINGS.moneda_comprobante,
-    align: STRINGS.TableAlign,
-    field: STRINGS.moneda_comprobante.toLowerCase(),
-    sortable: true,
-  },
 ]
 
-// Función para personalizar la etiqueta del número de filas seleccionadas
-
-const customSelectedLabel = (count) => {
-  return `${count} fila${count > 1 ? 's' : ''} seleccionada${count > 1 ? 's' : ''}`
-}
+const Titulo = ref('')
 
 const InitDataTable = async () => {
   isLoading.value = true
   try {
-    const response = await api.get(STRINGS.urlApiComprobante)
-
-    const responseMoneda = await imports.getCoin()
-
-    response.data.forEach((element) => {
-      responseMoneda.data.forEach((item) => {
-        if (item['_id'] === element['moneda']) {
-          element['moneda'] = item['siglas']
-        }
-      })
-    })
-
+    const response = await api.get(STRINGS.urlApiTipoCuenta)
     rows.value = response.data
   } catch (error) {
     console.error('Error cargando datos:', error)
@@ -119,8 +85,13 @@ const InitDataTable = async () => {
   }
 }
 
+const GetTitulo = () => {
+  Titulo.value = imports.JoinCamelCase(STRINGS.tipoCuentaLowercaseURL)
+}
+
 onBeforeMount(() => {
   InitDataTable()
+  GetTitulo()
 })
 
 const rows = ref([])
@@ -139,13 +110,12 @@ const filteredRows = computed(() => {
   const searchTerm = props.TextSearch.toLowerCase()
   return rows.value.filter((row) => {
     return (
-      row.nombre.toLowerCase().includes(searchTerm) ||
-      row.codigo.toLowerCase().includes(searchTerm) ||
-      row.moneda.toLowerCase().includes(searchTerm)
+      row.nombre.toLowerCase().includes(searchTerm) || row.codigo.toLowerCase().includes(searchTerm)
     )
   })
 })
 
+// Emite eventos
 const emit = defineEmits(['seleccionado'])
 //Manejador de los botones de la navBottom
 var EnableItemsTabs = ref(true)
@@ -162,12 +132,14 @@ const onSelectedRowsChange = (newSelected) => {
 
 const UpdateTable = async () => {
   InitDataTable()
+  selectedRows.value = []
 }
 
 const EmptySelected = () => {
   selectedRows.value = []
 }
 
+// Exponemos `filteredRows` si el padre necesita acceder directamente
 defineExpose({
   filteredRows,
   EmptySelected,

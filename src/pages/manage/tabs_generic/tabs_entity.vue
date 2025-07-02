@@ -87,6 +87,9 @@
   <!-- Add Operador -->
   <DialogoAddOperador ref="dialogoAddOperador" @ActualizarTabla="tableUpdater" />
 
+  <!-- Add Operador -->
+  <DialogoAddCliente ref="dialogoAddCliente" @ActualizarTabla="tableUpdater" />
+
   <!-- Edit Estacion -->
   <DialogoEditEstacion ref="dialogoEditEstacion" @ActualizarTabla="tableUpdater" />
 
@@ -123,6 +126,7 @@ import {
   DialogoAddTerminal,
   DialogoAddPuntoDeVenta,
   DialogoAddOperador,
+  DialogoAddCliente,
   DialogoEditEstacion,
   TableEstacion,
   TableADT,
@@ -222,6 +226,9 @@ const dialogoAddPuntoDeVenta = ref(null)
 //Const Operador
 const dialogoAddOperador = ref(null)
 
+//Const Cliente
+const dialogoAddCliente = ref(null)
+
 const tableUpdater = (value) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
@@ -298,11 +305,13 @@ const onItemClick = (value) => {
         dialogoAddPuntoDeVenta.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.operadoresLowercase)) {
         dialogoAddOperador.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.clientesLowercase)) {
+        dialogoAddCliente.value.getUpDialogAdd()
       }
       break
     case STRINGS.edit:
       if (nuevaRuta.includes(STRINGS.estacionesLowercase)) {
-        dialogoEditEstacion.value.LevantarDialogoEdit(
+        dialogoEditEstacion.value.getUpDialogEdit(
           arraySelected.value['nombre'],
           arraySelected.value['codigo'],
           arraySelected.value['direccion'],

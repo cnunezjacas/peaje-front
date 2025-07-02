@@ -7,7 +7,7 @@
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" to="/" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
           <q-breadcrumbs-el :label="STRINGS.provinciaLowercase" icon="post_add" />
@@ -22,8 +22,7 @@
 
     <q-table
       v-else
-      class="shadow-2"
-      bordered
+      class="shadow-2 custom-horizontal-lines"
       table-header-class="bg-green-10 text-white"
       ref="tableAddProvincia"
       :rows-per-page-label="STRINGS.record_page"
@@ -36,26 +35,32 @@
       selection="single"
       v-model:selected="selectedRows"
       @update:selected="onSelectedRowsChange"
-    />
+    >
+    </q-table>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+//******* Importaciones *******
+import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
 import imports from 'src/utils/imports.js'
+import notify_error from 'src/utils/notify/notify_error.js'
 
-// Datos
+// ******* Variables *******
 const numberForPage = imports.getNumberForPage()
-//Spinner Carga Datos
 const isLoading = ref(true)
-
+const rows = ref([])
+const separator = ref('vertical')
+const selectedRows = ref([])
+var EnableItemsTabs = ref(true)
 const columns = [
   {
     name: 'nombre',
     required: true,
-    label: STRINGS.nombre,
+    label: STRINGS.nombre_prov,
+    style: 'width: 150px;', // ajusta según sea necesario
     align: STRINGS.TableAlign,
     field: (rows) => rows.nombre,
     format: (val) => `${val}`,
@@ -63,16 +68,25 @@ const columns = [
   },
   {
     name: 'codigo',
-    align: STRINGS.TableAlign,
     label: STRINGS.codigo_prov,
+    align: STRINGS.TableAlign,
+    style: 'width: 10px;', // ajusta según sea necesario
     field: 'codigo',
+    sortable: true,
+  },
+  {
+    name: '_id',
+    align: STRINGS.TableAlign,
+    style: 'width: 10px;', // ajusta según sea necesario
+    field: '_id',
     sortable: true,
   },
 ]
 
-import { onBeforeMount } from 'vue'
-import notify_error from 'src/utils/notify/notify_error.js'
-
+//******* Funciones *******
+/**
+ * Función encargada de cargar los datos de la tabla
+ */
 const InitDataTable = async () => {
   isLoading.value = true
   try {
@@ -86,20 +100,49 @@ const InitDataTable = async () => {
   }
 }
 
+// Emite eventos
+const emit = defineEmits(['seleccionado'])
+/**
+ * Función encargada de capturar los datos del elemento capturado
+ */
+const onSelectedRowsChange = (newSelected) => {
+  if (newSelected.length > 0) {
+    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
+    emit('onEnable', (EnableItemsTabs.value = false))
+  } else {
+    emit('onEnable', (EnableItemsTabs.value = true))
+  }
+}
+/**
+ * Función encargada actualizar los datos de la tabla
+ */
+const UpdateTable = async () => {
+  InitDataTable()
+  selectedRows.value = []
+}
+/**
+ * Función encargada de limpiar los datos capturados en la selección
+ */
+const EmptySelected = () => {
+  selectedRows.value = []
+}
+
+//******* Métodos *******
+/**
+ * Método encargado de realizar operaciones, previo de que el componente sea montado en el DOM
+ */
 onBeforeMount(() => {
   InitDataTable()
 })
-
-const rows = ref([])
-const separator = ref('vertical')
-const selectedRows = ref([])
 
 // Props
 const props = defineProps({
   TextSearch: String,
 })
 
-// Reacción a cambios en TextSearch
+/**
+ * Función encargado filtrar los datos de la tabla según el criterio de búsqueda descrito en "props.TextSearch"
+ */
 const filteredRows = computed(() => {
   if (!props.TextSearch) {
     return rows.value
@@ -113,31 +156,7 @@ const filteredRows = computed(() => {
   })
 })
 
-// Emite eventos
-const emit = defineEmits(['seleccionado'])
-//Manejador de los botones de la navBottom
-var EnableItemsTabs = ref(true)
-
-// Manejador de selección
-const onSelectedRowsChange = (newSelected) => {
-  if (newSelected.length > 0) {
-    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onEnable', (EnableItemsTabs.value = false))
-  } else {
-    emit('onEnable', (EnableItemsTabs.value = true))
-  }
-}
-
-const UpdateTable = async () => {
-  InitDataTable()
-  selectedRows.value = []
-}
-
-const EmptySelected = () => {
-  selectedRows.value = []
-}
-
-// Exponemos `filteredRows` si el padre necesita acceder directamente
+//Exponer Funciones y Métodos a Template Padre
 defineExpose({
   filteredRows,
   UpdateTable,

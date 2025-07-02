@@ -7,7 +7,7 @@
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
           <q-breadcrumbs-el :label="STRINGS.bancoLowercase" icon="post_add" />
@@ -23,8 +23,7 @@
 
     <q-table
       v-else
-      class="shadow-2"
-      bordered
+      class="shadow-2 custom-horizontal-lines"
       table-header-class="bg-green-10 text-white"
       ref="tableAddProvincia"
       :rows-per-page-label="STRINGS.record_page"
@@ -131,21 +130,15 @@ const filteredRows = computed(() => {
 // Emite eventos
 const emit = defineEmits(['seleccionado'])
 //Manejador de los botones de la navBottom
-var BloquearEdit = ref(true)
-var BloquearDelete = ref(true)
-var BloquearDetalle = ref(true)
+var EnableItemsTabs = ref(true)
 
 // Manejador de selección
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onBloquearEdit', (BloquearEdit.value = false))
-    emit('onBloquearDelete', (BloquearDelete.value = false))
-    emit('onBloquearDetalle', (BloquearDetalle.value = false))
+    emit('onEnable', (EnableItemsTabs.value = false))
   } else {
-    emit('onBloquearEdit', (BloquearEdit.value = true))
-    emit('onBloquearDelete', (BloquearDelete.value = true))
-    emit('onBloquearDetalle', (BloquearDetalle.value = true))
+    emit('onEnable', (EnableItemsTabs.value = true))
   }
 }
 

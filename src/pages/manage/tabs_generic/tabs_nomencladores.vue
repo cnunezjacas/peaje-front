@@ -608,7 +608,7 @@ const onItemClick = (value) => {
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogoEditProvincia.value.LevantarDialogoEdit(
+            dialogoEditProvincia.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['_id'],
@@ -617,7 +617,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.municipioLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogoEditMunicipio.value.LevantarDialogoEdit(
+            dialogoEditMunicipio.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['provincia'],
@@ -627,7 +627,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.organismoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditOrganismo.value.LevantarDialogoEdit(
+            dialogEditOrganismo.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['name'],
               arraySelected.value['_id'],
@@ -636,7 +636,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.bancoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditBanco.value.LevantarDialogoEdit(
+            dialogEditBanco.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['detalle'],
@@ -646,7 +646,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.monedasLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditMoneda.value.LevantarDialogoEdit(
+            dialogEditMoneda.value.getUpDialogEdit(
               arraySelected.value['siglas'],
               arraySelected.value['nombre'],
               arraySelected.value['tasa'],
@@ -659,7 +659,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditVehiculo.value.LevantarDialogoEdit(
+            dialogEditVehiculo.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['tasa'],
@@ -670,7 +670,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.exentoLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditExento.value.LevantarDialogoEdit(
+            dialogEditExento.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['nomenclador'],
@@ -681,7 +681,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditComprobante.value.LevantarDialogoEdit(
+            dialogEditComprobante.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['codigo'],
               arraySelected.value['moneda'],
@@ -692,7 +692,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditFdp.value.LevantarDialogoEdit(
+            dialogEditFdp.value.getUpDialogEdit(
               arraySelected.value['nombre'],
               arraySelected.value['nomenclador'],
               arraySelected.value['detalles'],
@@ -702,7 +702,7 @@ const onItemClick = (value) => {
       } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL)) {
         if (!disabledEdit.value.includes(STRINGS.desabilitar)) {
           if (arraySelected.value != null)
-            dialogEditTipoCuenta.value.LevantarDialogoEdit(
+            dialogEditTipoCuenta.value.getUpDialogEdit(
               arraySelected.value['codigo'],
               arraySelected.value['nombre'],
               arraySelected.value['_id'],
@@ -713,7 +713,7 @@ const onItemClick = (value) => {
       break
     case STRINGS.delete:
       if (!disabledDelete.value.includes(STRINGS.desabilitar)) {
-        dialogoDelete.value.LevantarDialogoDelete(
+        dialogoDelete.value.getUpDialogDelete(
           arraySelected.value['nombre'],
           arraySelected.value['_id'],
           getPath(),
