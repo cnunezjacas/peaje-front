@@ -14,12 +14,12 @@ const rulesOnlyUppercase = [
 
 const rulesFullText = [
   (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.FullText.test(val) || STRINGS.onlyLetters,
+  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
 ]
 
 const rulesFullTextAndNumber = [
-  (val) => val != '' || STRINGS.FullTextAndNumber,
-  (val) => expRegulares.FullTextAndNumber.test(val) || STRINGS.FullTextAndNumber,
+  (val) => val != '' || STRINGS.TextAndNumber,
+  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
 ]
 
 const rulesNoEmpty = [(val) => val != '' || STRINGS.inputEmpty]
@@ -33,6 +33,27 @@ const rulesIP = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.ip.test(val) || STRINGS.ip,
 ]
+
+const rulesCardOfBank = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.cardOfBank.test(val) || STRINGS.cardOfBank,
+]
+
+const rulesPhone = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.numberPhone.test(val) || STRINGS.numberPhone,
+]
+
+const rulesAddress = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.onlyAddress.test(val) || STRINGS.onlyAddress,
+]
+
+const rulesNumberAndHyphen = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.numberAndHyphen.test(val) || STRINGS.numberAndHyphen,
+]
+
 /*Validaciones*/
 
 export default {
@@ -43,4 +64,8 @@ export default {
   rulesFullTextAndNumber,
   rulesNickName,
   rulesIP,
+  rulesCardOfBank,
+  rulesPhone,
+  rulesAddress,
+  rulesNumberAndHyphen,
 }
