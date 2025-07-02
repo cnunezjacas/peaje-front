@@ -7,6 +7,7 @@ import DialogoAddCuenta from 'EntityAdd/dialog_add_cuenta.vue'
 import DialogoAddTerminal from 'EntityAdd/dialog_add_terminal.vue'
 import DialogoAddPuntoDeVenta from 'EntityAdd/dialog_add_puntos_de_venta.vue'
 import DialogoAddOperador from 'EntityAdd/dialog_add_operador.vue'
+import DialogoAddCliente from 'EntityAdd/dialog_add_cliente.vue'
 
 //Dialogs Edit
 import DialogoEditEstacion from 'EntityEdit/dialog_edit_estacion.vue'
@@ -28,6 +29,7 @@ export {
   DialogoAddTerminal,
   DialogoAddPuntoDeVenta,
   DialogoAddOperador,
+  DialogoAddCliente,
   DialogoEditEstacion,
   TableEstacion,
   TableADT,
