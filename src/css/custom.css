@@ -9,16 +9,40 @@
   flex-direction: column; /* Opcional */
 }
 
+.noStyle {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.small-font-user {
+  font-size: 15px; /* Ajusta el tamaño según necesites */
+  font-weight: bold;
+}
+
+.textSubtittle {
+  font-size: 11px;
+}
+
 .border-box-bank {
   border: 1px solid rgb(45, 149, 13);
   padding-bottom: 30px;
   padding-left: 10px;
   padding-right: 10px;
+  border-radius: 10px !important;
+  -webkit-border-radius: 10px !important;
+  -moz-border-radius: 10px !important;
+  -ms-border-radius: 10px !important;
+  -o-border-radius: 10px !important;
 }
 
 .border-box-radio {
   border: 1px solid rgb(45, 149, 13);
   padding: 10px !important;
+  border-radius: 10px !important;
+  -webkit-border-radius: 10px !important;
+  -moz-border-radius: 10px !important;
+  -ms-border-radius: 10px !important;
+  -o-border-radius: 10px !important;
 }
 
 .dialog-md {
@@ -131,13 +155,12 @@
 
 /* Tamaño dialogos */
 
-.my-menu-link {
-  color: white;
-  background-color: #000;
-  font-weight: bold;
-}
-
 .q-item--active {
   background-color: #fff;
   color: #000;
+}
+
+/*Bordes horizontales celdas*/
+.custom-horizontal-lines td {
+  border-bottom: 1px solid #dcdcdc;
 }
