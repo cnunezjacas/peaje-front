@@ -87,8 +87,11 @@
   <!-- Add Operador -->
   <DialogoAddOperador ref="dialogoAddOperador" @ActualizarTabla="tableUpdater" />
 
-  <!-- Add Operador -->
+  <!-- Add Cliente -->
   <DialogoAddCliente ref="dialogoAddCliente" @ActualizarTabla="tableUpdater" />
+
+  <!-- Add Tramitador -->
+  <DialogoAddTramitador ref="dialogoAddTramitador" @ActualizarTabla="tableUpdater" />
 
   <!-- Edit Estacion -->
   <DialogoEditEstacion ref="dialogoEditEstacion" @ActualizarTabla="tableUpdater" />
@@ -127,6 +130,7 @@ import {
   DialogoAddPuntoDeVenta,
   DialogoAddOperador,
   DialogoAddCliente,
+  DialogoAddTramitador,
   DialogoEditEstacion,
   TableEstacion,
   TableADT,
@@ -229,6 +233,9 @@ const dialogoAddOperador = ref(null)
 //Const Cliente
 const dialogoAddCliente = ref(null)
 
+//Const Tramitador
+const dialogoAddTramitador = ref(null)
+
 const tableUpdater = (value) => {
   var ruta = route.fullPath
   var nuevaRuta = ruta.split('_')
@@ -307,6 +314,8 @@ const onItemClick = (value) => {
         dialogoAddOperador.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.clientesLowercase)) {
         dialogoAddCliente.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.tramitadorLowercase)) {
+        dialogoAddTramitador.value.getUpDialogAdd()
       }
       break
     case STRINGS.edit:
