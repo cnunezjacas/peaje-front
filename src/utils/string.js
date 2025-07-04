@@ -10,6 +10,7 @@ export const STRINGS = {
   //manage
   gestionNomencladoresLowercase: 'gestion_nomencladores',
   gestionEntidadLowercase: 'gestion_entidad',
+  gestionAlmacenLowercase: 'gestion_almacen',
   gestionBancoLowercase: 'gestion_banco',
 
   //Text of Tabs
@@ -209,7 +210,7 @@ export const STRINGS = {
   maxDiasSinColectar_PDV: 'Máximo días sin colectar',
   DuracionMaximaDelTurno_PDV: 'Duración máxima del turno(h)',
 
-  //Campos PUNTOS DE VENTAS
+  //Campos Clientes
   categoria_cliente: 'Categoría',
   codigo_cliente: 'Código',
   nombre_cliente: 'Nombre',
@@ -221,6 +222,13 @@ export const STRINGS = {
   registroMercantil_cliente: 'Registro mercantil',
   numerosTelefonicos_cliente: 'Números Telefónicos',
   direccion_cliente: 'Dirección',
+
+  //Campos Tramitador
+  id_tramitador: 'ID',
+  nombre_tramitador: 'Nombre y Apellidos',
+  correo_tramitador: 'Correo',
+  estado_tramitador: 'Estado',
+  cliente_tramitador: 'Cliente',
 
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
@@ -322,6 +330,7 @@ export const STRINGS = {
   nickName:
     'Este campo solo asepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
   ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
+  email: 'Ingrese un correo válido: Ejemplo: ruky_99@@gmail.com',
 
   //Alertas Success Provincias
   provinciaAddSuccess: 'Provincia añadida correctamente.',
