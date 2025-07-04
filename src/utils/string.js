@@ -91,6 +91,8 @@ export const STRINGS = {
   nombre: 'Nombre',
   nombre_abreviado: 'Sigla',
 
+  //*********** Campos Nomenclador **************
+
   //Campos Provincia
   nombre_prov: 'Nombre provincia',
   codigo_prov: 'Código provincia',
@@ -229,6 +231,13 @@ export const STRINGS = {
   correo_tramitador: 'Correo',
   estado_tramitador: 'Estado',
   cliente_tramitador: 'Cliente',
+
+  //*********** Campos Almacén **************
+  codigo_tarjetaBanca: 'Código',
+  descripcion_tarjetaBanca: 'Descripción',
+  balance_tarjetaBanca: 'Balance',
+  sam_tarjetaBanca: 'SAM',
+  costo_tarjetaBanca: 'Costo',
 
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
