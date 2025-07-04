@@ -14,9 +14,8 @@
             <div class="col-5">
               <q-input
                 v-model="TextNombre_mun"
-                ref="textNombre_Mun"
                 color="green"
-                :rules="rulesAddNombreMunicipio"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_mun"
                 @keyup="checkStatusInputs"
@@ -28,7 +27,7 @@
                 v-model="TextCodigo_mun"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigoMunicipio"
+                :rules="validaciones_generales.rulesOnlyNumbers"
                 :label="STRINGS.codigo_mun"
                 @keyup="checkStatusInputs"
               />
@@ -41,7 +40,7 @@
                 @update:model-value="SelectNombre_prov = $event"
                 :options="options"
                 :label="STRINGS.nombre_prov"
-                :rules="rulesAddNombreProvincia"
+                :rules="validaciones_generales.rulesNoEmpty"
               />
             </div>
           </div>
@@ -86,7 +85,8 @@ import notify_success from 'src/utils/notify/notify_success.js'
 import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
-const list = STRINGS.OpacityDialog
+import validaciones_generales from 'src/utils/validaciones_generales'
+validaciones_generales
 
 const options = ref([])
 
@@ -98,38 +98,18 @@ onBeforeMount(() => {
   loadProvincias()
 })
 
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreMunicipio = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddCodigoMunicipio = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
-]
-
-const rulesAddNombreProvincia = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
-
 const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    //var aux = ''
-
     // Verificar si el código ya existe
     const existeCodigo = await verificarCodigoExistente(TextCodigo_mun.value)
     if (existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
-
       notify_error(STRINGS.codigoRepetido)
-
+      //Focus del campo Código
       textCodigo_Mun.value.focus()
-
       return
     } else {
       const newItem = {
@@ -140,52 +120,43 @@ const SendData = async () => {
 
       try {
         await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
-
         notify_success(STRINGS.municipioAddSuccess)
-
         emit('ActualizarTabla', true)
       } catch (error) {
         console.error('Error al crear item:', error)
         notify_error(STRINGS.municipioAddError)
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
       Reset()
     }
   }
 }
 
+//Función para comprobar que los campos no estén vacíos
 const InputEmpty = () => {
   if (
-    TextNombre_mun.value.trim() === '' ||
-    TextCodigo_mun.value.trim() === '' ||
-    SelectNombre_prov.value === ''
+    TextNombre_mun.value.trim() !== '' &&
+    TextCodigo_mun.value.trim() !== '' &&
+    SelectNombre_prov.value !== ''
   )
     return true
   else return false
 }
 
+//Función para comprobar que los campos sean válidos
 const InputRegularExpressions = () => {
-  let InputValidated =
+  if (
     expRegulares.onlyNumber.test(TextCodigo_mun.value) &&
-    expRegulares.onlyText.test(TextNombre_mun.value) &&
-    SelectNombre_prov.value !== null
-
-  return InputValidated
+    expRegulares.onlyText.test(TextNombre_mun.value)
+  )
+    return true
+  else return false
 }
 
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  var isEmpty = InputEmpty()
-  var InputValidated = InputRegularExpressions()
-
-  if (isEmpty) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else if (!InputValidated) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else {
-    disabledBtnSave.value = ''
-  }
-
+  const isValid = InputEmpty() && InputRegularExpressions()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
@@ -204,19 +175,24 @@ const Reset = () => {
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
+//Ref dialogo
 const dialog = ref(false)
+const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
+const refDialogoAdd = ref(null)
 
 const TextCodigo_mun = ref('')
 const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
 const selectProv = ref(null)
 
-const textNombre_Mun = ref(null)
+//Ref key
 const textCodigo_Mun = ref(null)
 
+//Ref BtnSave
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
+//Casos Especiales
 watch(SelectNombre_prov, () => {
   checkStatusInputs()
 })
