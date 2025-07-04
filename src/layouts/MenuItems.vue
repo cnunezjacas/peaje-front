@@ -69,7 +69,6 @@ const toggleExpand = () => {
 
 // Función para determinar si un item está activo
 const isActiveItem = (item) => {
-  //console.log(route.path)
   return route.path === '/' + item.id
 }
 

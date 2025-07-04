@@ -238,6 +238,61 @@ const linksNavLeft = [
       },
     ],
   },
+  {
+    id: STRINGS.gestionEntidadLowercase,
+    label: STRINGS.gestionEntidad,
+    icon: 'folder',
+    children: [
+      {
+        id: 'gest_' + STRINGS.cuentaLowercase,
+        label: STRINGS.cuentaLowercase,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.estacionesLowercase,
+        label: STRINGS.name_estaciones,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.areasDeTrabajoLowercase,
+        label: STRINGS.name_areas_trabajo,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.puntosDeVentasLowercase,
+        label: STRINGS.name_puntos_venta,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.terminalLowercase,
+        label: STRINGS.name_terminal,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.operadoresLowercase,
+        label: STRINGS.name_operadores,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.clientesLowercase,
+        label: STRINGS.name_clientes,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+      {
+        id: 'gest_' + STRINGS.tramitadorLowercase,
+        label: STRINGS.name_tramitador,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        icon: 'post_add',
+      },
+    ],
+  },
 
   {
     id: 'pageConfiguracion',

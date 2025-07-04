@@ -1,4 +1,5 @@
 <template>
+  <gestGlobal ref="gestGlobalRef" style="display: none" />
   <div class="text-uppercase small-font">
     <q-list padding class="rounded-borders text-white">
       <MenuItems
@@ -8,15 +9,14 @@
         @item-clicked="handleItemClick"
       />
     </q-list>
-    <gestGlobal ref="gestGlobalRef" style="display: none" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import gestGlobal from 'viewsManage/gest_global.vue'
-import MenuItems from '../layouts/MenuItems.vue' // componente recursivo
+import MenuItems from 'layouts/MenuItems.vue' // componente recursivo
 
 // Props
 defineProps({
@@ -28,19 +28,23 @@ defineProps({
 
 // Refs y hooks
 const router = useRouter()
-const route = useRoute()
+//const route = useRoute()
 
 const gestGlobalRef = ref(null)
+const ItemTab = ref({})
 
 // Estado de items expandidos (si quieres mantenerlo en la raíz)
 
 // Función para manejar clic en item
-const handleItemClick = (item) => {
+const handleItemClick = async (item) => {
   if (item.children && item.children.length) {
+    /*console.log('Soy Padre')
     gestGlobalRef.value.CheckItemFather(item)
-    //toggleExpand(item)
+    //toggleExpand(item)*/
   } else {
-    gestGlobalRef.value.CheckItemChildren(route.path.split('/'))
+    //ItemTab.value = item
+    ItemTab.value = item
+    await gestGlobalRef.value.CheckItemChildren(item)
     router.push('/' + item.id)
   }
 }
