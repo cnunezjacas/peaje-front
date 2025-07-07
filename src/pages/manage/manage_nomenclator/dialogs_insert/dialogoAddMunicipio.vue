@@ -181,6 +181,7 @@ const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
 const refDialogoAdd = ref(null)
 
+//Ref Variables
 const TextCodigo_mun = ref('')
 const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
@@ -197,6 +198,7 @@ watch(SelectNombre_prov, () => {
   checkStatusInputs()
 })
 
+/* Exponer variables o funciones al fichero padre */
 defineExpose({
   getUpDialogAdd,
 })
