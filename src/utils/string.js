@@ -5,6 +5,7 @@ export const STRINGS = {
   gestionNomencladores: 'Gestión nomencladores',
   gestionEntidad: 'Gestión entidad',
   gestionBanco: 'Gestión Banco',
+  gestionAlmacen: 'Gestión Almacén',
   gestionPeaje: 'Acciones de peaje',
 
   //manage
@@ -294,6 +295,24 @@ export const STRINGS = {
   operadoresLowercase: 'operadores',
   clientesLowercase: 'clientes',
   tramitadorLowercase: 'tramitador',
+
+  //NOMBRES MODULO Almacen MAYUSCULAS
+  name_tarjeta_blanca: 'Tarjeta blanca',
+  name_tarjeta_producida: 'Tarjeta producida',
+  name_proveedor: 'Proveedor',
+  name_recepcion_de_tarjeta_blanca: 'Recepción de tarjeta blanca',
+  name_recepcion_de_tarjeta_producida: 'Recepción de tarjeta producida ',
+  name_salida_de_tarjeta_producida: 'Salida tarjeta producida',
+  name_visualizar_movimientos_internos: 'Visualizar movimientos internos',
+
+  //NOMBRES MODULO Almacen MINUSCULAS
+  tarjeta_blancaLowercase: 'tarjetaBlanca',
+  tarjeta_producidaLowercase: 'tarjetaProducida',
+  proveedorLowercase: 'proveedor',
+  recepcion_de_tarjeta_blancaLowercase: 'recepcionDeTarjetaBlanca',
+  recepcion_de_tarjeta_producidaLowercase: 'recepcionDeTarjetaProducida ',
+  salida_de_tarjeta_producidaLowercase: 'salidaTarjetaProducida',
+  visualizar_movimientos_internosLowercase: 'visualizarMovimientosInternos',
 
   search: 'Buscar...',
   desabilitar: 'disabled',
