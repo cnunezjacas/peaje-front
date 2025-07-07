@@ -76,28 +76,28 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+/* Importaciones */
+import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
 import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteMunicipio.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
-import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
-validaciones_generales
 
-const options = ref([])
-
+/* Función encargada de realizar la petición y retornar el listado de provincias */
 const loadProvincias = async () => {
   options.value = await getNomenclator.loadProvincias()
 }
 
+/* onBeforeMount: se ejecuta justo antes de que el componente se monte en el DOM. */
 onBeforeMount(() => {
   loadProvincias()
 })
 
+/* Inicialización del Emit */
 const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
@@ -109,8 +109,7 @@ const SendData = async () => {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
       //Focus del campo Código
-      textCodigo_Mun.value.focus()
-      return
+      return textCodigo_Mun.value.focus()
     } else {
       const newItem = {
         codigo: Number(TextCodigo_mun.value),
@@ -186,6 +185,7 @@ const TextCodigo_mun = ref('')
 const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
 const selectProv = ref(null)
+const options = ref([])
 
 //Ref key
 const textCodigo_Mun = ref(null)
