@@ -5,7 +5,11 @@
         <p class="text-tittle-table">{{ props.title }}</p>
       </div>
       <div>
-        <slot name="breadcrumbs"></slot>
+        <q-breadcrumbs>
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" :label="props.fatherBreadcrumbs" icon="folder" />
+          <q-breadcrumbs-el :label="props.SonBreadcrumbs" icon="post_add" />
+        </q-breadcrumbs>
       </div>
     </div>
 
@@ -49,6 +53,8 @@ const props = defineProps({
   separator: String,
   breadcrumbsSlot: Boolean,
   searchTerm: String,
+  fatherBreadcrumbs: String,
+  SonBreadcrumbs: String,
   filteredRows: {
     type: Array,
     default: () => [],
