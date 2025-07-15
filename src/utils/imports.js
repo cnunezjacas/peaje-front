@@ -4,16 +4,28 @@ import { STRINGS } from 'utils/string'
 //import { notify_error } from 'utils/notify/notify_error.js'
 import api from 'src/axios'
 
-function capitalizeWords(str) {
-  return str
-    .split(' ')
-    .map((word) => {
-      if (word.length === 0) return word // Por si hay cadenas vacías
-      return word[0].toUpperCase() + word.slice(1).toLowerCase()
-    })
-    .join(' ')
-}
+function capitalizeWords(str, capitalizeFirstWord = false) {
+  // Dividimos la cadena en palabras
+  const words = str.split(' ')
 
+  // Si capitalizeFirstWord es true, solo capitalizamos la primera palabra
+  if (capitalizeFirstWord) {
+    // Capitalizamos solo la primera palabra
+    words[0] = words[0][0].toUpperCase() + words[0].slice(1).toLowerCase()
+    // Las demás palabras en minúsculas
+    for (let i = 1; i < words.length; i++) {
+      words[i] = words[i].toLowerCase()
+    }
+  } else {
+    // Capitalizamos la primera letra de cada palabra
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].slice(1).toLowerCase()
+    }
+  }
+
+  // Unimos las palabras y devolvemos la cadena
+  return words.join(' ')
+}
 //Permite saber la URL donde te encuentras
 const searchWebPath = (path) => {
   var newPath = path.split('_')
