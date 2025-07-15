@@ -48,6 +48,7 @@ export default defineConfig((/* ctx */) => {
         utils: fileURLToPath(new URL('./src/utils', import.meta.url)),
         views: fileURLToPath(new URL('./src/pages', import.meta.url)),
         viewsManage: fileURLToPath(new URL('./src/pages/manage/', import.meta.url)),
+        TableManage: fileURLToPath(new URL('./src/pages/manage/table_generic', import.meta.url)),
         viewsUtilsNomenclator: fileURLToPath(
           new URL('./src/pages/manage/manage_nomenclator', import.meta.url),
         ),
