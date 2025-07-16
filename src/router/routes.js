@@ -1,3 +1,4 @@
+import imports from 'src/utils/imports'
 import { STRINGS } from 'utils/string.js'
 
 const routes = [
@@ -9,42 +10,82 @@ const routes = [
       //nomenclator
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
+        meta: {
+          breadcrumb: STRINGS.name_provincia,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.municipioLowercase,
+        meta: {
+          breadcrumb: STRINGS.name_municipio,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.organismoLowercase,
+        meta: {
+          breadcrumb: STRINGS.organismoLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.bancoLowercase,
+        meta: {
+          breadcrumb: STRINGS.bancoLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.monedasLowercase,
+        meta: {
+          breadcrumb: STRINGS.monedasLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.vehiculosLowercase,
+        meta: {
+          breadcrumb: STRINGS.vehiculosLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.exentoLowercase,
+        meta: {
+          breadcrumb: STRINGS.exentoLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.comprobanteLowercase,
+        meta: {
+          breadcrumb: STRINGS.comprobanteLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
+        meta: {
+          breadcrumb: imports.JoinCamelCase(STRINGS.formaDePagoLowercaseURL),
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.tipoCuentaLowercaseURL,
+        meta: {
+          breadcrumb: imports.JoinCamelCase(STRINGS.tipoCuentaLowercaseURL),
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       //Entity
