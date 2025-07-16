@@ -12,8 +12,6 @@
     searchTerm="props.TextSearch"
     @onEnable="EnableTabs"
     @seleccionado="DataSelected"
-    :fatherBreadcrumbs="imports.capitalizeWords(STRINGS.gestionNomencladores, true)"
-    :SonBreadcrumbs="imports.capitalizeWords(STRINGS.name_municipio)"
     ref="tableGeneric"
   >
   </BaseTable>
