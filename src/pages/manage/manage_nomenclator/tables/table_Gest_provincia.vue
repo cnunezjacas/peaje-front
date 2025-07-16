@@ -41,7 +41,7 @@ const props = defineProps({
   TextSearch: String,
 })
 
-/* Columnas de la tabla Provincia */
+/* Detalles de las columnas de la tabla, referencias de los nombres de las columnas de la tabla en BD */
 const columns = [
   {
     name: 'nombre',
@@ -96,6 +96,7 @@ const filteredRows = computed(() => {
 
 const emit = defineEmits(['onEnable'])
 
+/* Función destinada a emit un evento que hablita/desabilita los tabs [Add,Editar,Delete ... ect] */
 const EnableTabs = (value) => {
   if (value) {
     emit('onEnable', true)
@@ -104,6 +105,7 @@ const EnableTabs = (value) => {
   }
 }
 
+/* Función destinada a recibir de template BaseTable los valores de la fila seleccionada en la tabla */
 const DataSelected = (newSelected) => {
   if (newSelected.length > 0) {
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
