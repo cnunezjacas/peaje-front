@@ -29,6 +29,7 @@
       :row-key="props.rowKey"
       :separator="props.separator"
       selection="single"
+      :selected-rows-label="customSelectedLabel"
       v-model:selected="selectedRows"
       @update:selected="onSelectedRowsChange"
       class="shadow-2 custom-horizontal-lines"
@@ -63,6 +64,10 @@ const props = defineProps({
 
 const selectedRows = ref([])
 const tableRef = ref(null)
+
+const customSelectedLabel = (count) => {
+  return `${count} fila${count > 1 ? 's' : ''} seleccionada${count > 1 ? 's' : ''}`
+}
 
 const emit = defineEmits(['seleccionado', 'onEnable'])
 const EnableItemsTabs = ref(true)
