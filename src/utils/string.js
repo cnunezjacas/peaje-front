@@ -321,6 +321,7 @@ export const STRINGS = {
   help: 'Ayuda',
   close_seccion: 'Cerrar Sección',
   no_data_available: 'No hay datos disponibles',
+  number_of_page: 'Número de páginas',
   fila_no_selected: 'No hay fila seleccionada',
   errorUpdate: 'Operación fallida',
   errorSelected: 'Problemas en la selección',
