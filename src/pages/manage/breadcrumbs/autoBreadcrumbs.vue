@@ -44,7 +44,6 @@ onMounted(() => {
 watch(
   () => route.fullPath,
   () => {
-    console.log(route.matched)
     generateBreadcrumbs()
   },
 )
