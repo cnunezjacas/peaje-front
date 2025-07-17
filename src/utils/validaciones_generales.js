@@ -8,7 +8,7 @@ const rulesOnlyNumbers = [
 ]
 
 const rulesOnlyUppercase = [
-  (val) => val != '' || STRINGS.onlyUppercase,
+  (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
 ]
 
