@@ -91,34 +91,66 @@ const routes = [
       //Entity
       {
         path: '/gest_' + STRINGS.cuentaLowercase,
+        meta: {
+          breadcrumb: STRINGS.cuentaLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.estacionesLowercase,
+        meta: {
+          breadcrumb: STRINGS.estacionesLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.areasDeTrabajoLowercase,
+        meta: {
+          breadcrumb: imports.JoinCamelCase(STRINGS.areasDeTrabajoLowercase),
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.puntosDeVentasLowercase,
+        meta: {
+          breadcrumb: imports.JoinCamelCase(STRINGS.puntosDeVentasLowercase),
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.terminalLowercase,
+        meta: {
+          breadcrumb: STRINGS.terminalLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.operadoresLowercase,
+        meta: {
+          breadcrumb: STRINGS.operadoresLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.clientesLowercase,
+        meta: {
+          breadcrumb: STRINGS.clientesLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
         path: '/gest_' + STRINGS.tramitadorLowercase,
+        meta: {
+          breadcrumb: STRINGS.tramitadorLowercase,
+          icon: 'post_add',
+        },
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
