@@ -35,6 +35,18 @@
   -o-border-radius: 10px !important;
 }
 
+.border-box-bank-box-small {
+  border: 1px solid rgb(45, 149, 13);
+  padding-bottom: 42px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px !important;
+  -webkit-border-radius: 10px !important;
+  -moz-border-radius: 10px !important;
+  -ms-border-radius: 10px !important;
+  -o-border-radius: 10px !important;
+}
+
 .border-box-radio {
   border: 1px solid rgb(45, 149, 13);
   padding: 10px !important;
