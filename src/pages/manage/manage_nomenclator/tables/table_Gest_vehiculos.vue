@@ -4,7 +4,7 @@
     :Loading="isLoading"
     :filteredRows="filteredRows"
     :columns="columns"
-    row-key="codigo"
+    row-key="_id"
     :no-data-label="STRINGS.no_data_available"
     :separator="separator"
     :rows-per-page-options="numberForPage"
