@@ -3,10 +3,9 @@
     <q-dialog
       v-model="dialog"
       persistent
+      full-width
       ref="refDialogoAdd"
       :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
     >
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
@@ -21,7 +20,7 @@
         <q-card-section>
           <!-- codigo,categoria y nombre -->
           <div class="row flex justify-between q-mb-md">
-            <div class="col-5">
+            <div class="col-3">
               <q-input
                 v-model="TextNombre_cliente"
                 color="green"
@@ -33,7 +32,7 @@
               />
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
               <q-input
                 v-model="TextCodigo_cliente"
                 color="green"
@@ -45,7 +44,7 @@
               />
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
               <q-select
                 v-model="TextCategoria_cliente"
                 color="green"
@@ -56,11 +55,8 @@
                 @keyup="checkStatusInputs"
               />
             </div>
-          </div>
 
-          <!-- siglas,estación y Organismo -->
-          <div class="row flex justify-between q-mb-xl">
-            <div class="col-3">
+            <div class="col-1">
               <q-input
                 v-model="TextSiglas_cliente"
                 color="green"
@@ -72,7 +68,7 @@
               />
             </div>
 
-            <div class="col-5">
+            <div class="col-2">
               <q-select
                 v-model="TextEstacion_cliente"
                 color="green"
@@ -84,140 +80,144 @@
                 @keyup="checkStatusInputs"
               />
             </div>
-
-            <div class="col-3">
-              <q-select
-                v-model="TextOrganismo_cliente"
-                color="green"
-                :options="optionsOrganismo"
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="STRINGS.organismo_cliente"
-                @keyup="checkStatusInputs"
-              />
-            </div>
           </div>
 
-          <!-- Banco CUC & Banco CUP-->
+          <!-- siglas,estación y Organismo -->
           <div class="row flex justify-between">
-            <div class="col-5">
-              <p>{{ STRINGS.bancoCUC.toUpperCase() }}</p>
-            </div>
-
-            <div class="col-5">
-              <p>{{ STRINGS.bancoCUP.toUpperCase() }}</p>
-            </div>
-          </div>
-          <div class="row flex justify-between border-box-bank q-mb-md">
-            <div class="col-5">
-              <q-input
-                v-model="TextCuenta_CUC"
-                ref="textCuenta_CUC"
-                color="green"
-                maxlength="19"
-                type="text"
-                :rules="validacionesGenerales.rulesCardOfBank"
-                :label="STRINGS.cuenta"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-
-            <div class="col-5">
-              <q-input
-                ref="textCuenta_CUP"
-                v-model="TextCuenta_CUP"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesCardOfBank"
-                :label="STRINGS.cuenta"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-          </div>
-
-          <!-- ID Tributaria ,Registro COmercial y mercantil -->
-          <div class="row flex justify-between q-mb-xl">
-            <div class="col-3">
-              <q-input
-                v-model="TextIdTributaria_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesOnlyNumbers"
-                lazy-rules
-                :label="STRINGS.idTributaria_cliente"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-
-            <div class="col-4">
-              <q-input
-                v-model="TextRegistroComercial_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesFullTextAndNumber"
-                lazy-rules
-                :label="STRINGS.registroComercial_cliente"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-
-            <div class="col-4">
-              <q-input
-                v-model="TextRegistroMercantil_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesFullTextAndNumber"
-                lazy-rules
-                :label="STRINGS.registroMercantil_cliente"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-          </div>
-
-          <!-- numeros de telefono ,provincia y municipio -->
-          <div class="row flex justify-between q-mb-md">
-            <div class="col-4">
+            <div class="col-2">
               <Phone ref="refPhone" @UpdatePhone="UpdatePhone" />
             </div>
 
-            <div class="col-4">
-              <q-select
-                v-model="TextSelectNombre_prov"
-                color="green"
-                :options="optionsProvincia"
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="imports.capitalizeWords(STRINGS.provinciaLowercase)"
-                @keyup="checkStatusInputs"
-              />
-            </div>
+            <div class="col-9">
+              <div class="row flex justify-between">
+                <div class="col-2 q-mb-xl">
+                  <q-select
+                    v-model="TextOrganismo_cliente"
+                    color="green"
+                    :options="optionsOrganismo"
+                    :rules="validacionesGenerales.rulesNoEmpty"
+                    lazy-rules
+                    :label="STRINGS.organismo_cliente"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
 
-            <div class="col-3">
-              <q-select
-                v-model="TextSelectNombre_mun"
-                color="green"
-                :options="optionsMunicipio"
-                :disable="optionsMunicipio.length === 0 ? true : disabledSelectMun"
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="imports.capitalizeWords(STRINGS.municipioLowercase)"
-                @keyup="checkStatusInputs"
-              />
-            </div>
-          </div>
+                <div class="col-3 q-mb-xl">
+                  <q-input
+                    v-model="TextIdTributaria_cliente"
+                    color="green"
+                    type="text"
+                    :rules="validacionesGenerales.rulesOnlyNumbers"
+                    lazy-rules
+                    :label="STRINGS.idTributaria_cliente"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
 
-          <!-- Direccion -->
-          <div class="row flex justify-between q-mb-md">
-            <div class="col-12">
-              <q-input
-                v-model="TextDireccion_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesAddress"
-                lazy-rules
-                :label="STRINGS.direccion_cliente"
-                @keyup="checkStatusInputs"
-              />
+                <div class="col-3 q-mb-xl">
+                  <q-input
+                    v-model="TextRegistroComercial_cliente"
+                    color="green"
+                    type="text"
+                    :rules="validacionesGenerales.rulesFullTextAndNumber"
+                    lazy-rules
+                    :label="STRINGS.registroComercial_cliente"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
+
+                <div class="col-3 q-mb-xl">
+                  <q-input
+                    v-model="TextRegistroMercantil_cliente"
+                    color="green"
+                    type="text"
+                    :rules="validacionesGenerales.rulesFullTextAndNumber"
+                    lazy-rules
+                    :label="STRINGS.registroMercantil_cliente"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
+
+                <!-- Continuidad de Items -->
+
+                <div class="col-2 q-mb-xl">
+                  <q-select
+                    v-model="TextSelectNombre_prov"
+                    color="green"
+                    :options="optionsProvincia"
+                    :rules="validacionesGenerales.rulesNoEmpty"
+                    lazy-rules
+                    :label="imports.capitalizeWords(STRINGS.provinciaLowercase)"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
+
+                <div class="col-2 q-mb-xl">
+                  <q-select
+                    v-model="TextSelectNombre_mun"
+                    color="green"
+                    :options="optionsMunicipio"
+                    :disable="optionsMunicipio.length === 0 ? true : disabledSelectMun"
+                    :rules="validacionesGenerales.rulesNoEmpty"
+                    lazy-rules
+                    :label="imports.capitalizeWords(STRINGS.municipioLowercase)"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
+
+                <div class="col-7 q-mb-xl">
+                  <q-input
+                    v-model="TextDireccion_cliente"
+                    color="green"
+                    type="text"
+                    :rules="validacionesGenerales.rulesAddress"
+                    lazy-rules
+                    :label="STRINGS.direccion_cliente"
+                    @keyup="checkStatusInputs"
+                  />
+                </div>
+
+                <!-- Items 3era fila -->
+
+                <div class="col-12">
+                  <!-- Banco CUC & Banco CUP-->
+                  <div class="row flex justify-between">
+                    <div class="col-5">
+                      <p>{{ STRINGS.bancoCUC.toUpperCase() }}</p>
+                    </div>
+
+                    <div class="col-5">
+                      <p>{{ STRINGS.bancoCUP.toUpperCase() }}</p>
+                    </div>
+                  </div>
+                  <div class="row flex justify-between border-box-bank-box-small">
+                    <div class="col-5">
+                      <q-input
+                        v-model="TextCuenta_CUC"
+                        ref="textCuenta_CUC"
+                        color="green"
+                        maxlength="19"
+                        type="text"
+                        :rules="validacionesGenerales.rulesCardOfBank"
+                        :label="STRINGS.cuenta"
+                        @keyup="checkStatusInputs"
+                      />
+                    </div>
+
+                    <div class="col-5">
+                      <q-input
+                        ref="textCuenta_CUP"
+                        v-model="TextCuenta_CUP"
+                        color="green"
+                        type="text"
+                        :rules="validacionesGenerales.rulesCardOfBank"
+                        :label="STRINGS.cuenta"
+                        @keyup="checkStatusInputs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </q-card-section>
@@ -263,7 +263,6 @@ import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator.j
 import imports from 'src/utils/imports'
 import Phone from 'src/pages/manage/manage_entity/template/PhoneNumberInput.vue'
 //import notify_error from 'src/utils/notify/notify_error.js'
-//import imports from 'src/utils/imports'
 
 const options = ref([])
 const optionsOrganismo = ref([])
