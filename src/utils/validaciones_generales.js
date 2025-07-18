@@ -49,6 +49,11 @@ const rulesAddress = [
   (val) => expRegulares.onlyAddress.test(val) || STRINGS.onlyAddress,
 ]
 
+const rulesEmail = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.email.test(val) || STRINGS.email,
+]
+
 const rulesNumberAndHyphen = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.numberAndHyphen.test(val) || STRINGS.numberAndHyphen,
@@ -66,6 +71,7 @@ export default {
   rulesIP,
   rulesCardOfBank,
   rulesPhone,
+  rulesEmail,
   rulesAddress,
   rulesNumberAndHyphen,
 }
