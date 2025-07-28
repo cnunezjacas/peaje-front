@@ -4,9 +4,20 @@ import { STRINGS } from 'utils/string.js'
 const routes = [
   {
     path: '/',
+    meta: {
+      breadcrumb: 'Inicio',
+      icon: 'house',
+    },
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      {
+        path: '',
+        meta: {
+          breadcrumb: 'Inicio',
+          icon: 'house',
+        },
+        component: () => import('pages/IndexPage.vue'),
+      },
       //nomenclator
       {
         path: '/gest_' + STRINGS.provinciaLowercase,
@@ -149,6 +160,14 @@ const routes = [
         path: '/gest_' + STRINGS.tramitadorLowercase,
         meta: {
           breadcrumb: STRINGS.tramitadorLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      }, //Store
+      {
+        path: '/gest_' + STRINGS.tarjeta_blancaLowercase,
+        meta: {
+          breadcrumb: STRINGS.tarjeta_blancaLowercase,
           icon: 'post_add',
         },
         component: () => import('viewsManage/gest_global.vue'),
