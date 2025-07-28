@@ -74,10 +74,22 @@ export default defineConfig((/* ctx */) => {
           new URL('./src/pages/manage/manage_entity/dialogs_edit', import.meta.url),
         ),
         EntityDelete: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity/dialogs_edit', import.meta.url),
+          new URL('./src/pages/manage/manage_entity/dialogs_delete', import.meta.url),
         ),
         EntityTables: fileURLToPath(
           new URL('./src/pages/manage/manage_entity/tables', import.meta.url),
+        ),
+        StoreAdd: fileURLToPath(
+          new URL('./src/pages/manage/manage_store/dialogs_insert', import.meta.url),
+        ),
+        StoreEdit: fileURLToPath(
+          new URL('./src/pages/manage/manage_store/dialogs_edit', import.meta.url),
+        ),
+        StoreDelete: fileURLToPath(
+          new URL('./src/pages/manage/manage_store/dialogs_delete', import.meta.url),
+        ),
+        StoreTables: fileURLToPath(
+          new URL('./src/pages/manage/manage_store/tables', import.meta.url),
         ),
       },
 
