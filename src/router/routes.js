@@ -173,6 +173,14 @@ const routes = [
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
+        path: '/gest_' + STRINGS.proveedorLowercase,
+        meta: {
+          breadcrumb: STRINGS.proveedorLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
         path: '/pageAyuda',
         component: () => import('pages/pageAyuda.vue'),
       },
