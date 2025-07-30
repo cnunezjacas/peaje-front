@@ -276,6 +276,12 @@
   <div>
     <!-- Dialogo Add Tarjeta Blanca -->
     <DialogoAddTarjetaBlanca ref="dialogoAddTarjetaBlanca" @ActualizarTabla="tableUpdater" />
+
+    <!-- Dialogo Add Proveedor -->
+    <DialogoAddProveedor ref="dialogoAddProveedor" @ActualizarTabla="tableUpdater" />
+
+    <!-- Dialogo Add Tarjeta Producida -->
+    <DialogoAddTarjetaProducida ref="dialogoAddTarjetaProducida" @ActualizarTabla="tableUpdater" />
   </div>
 </template>
 
@@ -334,7 +340,11 @@ import {
   TableCuenta,
 } from 'src/utils/import_files_entity.js'
 
-import { DialogoAddTarjetaBlanca } from 'src/utils/import_files_store.js'
+import {
+  DialogoAddTarjetaBlanca,
+  DialogoAddProveedor,
+  DialogoAddTarjetaProducida,
+} from 'src/utils/import_files_store.js'
 
 import imports from 'utils/imports.js'
 import notify_success from 'src/utils/notify/notify_success'
@@ -626,29 +636,29 @@ const tableFdp = ref(null)
 const tableTipoCuenta = ref(null)
 
 /* Declaración de constantes Entidad */
-//Const Estacion
+//Const Add Estacion
 const dialogoAddEstacion = ref(null)
 const dialogoEditEstacion = ref(null)
 
-//Const Areas de Trabajo
+//Const Add Areas de Trabajo
 const dialogoAddAreaTrabajo = ref(null)
 
-//Const Cuenta
+//Const Add Cuenta
 const dialogoAddCuenta = ref(null)
 
-//Const Terminal
+//Const Add Terminal
 const dialogoAddTerminal = ref(null)
 
-//Const Terminal
+//Const Add Terminal
 const dialogoAddPuntoDeVenta = ref(null)
 
-//Const Operador
+//Const Add Operador
 const dialogoAddOperador = ref(null)
 
-//Const Cliente
+//Const Add Cliente
 const dialogoAddCliente = ref(null)
 
-//Const Tramitador
+//Const Add Tramitador
 const dialogoAddTramitador = ref(null)
 
 //Constantes referencias de las tablas de Entidad
@@ -657,7 +667,14 @@ const tableADT = ref(null)
 const tableCuenta = ref(null)
 
 /* Declaración de constantes Store */
+//Const Dialogo Tarjeta Blanca
 const dialogoAddTarjetaBlanca = ref(null)
+
+//Const Dialogo Add Proveedor
+const dialogoAddProveedor = ref(null)
+
+//Const Dialogo Add Tarjeta Producida
+const dialogoAddTarjetaProducida = ref(null)
 
 //ARRAY GLOBAL QUE SELECCIONA TODO
 var arraySelected = ref([])
@@ -835,9 +852,14 @@ const onItemClick = (value) => {
         dialogoAddCliente.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.tramitadorLowercase)) {
         dialogoAddTramitador.value.getUpDialogAdd()
-      } else if (nuevaRuta.includes(STRINGS.tarjeta_blancaLowercase)) {
+      } /* Almacén */ else if (nuevaRuta.includes(STRINGS.tarjeta_blancaLowercase)) {
         dialogoAddTarjetaBlanca.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.proveedorLowercase)) {
+        dialogoAddProveedor.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.tarjeta_producidaLowercase)) {
+        dialogoAddTarjetaProducida.value.getUpDialogAdd()
       }
+
       break
     case STRINGS.edit:
       if (nuevaRuta.includes(STRINGS.provinciaLowercase)) {
