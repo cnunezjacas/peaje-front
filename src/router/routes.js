@@ -181,6 +181,14 @@ const routes = [
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
+        path: '/gest_' + STRINGS.tarjeta_producidaLowercase,
+        meta: {
+          breadcrumb: STRINGS.tarjeta_producidaLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
         path: '/pageAyuda',
         component: () => import('pages/pageAyuda.vue'),
       },
