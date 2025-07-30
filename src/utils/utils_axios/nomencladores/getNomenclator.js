@@ -20,6 +20,15 @@ const loadProvincias = async () => {
   return options
 }
 
+const loadCoins = async () => {
+  const response = await api.get(STRINGS.urlApiMoneda)
+  const options = response.data.map((element) => ({
+    label: element['siglas'],
+    value: element['_id'],
+  }))
+  return options
+}
+
 const loadMunicipios = async () => {
   const response = await api.get(STRINGS.urlApiMunicipio)
   const options = response.data.map((element) => ({
@@ -44,4 +53,10 @@ const loadMunicipiosByProvincia = async (newVal) => {
   return options
 }
 
-export default { loadOrganismo, loadProvincias, loadMunicipios, loadMunicipiosByProvincia }
+export default {
+  loadOrganismo,
+  loadProvincias,
+  loadMunicipios,
+  loadMunicipiosByProvincia,
+  loadCoins,
+}
