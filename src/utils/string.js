@@ -84,12 +84,14 @@ export const STRINGS = {
   PreguntaDeleteFemenino: '¿Está seguro de eliminar la ',
 
   category: 'Categoría',
-  addModelo: 'Adicionar modelo',
+  modelo: 'Modelo',
   gestion_Bd_datos: 'Gestionar fuente de datos',
   denominacion: 'Denominación',
   descripcion: 'Descripción',
   cmp_modelo: 'Campos del modelo',
   nombre: 'Nombre',
+  codigo: 'Código',
+  recepcion: 'Recepción',
   nombre_abreviado: 'Sigla',
 
   //*********** Campos Nomenclador **************
@@ -234,11 +236,34 @@ export const STRINGS = {
   cliente_tramitador: 'Cliente',
 
   //*********** Campos Almacén **************
+  // Campos Tarjeta Blanca
   codigo_tarjetaBanca: 'Código',
   descripcion_tarjetaBanca: 'Descripción',
   balance_tarjetaBanca: 'Balance',
-  sam_tarjetaBanca: 'SAM',
+  sam: 'SAM',
   costo_tarjetaBanca: 'Costo',
+
+  // Campos Tarjeta Producida
+  codigo_tarjetaProducida: 'Código',
+  descripcion_tarjetaProducida: 'Descripción',
+  modelo_tarjetaProducida: 'Modelo',
+  categoria_tarjetaProducida: 'Categoría',
+  balance_tarjetaProducida: 'Balance',
+  precioDeVenta_tarjetaProducida: 'Precio de Venta',
+  sam_tarjetaProducida: 'SAM',
+  anverso_tarjetaProducida: 'Anverso',
+  ficheroChip_tarjetaProducida: 'Fichero chip',
+  bin_tarjetaProducida: 'BIN',
+  expira_tarjetaProducida: 'Expira',
+  importe_tarjetaProducida: 'Importe',
+  costo_tarjetaProducida: 'Costo',
+
+  // Campos Recepción Tarjeta Producida
+  producto_RecTarjetaProducida: 'Producto',
+  cantidad_RecTarjetaProducida: 'Cantidad',
+  costo_RecTarjetaProducida: 'Costo',
+  NumFactura_RecTarjetaProducida: 'No. factura',
+  cheque_RecTarjetaProducida: 'Cheque',
 
   tipo: 'Tipo',
   obigatorio: 'Obligatorio',
