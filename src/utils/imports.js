@@ -168,7 +168,7 @@ const JoinCamelCase = (str) => {
 
   if (!WordisCamelCase) {
     // Si no está en camelCase, devuelve la cadena original
-    return str
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   // Reemplaza las mayúsculas precedidas por minúsculas por un espacio y la letra en mayúscula
