@@ -30,7 +30,7 @@
       :columns="columns"
       :rows-per-page-options="numberForPage"
       :no-data-label="STRINGS.no_data_available"
-      row-key="codigo"
+      row-key="_id"
       :separator="separator"
       selection="single"
       v-model:selected="selectedRows"

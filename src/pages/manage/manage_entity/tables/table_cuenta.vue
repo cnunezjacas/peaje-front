@@ -31,7 +31,7 @@
       :columns="columns"
       :rows-per-page-options="numberForPage"
       :no-data-label="STRINGS.no_data_available"
-      row-key="codigo"
+      row-key="_id"
       :separator="separator"
       selection="single"
       v-model:selected="selectedRows"
@@ -43,7 +43,7 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+/* import api from 'src/axios.js' */
 import { computed } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
 import imports from 'src/utils/imports.js'
@@ -90,9 +90,9 @@ import { onBeforeMount } from 'vue'
 const InitDataTable = async () => {
   isLoading.value = true
   try {
-    const response = await api.get(STRINGS.urlApiCuenta)
+    const response = [] /* await api.get(STRINGS.urlApiCuenta) */
 
-    rows.value = response.data
+    rows.value = response.data = []
   } catch (error) {
     console.error('Error cargando datos:', error)
     notify_error(STRINGS.loadingTablesError)
