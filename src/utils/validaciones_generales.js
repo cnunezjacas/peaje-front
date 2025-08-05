@@ -59,6 +59,12 @@ const rulesNumberAndHyphen = [
   (val) => expRegulares.numberAndHyphen.test(val) || STRINGS.numberAndHyphen,
 ]
 
+const rulesCodeThreeLettersHyphenNumbers = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) =>
+    expRegulares.codeThreeLettersHyphenNumbers.test(val) || STRINGS.codeThreeLettersHyphenNumbers,
+]
+
 /*Validaciones*/
 
 export default {
@@ -74,4 +80,5 @@ export default {
   rulesEmail,
   rulesAddress,
   rulesNumberAndHyphen,
+  rulesCodeThreeLettersHyphenNumbers,
 }
