@@ -258,6 +258,15 @@ export const STRINGS = {
   importe_tarjetaProducida: 'Importe',
   costo_tarjetaProducida: 'Costo',
 
+  // Salida Tarjeta Producida
+  numero_STP: 'Número',
+  tipoSalida_STP: 'Tipo de salida ',
+  fechaCreada_STP: 'Fecha de creada',
+  destinatario_STP: 'Destinatario',
+  Registrado_STP: 'Registrado',
+  numOrdenTrabajo_STP: 'No. Orden de Trabajo',
+  relacion_STP: 'Relación por tipo de tarjetas',
+
   // Campos Recepción Tarjeta Producida
   producto_RecTarjetaProducida: 'Producto',
   cantidad_RecTarjetaProducida: 'Cantidad',
