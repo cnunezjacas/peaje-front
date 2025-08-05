@@ -261,7 +261,7 @@ import validacionesGenerales from 'utils/validaciones_generales.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator.js'
 import imports from 'src/utils/imports'
-import Phone from 'src/pages/manage/manage_entity/template/PhoneNumberInput.vue'
+import Phone from 'src/pages/utils/PhoneNumberInput.vue'
 //import notify_error from 'src/utils/notify/notify_error.js'
 
 const options = ref([])
