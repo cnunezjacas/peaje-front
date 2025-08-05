@@ -26,7 +26,7 @@
             <div class="col-3">
               <div class="row border-box-radio">
                 <div class="col-6 text-center q-mt-md">
-                  <p>{{ STRINGS.sam_tarjetaBanca }}:</p>
+                  <p>{{ STRINGS.sam }}:</p>
                 </div>
 
                 <div class="col-6 text-center">
