@@ -1,56 +1,46 @@
 <template>
-  <div class="q-px-md">
-    <div class="flex justify-between padding_minimo">
-      <div class="text-center bg-green-10 rounded-borders my-cell">
-        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ Titulo.toLowerCase() }}</p>
-      </div>
-
-      <div>
-        <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" to="/" />
-          <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
-
-          <q-breadcrumbs-el :label="Titulo.toLowerCase()" icon="post_add" />
-        </q-breadcrumbs>
-      </div>
-    </div>
-
-    <!-- Mostrar spinner cuando está cargando -->
-    <div v-if="isLoading" class="flex justify-center items-center" style="height: 300px">
-      <q-spinner size="50px" color="green" />
-    </div>
-    <!-- Mostrar la tabla cuando no está cargando -->
-
-    <q-table
-      v-else
-      class="shadow-2 custom-horizontal-lines"
-      table-header-class="bg-green-10 text-white"
-      ref="tableAddProvincia"
-      :rows-per-page-label="STRINGS.record_page"
-      :rows="filteredRows"
-      :columns="columns"
-      :rows-per-page-options="numberForPage"
-      :no-data-label="STRINGS.no_data_available"
-      row-key="codigo"
-      :separator="separator"
-      selection="single"
-      v-model:selected="selectedRows"
-      @update:selected="onSelectedRowsChange"
-    />
-  </div>
+  <BaseTable
+    :title="title"
+    :Loading="isLoading"
+    :filteredRows="filteredRows"
+    :columns="columns"
+    row-key="_id"
+    :no-data-label="STRINGS.no_data_available"
+    :separator="separator"
+    :rows-per-page-options="numberForPage"
+    :rows-per-page-label="STRINGS.number_of_page"
+    searchTerm="props.TextSearch"
+    @onEnable="EnableTabs"
+    @seleccionado="DataSelected"
+    ref="tableGeneric"
+  >
+  </BaseTable>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+//******* Importaciones *******
+import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import imports from 'src/utils/imports'
-import { onBeforeMount } from 'vue'
 import notify_error from 'src/utils/notify/notify_error.js'
+import imports from 'src/utils/imports.js'
+import BaseTable from 'TableManage/tableGeneric.vue'
 
+// ******* Variables *******
+const title = ref(
+  STRINGS.gestion + ' ' + imports.JoinCamelCase(STRINGS.tipoCuentaLowercaseURL).toLowerCase(),
+)
+const rows = ref([])
+const separator = ref('vertical')
 const numberForPage = imports.getNumberForPage()
+const tableGeneric = ref([])
 const isLoading = ref(true)
+// Props
+const props = defineProps({
+  TextSearch: String,
+})
 
+/* Detalles de las columnas de la tabla, referencias de los nombres de las columnas de la tabla en BD */
 const columns = [
   {
     name: 'codigo',
@@ -70,8 +60,11 @@ const columns = [
   },
 ]
 
-const Titulo = ref('')
+//******* Funciones *******
 
+/**
+ * Función encargada de cargar los datos de la tabla
+ */
 const InitDataTable = async () => {
   isLoading.value = true
   try {
@@ -84,23 +77,6 @@ const InitDataTable = async () => {
     isLoading.value = false
   }
 }
-
-const GetTitulo = () => {
-  Titulo.value = imports.JoinCamelCase(STRINGS.tipoCuentaLowercaseURL)
-}
-
-onBeforeMount(() => {
-  InitDataTable()
-  GetTitulo()
-})
-
-const rows = ref([])
-const separator = ref('vertical')
-const selectedRows = ref([])
-
-const props = defineProps({
-  TextSearch: String,
-})
 
 // Reacción a cambios en TextSearch
 const filteredRows = computed(() => {
@@ -115,34 +91,49 @@ const filteredRows = computed(() => {
   })
 })
 
-// Emite eventos
-const emit = defineEmits(['seleccionado'])
-//Manejador de los botones de la navBottom
-var EnableItemsTabs = ref(true)
+const emit = defineEmits(['onEnable'])
 
-// Manejador de selección
-const onSelectedRowsChange = (newSelected) => {
-  if (newSelected.length > 0) {
-    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onEnable', (EnableItemsTabs.value = false))
+/* Función destinada a emit un evento que hablita/desabilita los tabs [Add,Editar,Delete ... ect] */
+const EnableTabs = (value) => {
+  if (value) {
+    emit('onEnable', true)
   } else {
-    emit('onEnable', (EnableItemsTabs.value = true))
+    emit('onEnable', false)
   }
 }
 
+/* Función destinada a recibir de template BaseTable los valores de la fila seleccionada en la tabla */
+const DataSelected = (newSelected) => {
+  if (newSelected.length > 0) {
+    emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
+  }
+}
+
+/**
+ * Función encargada actualizar los datos de la tabla
+ */
 const UpdateTable = async () => {
   InitDataTable()
-  selectedRows.value = []
+  tableGeneric.value.selectedRows = []
 }
-
+/**
+ * Función encargada de limpiar los datos capturados en la selección
+ */
 const EmptySelected = () => {
-  selectedRows.value = []
+  tableGeneric.value.selectedRows = []
 }
 
-// Exponemos `filteredRows` si el padre necesita acceder directamente
+//******* Métodos *******
+/**
+ * Método encargado de realizar operaciones, previo de que el componente sea montado en el DOM
+ */
+onBeforeMount(() => {
+  InitDataTable()
+})
+
+//Exponer Funciones y Métodos a Template Padre
 defineExpose({
-  filteredRows,
-  EmptySelected,
   UpdateTable,
+  EmptySelected,
 })
 </script>
