@@ -189,6 +189,30 @@ const routes = [
         component: () => import('viewsManage/gest_global.vue'),
       },
       {
+        path: '/gest_' + STRINGS.recepcion_de_tarjeta_blancaLowercase,
+        meta: {
+          breadcrumb: STRINGS.recepcion_de_tarjeta_blancaLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.recepcion_de_tarjeta_producidaLowercase,
+        meta: {
+          breadcrumb: STRINGS.recepcion_de_tarjeta_producidaLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
+        path: '/gest_' + STRINGS.salida_de_tarjeta_producidaLowercase,
+        meta: {
+          breadcrumb: STRINGS.salida_de_tarjeta_producidaLowercase,
+          icon: 'post_add',
+        },
+        component: () => import('viewsManage/gest_global.vue'),
+      },
+      {
         path: '/pageAyuda',
         component: () => import('pages/pageAyuda.vue'),
       },
