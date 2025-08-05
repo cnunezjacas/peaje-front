@@ -1,84 +1,72 @@
 <template>
   <q-page>
     <div>
-      <div id="boxNom" ref="RefBoxNom" class="col-12 d-none">
-        <tabs_nomencladores ref="RefNom" />
-      </div>
-    </div>
-
-    <div>
-      <div id="boxEnt" ref="RefBoxEnt" class="col-12 d-none">
-        <tabs_entity />
-      </div>
+      <tabs_generic ref="RefGen" />
     </div>
   </q-page>
 </template>
 
 <script setup>
-import { onBeforeUpdate, ref, nextTick } from 'vue'
+import { ref, onBeforeUpdate, onMounted } from 'vue'
 
-import tabs_nomencladores from 'viewsManage/tabs_generic/tabs_nomencladores.vue'
-import tabs_entity from 'viewsManage/tabs_generic/tabs_entity.vue'
-import { STRINGS } from 'src/utils/string'
+import tabs_generic from 'src/pages/manage/tabs_generic/tabs_generic.vue'
+///import { notify_error } from 'src/utils/import_files_nomenclador'
+//import { notify_error } from 'src/utils/import_files_nomenclador'
+/* import tabs_entity from 'viewsManage/tabs_generic/tabs_entity.vue' */
 
 //Const REF
-const RefNom = ref(null)
-const RefBoxNom = ref(null)
-const RefBoxEnt = ref(null)
+const RefGen = ref(null)
+const domLoad = ref(false)
 
 // Cuando quieras llamar a la función:
-const callEmptySelectedTwo = () => {
-  // Espera a que Vue actualice el DOM y las referencias
-  if (RefNom.value) {
-    RefNom.value.EmptySelectedTwo()
+const callEmptySelected = () => {
+  if (RefGen.value) {
+    RefGen.value.EmptySelected()
   } else {
-    console.warn('La referencia RefNom aún no está disponible')
+    // Opcional: reintenta después de un pequeño retraso
+    setTimeout(() => {
+      if (RefGen.value) {
+        RefGen.value.EmptySelected()
+      } else {
+        console.warn('La referencia RefGen aún no está disponible')
+      }
+    }, 3000)
   }
 }
-
-const isActiveTabsNomenclator = ref(null)
-const isActiveTabsEntity = ref(null)
 
 onBeforeUpdate(() => {
-  callEmptySelectedTwo()
+  callEmptySelected()
+  //SendItemChildren(objetLoad.value)
 })
 
-const objeto = ref({})
+onMounted(() => {
+  LoadDOM()
+})
 
-const CheckItemChildren = async (item) => {
-  await nextTick()
-  objeto.value = item
+const LoadDOM = () => {
+  domLoad.value = true
+}
 
-  if (item.length !== 0) {
-    // const aux = tieneHijoConId(objeto.value, idBuscado.value)
-    isActiveTabsNomenclator.value = document.getElementById('boxNom')
-    isActiveTabsEntity.value = document.getElementById('boxEnt')
+const objetLoad = ref({})
 
-    // Verificar que existan
-    if (isActiveTabsNomenclator.value === null || isActiveTabsEntity.value === null) {
-      console.warn('Elementos DOM no disponibles en este momento')
-    }
-
-    switch (item.idPadre) {
-      case STRINGS.gestionNomencladoresLowercase:
-        if (isActiveTabsNomenclator.value) {
-          isActiveTabsNomenclator.value.classList.remove('d-none')
-        }
-        if (isActiveTabsEntity.value) {
-          isActiveTabsEntity.value.classList.add('d-none')
-        }
-        break
-      case STRINGS.gestionEntidadLowercase:
-        if (isActiveTabsNomenclator.value) {
-          isActiveTabsNomenclator.value.classList.add('d-none')
-        }
-        if (isActiveTabsEntity.value) {
-          isActiveTabsEntity.value.classList.remove('d-none')
-        }
-        break
-    }
+// Función que deseas llamar desde fuera
+const CheckItemChildren = async (item = null) => {
+  if (item.idPadre !== '') {
+    objetLoad.value = item
   }
 }
+
+/* const SendItemChildren = async (item) => {
+  console.log('RefGen.value')
+  console.log(RefGen.value)
+  if (RefGen.value && typeof RefGen.value.BoxSelected === 'function') {
+    // Llamar a la función del componente hijo
+    RefGen.value.BoxSelected(item)
+  } else {
+    // Opcional: manejar el caso en que aún no está listo
+    console.warn('El método BoxSelected no está disponible en el componente hijo.')
+  }
+} */
 
 defineExpose({
   CheckItemChildren,
