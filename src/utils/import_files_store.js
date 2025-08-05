@@ -4,6 +4,8 @@ import { STRINGS } from 'utils/string.js'
 import DialogoAddTarjetaBlanca from 'StoreAdd/dialogAddTarjetaBlanca.vue'
 import DialogoAddProveedor from 'StoreAdd/dialogAddProveedor.vue'
 import DialogoAddTarjetaProducida from 'StoreAdd/dialogAddTarjetaProducida.vue'
+import DialogAddRecTarjetaBlanca from 'StoreAdd/dialogAddRecTarjetaBlanca.vue'
+import DialogAddSalidaTarjetaProducida from 'StoreAdd/dialogAddSalidaTarjetaProducida.vue'
 
 import notify_error from 'utils/notify/notify_error.js'
 
@@ -12,5 +14,7 @@ export {
   DialogoAddTarjetaBlanca,
   DialogoAddProveedor,
   DialogoAddTarjetaProducida,
+  DialogAddRecTarjetaBlanca,
+  DialogAddSalidaTarjetaProducida,
   notify_error,
 }
