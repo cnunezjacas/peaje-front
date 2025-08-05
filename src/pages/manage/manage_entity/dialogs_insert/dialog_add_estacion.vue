@@ -219,7 +219,7 @@ import notify_warning from 'src/utils/notify/notify_warning.js'
 import imports from 'src/utils/imports'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
-import Phone from 'src/pages/manage/manage_entity/template/PhoneNumberInput.vue'
+import Phone from 'src/pages/utils/PhoneNumberInput.vue'
 
 const list = STRINGS.OpacityDialog
 
