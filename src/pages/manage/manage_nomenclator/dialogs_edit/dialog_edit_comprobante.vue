@@ -79,8 +79,8 @@
                 :rules="rulesNomenclador_comprobante"
                 color="green"
                 :label="STRINGS.moneda_comprobante"
+                :disable="optionsMoneda.length > 0 ? false : true"
                 @onchange="checkStatusInputs"
-                outlined
               >
               </q-select>
             </div>
@@ -117,28 +117,22 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteComprobante.js'
+import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteComprobante.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import imports from 'src/utils/imports.js'
 import notify_error from 'src/utils/notify/notify_error.js'
+import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 
 const list = STRINGS.OpacityDialog
 const refDialogoEdit = ref(null)
 const optionsMoneda = ref([])
 
 const loadCoins = async () => {
-  const response = await api.get(STRINGS.urlApiMoneda)
-  optionsMoneda.value = response.data.map((element) => element['siglas'])
-
-  if (optionsMoneda.value === null) {
-    notify_error('Problemas de carga de datos..')
-  }
-  return optionsMoneda.value !== null ? optionsMoneda : (optionsMoneda.value = ['Empty'])
+  optionsMoneda.value = await getNomenclator.loadCoins()
 }
 
 onBeforeMount(() => {
@@ -314,13 +308,6 @@ const textCodigo_comprobante = ref(null)
 const textValor_comprobante = ref(null)
 const textMoneda_comprobante = ref(null)
 //const textDetalles_exento = ref(null)
-
-import { watch } from 'vue'
-
-/*watch(TextNomenclador_comprobante, (newVal) => {
-  TextValueNomenclador_comprobante.value = newVal
-  checkStatusInputs()
-})*/
 
 watch(TextMoneda_comprobante, (newVal) => {
   TextValueMoneda_comprobante.value = newVal
