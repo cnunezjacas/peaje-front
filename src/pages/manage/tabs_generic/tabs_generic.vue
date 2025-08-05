@@ -282,6 +282,15 @@
 
     <!-- Dialogo Add Tarjeta Producida -->
     <DialogoAddTarjetaProducida ref="dialogoAddTarjetaProducida" @ActualizarTabla="tableUpdater" />
+
+    <!-- Dialogo Add Recepción Tarjeta Producida -->
+    <DialogAddRecTarjetaBlanca ref="dialogAddRecTarjetaBlanca" @ActualizarTabla="tableUpdater" />
+
+    <!-- Dialogo Add Salida Tarjeta Producida -->
+    <DialogAddSalidaTarjetaProducida
+      ref="dialogAddSalidaTarjetaProducida"
+      @ActualizarTabla="tableUpdater"
+    />
   </div>
 </template>
 
@@ -344,6 +353,8 @@ import {
   DialogoAddTarjetaBlanca,
   DialogoAddProveedor,
   DialogoAddTarjetaProducida,
+  DialogAddRecTarjetaBlanca,
+  DialogAddSalidaTarjetaProducida,
 } from 'src/utils/import_files_store.js'
 
 import imports from 'utils/imports.js'
@@ -676,6 +687,12 @@ const dialogoAddProveedor = ref(null)
 //Const Dialogo Add Tarjeta Producida
 const dialogoAddTarjetaProducida = ref(null)
 
+//Const Dialogo Add Recepción Tarjeta Blanca
+const dialogAddRecTarjetaBlanca = ref(null)
+
+//Const Dialogo Add Salida Tarjeta Producida
+const dialogAddSalidaTarjetaProducida = ref(null)
+
 //ARRAY GLOBAL QUE SELECCIONA TODO
 var arraySelected = ref([])
 
@@ -858,6 +875,10 @@ const onItemClick = (value) => {
         dialogoAddProveedor.value.getUpDialogAdd()
       } else if (nuevaRuta.includes(STRINGS.tarjeta_producidaLowercase)) {
         dialogoAddTarjetaProducida.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.recepcion_de_tarjeta_blancaLowercase)) {
+        dialogAddRecTarjetaBlanca.value.getUpDialogAdd()
+      } else if (nuevaRuta.includes(STRINGS.salida_de_tarjeta_producidaLowercase)) {
+        dialogAddSalidaTarjetaProducida.value.getUpDialogAdd()
       }
 
       break
