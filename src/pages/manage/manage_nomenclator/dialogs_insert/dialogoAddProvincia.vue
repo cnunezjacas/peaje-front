@@ -68,21 +68,25 @@
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
-validaciones_generales
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 
 const emit = defineEmits(['ActualizarTabla'])
+
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiProvincia
+  const existeCodigo = await verificarExistente(url, 'codigo', TextCodigo_prov.value)
+  return existeCodigo
+}
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_prov.value)
-    if (existeCodigo) {
+    if (CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
       textCodigo_prov.value.focus()
