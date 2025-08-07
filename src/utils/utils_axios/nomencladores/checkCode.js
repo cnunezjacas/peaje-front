@@ -11,8 +11,7 @@ import api from 'src/axios.js'
 const verificarExistente = async (url, campo, valor) => {
   try {
     const response = await api.get(url)
-    console.log(response.data)
-    return response.data.some((element) => element[campo] === Number(valor))
+    return response.data.some((element) => element[campo] === valor)
   } catch (error) {
     console.error(error)
     return false
