@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialogEditBanco"
-      persistent
-      ref="refDialogoEditProvincia"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -20,10 +15,9 @@
                 v-model="TextNombre_banco"
                 ref="textNombre_banco"
                 color="green"
-                :rules="rulesAddNombreBanco"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_banco"
-                @keyup="checkStatusInputs"
               />
             </div>
             <div class="col-5">
@@ -32,23 +26,15 @@
                 v-model="TextCodigo_banco"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigoBanco"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.codigo_banco"
-                @keyup="checkStatusInputs"
               />
             </div>
 
             <div class="col-12 q-mt-md">
               <p>{{ STRINGS.detalles_banco }}:</p>
               <div class="bg-grey-4">
-                <q-input
-                  ref="textDetalles_banco"
-                  v-model="TextDetalles_banco"
-                  class="q-pa-md"
-                  color="green"
-                  autogrow
-                  @keyup="checkStatusInputs"
-                />
+                <q-input v-model="TextDetalles_banco" class="q-pa-md" color="green" autogrow />
               </div>
             </div>
           </div>
@@ -59,8 +45,8 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
-                @click="Procesar_EditBanco()"
+                :class="disabledBtnSave"
+                @click="SendData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -71,7 +57,7 @@
                 flat
                 icon="close"
                 :label="STRINGS.close"
-                @click="DevolverEstadoInputsEdit"
+                @click="Reset()"
                 color="dark"
                 v-close-popup
               />
@@ -84,56 +70,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
-import imports from 'src/utils/imports.js'
 import notify_error from 'src/utils/notify/notify_error.js'
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import validaciones_generales from 'src/utils/validaciones_generales.js'
 
 const list = STRINGS.OpacityDialog
 
-const refDialogoEditProvincia = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreBanco = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddCodigoBanco = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-/*Validaciones*/
-
 const emit = defineEmits(['ActualizarTabla'])
 
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiBanco
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_banco.value),
+  )
+  return existeCodigo
+}
+
 /*Funcion de procesado de Datos*/
-const Procesar_EditBanco = async () => {
+const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Verificar si el código ya existe
-    var existeCodigo = false
-
-    if (TextCodigo_banco.value !== TextCodigo_banco_copy.value)
-      existeCodigo = await verificarCodigoExistente(TextCodigo_banco.value)
-
-    if (existeCodigo ? true : false) {
-      // Mostrar mensaje de error o alertar al usuario
-
-      notify_error(STRINGS.codigoRepetido)
-
-      textCodigo_banco.value.focus()
-
-      return
+    if (InputDifferent() && TextCodigo_banco.value !== TextCodigo_banco_copy.value) {
+      if (await CheckCode()) {
+        // Verificar si el código ya existe
+        // Mostrar mensaje de error o alertar al usuario
+        notify_error(STRINGS.codigoRepetido)
+        return textCodigo_banco.value.focus()
+      }
     } else {
       const newItem = {
-        nombre: imports.capitalizeWords(TextNombre_banco.value),
+        nombre: TextNombre_banco.value.toUpperCase(),
         codigo: TextCodigo_banco.value,
-        detalles: TextDetalles_banco.value,
+        detalles: TextDetalles_banco.value.toUpperCase(),
       }
 
       try {
@@ -148,18 +124,15 @@ const Procesar_EditBanco = async () => {
 
         emit('ActualizarTabla', false)
       }
-      refDialogoEditProvincia.value.hide()
       Reset()
     }
-  } else {
-    refDialogoEditProvincia.value.show()
   }
 }
 
 /*Función que levanta el dialogo*/
 const getUpDialogEdit = (nombre, codigo, detalle, id) => {
   backdropFilter.value = list
-  dialogEditBanco.value = true
+  dialog.value = true
 
   TextCodigo_banco.value = codigo
   TextNombre_banco.value = nombre
@@ -169,62 +142,77 @@ const getUpDialogEdit = (nombre, codigo, detalle, id) => {
   //Copias de Seguridad
   TextCodigo_banco_copy.value = codigo
   TextNombre_banco_copy.value = nombre
-  TextDetalles_banco_copy.value = nombre
+  TextDetalles_banco_copy.value = detalle
 }
 
-const checkStatusInputs = () => {
-  // Si ambos campos son iguales a sus valores originales, deshabilitar
-  const noHaCambiado =
+//Función para comprobar que los campos no estén vacíos
+const InputEmpty = () => {
+  if (TextCodigo_banco.value !== '' && TextNombre_banco.value !== '') return true
+  else return false
+}
+/* Función para evaluar que los campos hallan sido modificados */
+const InputDifferent = () => {
+  return !(
     TextCodigo_banco.value === TextCodigo_banco_copy.value &&
     TextNombre_banco.value === TextNombre_banco_copy.value &&
     TextDetalles_banco.value === TextDetalles_banco_copy.value
-
-  if (TextCodigo_banco.value.trim() === '' || TextNombre_banco.value.trim() === '') {
-    // Si algún campo está vacío, deshabilitar
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (noHaCambiado) {
-    // Si no ha cambiado nada, deshabilitar
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (
-    !expRegulares.onlyText.test(TextNombre_banco.value) ||
-    !expRegulares.onlyUppercase.test(TextCodigo_banco.value)
-  ) {
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else {
-    // Si hay cambios, habilitar
-    disabledBtnSaveEdit.value = ''
-  }
-
-  return disabledBtnSaveEdit.value
+  )
 }
 
-const DevolverEstadoInputsEdit = () => {
-  disabledBtnSaveEdit.value = STRINGS.desabilitar
+//Función para comprobar que los campos sean válidos
+const InputRegularExpressions = () => {
+  if (
+    expRegulares.onlyText.test(TextNombre_banco.value) &&
+    expRegulares.onlyUppercase.test(TextCodigo_banco.value)
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar los campos y habilitar botón GUARDAR
+const checkStatusInputs = () => {
+  console.log('InputDifferent', InputDifferent())
+  const isValid = InputEmpty() && InputRegularExpressions() && InputDifferent()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
+  dialog.value = false
   TextCodigo_banco.value = ''
   TextNombre_banco.value = ''
   TextDetalles_banco.value = ''
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
-const dialogEditBanco = ref(false)
+/* Variables del dialogo */
+const dialog = ref(false)
+const backdropFilter = ref(null)
 
+/* Referencias de variables de seguridad */
 const TextCodigo_banco_copy = ref('')
 const TextNombre_banco_copy = ref('')
 const TextDetalles_banco_copy = ref('')
-
 const _id = ref('')
-const backdropFilter = ref(null)
 
+/* Referencias de los modelos de los campos */
 const TextNombre_banco = ref('')
 const TextCodigo_banco = ref('')
 const TextDetalles_banco = ref('')
+
+/* Referencia del campo key */
 const textCodigo_banco = ref(null)
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+/* Referencia del botón de enviar datos */
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
+watch([TextCodigo_banco, TextNombre_banco, TextDetalles_banco], () => {
+  checkStatusInputs()
+})
+
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogEdit,
 })

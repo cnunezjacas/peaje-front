@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -16,10 +16,9 @@
                 v-model="TextNombre_banco"
                 ref="textNombre_banco"
                 color="green"
-                :rules="rulesAddNombreBanco"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_banco"
-                @keyup="checkStatusInputs"
               />
             </div>
             <div class="col-5">
@@ -28,9 +27,8 @@
                 v-model="TextCodigo_banco"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigoBanco"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.codigo_banco"
-                @keyup="checkStatusInputs"
               />
             </div>
 
@@ -54,7 +52,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
+                :class="disabledBtnSave"
                 @click="SendData()"
                 :label="STRINGS.save"
                 color="green"
@@ -66,7 +64,7 @@
                 flat
                 icon="close"
                 :label="STRINGS.close"
-                v-on:click="Reset"
+                v-on:click="Reset()"
                 color="dark"
                 v-close-popup
               />
@@ -79,46 +77,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+/* Importaciones */
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteBanco.js'
 import imports from 'src/utils/imports.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
+import validaciones_generales from 'src/utils/validaciones_generales.js'
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 
-const list = STRINGS.OpacityDialog
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiBanco
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_banco.value),
+  )
+  return existeCodigo
+}
 
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreBanco = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddCodigoBanco = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-/*Validaciones*/
-
+/* Emisor */
 const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_banco.value)
-    if (existeCodigo) {
+    if (await CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
-
-      textCodigo_banco.value.focus()
-      return
+      return textCodigo_banco.value.focus()
     } else {
       const newItem = {
         nombre: imports.capitalizeWords(TextNombre_banco.value),
@@ -140,7 +130,6 @@ const SendData = async () => {
 
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
       Reset()
     }
   }
@@ -154,30 +143,56 @@ const getUpDialogAdd = () => {
 
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
+  dialog.value = false
   TextCodigo_banco.value = ''
   TextNombre_banco.value = ''
   TextDetalles_banco.value = ''
 }
 
-const checkStatusInputs = () => {
-  if (TextCodigo_banco.value != '' && expRegulares.onlyUppercase.test(TextCodigo_banco.value))
-    if (TextNombre_banco.value != '' && expRegulares.onlyText.test(TextNombre_banco.value))
-      disabledBtnSaveEdit.value = ''
-    else disabledBtnSaveEdit.value = STRINGS.desabilitar
-  else disabledBtnSaveEdit.value = STRINGS.desabilitar
-
-  return disabledBtnSaveEdit.value
+//Función para comprobar que los campos no estén vacíos
+const InputEmpty = () => {
+  if (TextCodigo_banco.value.trim() !== '' && TextNombre_banco.value.trim() !== '') return true
+  else return false
 }
 
+//Función para comprobar que los campos sean válidos
+const InputRegularExpressions = () => {
+  if (
+    expRegulares.onlyUppercase.test(TextCodigo_banco.value) &&
+    expRegulares.onlyText.test(TextNombre_banco.value)
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar los campos y habilitar botón GUARDAR
+const checkStatusInputs = () => {
+  const isValid = InputEmpty() && InputRegularExpressions()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
+}
+
+/* Referencias del dialogo */
 const dialog = ref(false)
+const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
 
+/* Referencias de los modelos de los campos */
 const TextNombre_banco = ref('')
 const TextCodigo_banco = ref('')
 const TextDetalles_banco = ref('')
+
+/* Referencia del campo key */
 const textCodigo_banco = ref(null)
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+/* Referencia del botón de enviar datos */
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
+watch([TextCodigo_banco, TextNombre_banco, TextDetalles_banco], () => {
+  checkStatusInputs()
+})
+
+/* Método para exponer funciones al componente Padre */
 defineExpose({ getUpDialogAdd })
 </script>
