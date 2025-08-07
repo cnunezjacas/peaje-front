@@ -55,7 +55,7 @@ const DataSelection = (row, ruta, arraySelected) => {
   } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
     arraySelected.value['nombre'] = row['nombre']
     arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['detalle'] = row['detalle']
+    arraySelected.value['detalle'] = row['detalles']
     arraySelected.value['_id'] = row['_id']
   } else if (nuevaRuta.includes(STRINGS.monedasLowercase) && row) {
     arraySelected.value['siglas'] = row['siglas']
