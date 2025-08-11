@@ -46,7 +46,7 @@
               <q-btn
                 icon="check"
                 :class="disabledBtnSave"
-                @click="SendData()"
+                @click="CheckData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -72,15 +72,12 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-
 import api from 'src/axios.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
-
-const list = STRINGS.OpacityDialog
 
 const emit = defineEmits(['ActualizarTabla'])
 
@@ -95,45 +92,54 @@ const CheckCode = async () => {
   return existeCodigo
 }
 
-/*Funcion de procesado de Datos*/
-const SendData = async () => {
+/* Comprueba que existan cambios y que el código key no sea repetido */
+const CheckData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
+    // Verificar si el código ya existe
     if (InputDifferent() && TextCodigo_banco.value !== TextCodigo_banco_copy.value) {
       if (await CheckCode()) {
-        // Verificar si el código ya existe
         // Mostrar mensaje de error o alertar al usuario
         notify_error(STRINGS.codigoRepetido)
         return textCodigo_banco.value.focus()
+      } else {
+        SendData()
       }
     } else {
-      const newItem = {
-        nombre: TextNombre_banco.value.toUpperCase(),
-        codigo: TextCodigo_banco.value,
-        detalles: TextDetalles_banco.value.toUpperCase(),
-      }
-
-      try {
-        await api.patch(STRINGS.urlApiBanco + '/' + _id.value, newItem) // POST /items
-        // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.bancoEditSuccess)
-
-        emit('ActualizarTabla', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.bancoEditError)
-
-        emit('ActualizarTabla', false)
-      }
-      Reset()
+      SendData()
     }
   }
 }
 
+/*Funcion de procesado de Datos*/
+const SendData = async () => {
+  const newItem = {
+    nombre: TextNombre_banco.value.toUpperCase(),
+    codigo: TextCodigo_banco.value,
+    detalles: TextDetalles_banco.value.toUpperCase(),
+  }
+
+  try {
+    await api.patch(STRINGS.urlApiBanco + '/' + _id.value, newItem) // POST /items
+    // Mostrar alerta positiva de éxito
+    notify_success(STRINGS.bancoEditSuccess)
+
+    emit('ActualizarTabla', true)
+  } catch (error) {
+    console.error('Error al crear item:', error)
+    notify_error(STRINGS.bancoEditError)
+
+    emit('ActualizarTabla', false)
+  }
+  Reset()
+}
+
 /*Función que levanta el dialogo*/
 const getUpDialogEdit = (nombre, codigo, detalle, id) => {
+  /* Se levanta el dialogo */
   backdropFilter.value = list
   dialog.value = true
 
+  //Contenido de modelos de los capos en pantalla
   TextCodigo_banco.value = codigo
   TextNombre_banco.value = nombre
   TextDetalles_banco.value = detalle
@@ -171,7 +177,6 @@ const InputRegularExpressions = () => {
 
 //Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  console.log('InputDifferent', InputDifferent())
   const isValid = InputEmpty() && InputRegularExpressions() && InputDifferent()
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
@@ -188,6 +193,7 @@ const Reset = () => {
 
 /* Variables del dialogo */
 const dialog = ref(false)
+const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
 
 /* Referencias de variables de seguridad */
