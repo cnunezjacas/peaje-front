@@ -24,7 +24,7 @@
                   v-model="TextNombre_moneda"
                   ref="textNombre_moneda"
                   color="green"
-                  :rules="rulesAddNombreMoneda"
+                  :rules="validaciones_generales.rulesOnlyText"
                   type="text"
                   :label="STRINGS.nombre_moneda"
                   @keyup="checkStatusInputs"
@@ -38,7 +38,7 @@
                   v-model="TextSiglas_moneda"
                   color="green"
                   type="text"
-                  :rules="rulesAddSiglasMoneda"
+                  :rules="validaciones_generales.rulesOnlyUppercase"
                   :label="STRINGS.siglas_moneda"
                   @keyup="checkStatusInputs"
                 />
@@ -51,7 +51,7 @@
                   v-model="TextTasaCambio_moneda"
                   ref="textTasaCambio_moneda"
                   color="green"
-                  :rules="rulesAddTasaCambio_moneda"
+                  :rules="validaciones_generales.rulesExchangeRate"
                   type="text"
                   :label="STRINGS.tasaCambio_moneda"
                   @keyup="checkStatusInputs"
@@ -66,7 +66,7 @@
                 <q-select
                   v-model="Textnomenclador_moneda"
                   :options="options"
-                  :rules="rulesAddNomenclador_moneda"
+                  :rules="validaciones_generales.rulesNoEmpty"
                   color="green"
                   :label="STRINGS.nomenclador_moneda"
                   @onchange="checkStatusInputs"
@@ -114,7 +114,7 @@
                   v-model="TextIdCondor_moneda"
                   ref="textIdCondor_moneda"
                   color="green"
-                  :rules="rulesAddIdCondor_moneda"
+                  :rules="validaciones_generales.rulesCondorTextID"
                   type="text"
                   :label="STRINGS.idCondor_moneda"
                   @keyup="checkStatusInputs"
@@ -174,67 +174,35 @@
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreMoneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddSiglasMoneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-
-const rulesAddTasaCambio_moneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => {
-    // Reemplazar coma por punto para convertir a número
-    const normalizedVal = val.replace(',', '.')
-    // Validar que sea un número válido
-    return (
-      (!isNaN(parseFloat(normalizedVal)) && parseFloat(normalizedVal) >= 0) ||
-      STRINGS.decimalPositive
-    )
-  },
-]
-
-const rulesAddNomenclador_moneda = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesAddIdCondor_moneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.condorTextID.test(val) || STRINGS.condorTextID,
-]
-
-/*Validaciones*/
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 const emit = defineEmits(['ActualizarTabla'])
+
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiMoneda
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.siglasBD,
+    String(TextSiglas_moneda.value),
+  )
+  return existeCodigo
+}
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextSiglas_moneda.value)
-    if (existeCodigo) {
+    if (await CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
-
       notify_error(STRINGS.siglasRepetidas)
-
-      textSiglas_monedas.value.focus()
-      return
+      return textSiglas_monedas.value.focus()
     } else {
       const newItem = {
-        nombre: TextNombre_moneda.value,
+        nombre: TextNombre_moneda.value.toUpperCase(),
         siglas: TextSiglas_moneda.value,
         nomenclador: Number(Textnomenclador_moneda.value),
         tasa: Number(TextTasaCambio_moneda.value),
@@ -255,7 +223,6 @@ const SendData = async () => {
 
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
       Reset()
     }
   }
@@ -280,50 +247,45 @@ const Reset = () => {
   //TextDetalles_moneda.value = ''
 }
 
+//Función para comprobar que los campos no estén vacíos
 const InputEmpty = () => {
   if (
-    TextNombre_moneda.value.trim() === '' ||
-    TextSiglas_moneda.value.trim() === '' ||
-    TextTasaCambio_moneda.value === '' ||
-    Textnomenclador_moneda.value === '' ||
-    TextmBase_moneda.value === '' ||
-    TextIdCondor_moneda.value.trim() === ''
+    TextNombre_moneda.value.trim() !== '' &&
+    TextSiglas_moneda.value.trim() !== '' &&
+    TextTasaCambio_moneda.value !== '' &&
+    Textnomenclador_moneda.value !== '' &&
+    TextmBase_moneda.value !== '' &&
+    TextIdCondor_moneda.value.trim() !== ''
   )
     return true
   else return false
 }
 
+//Función para comprobar que los campos sean válidos
 const InputRegularExpressions = () => {
-  let TazaCambio = EvaluarTazaCambio()
-
-  let InputValidated =
+  if (
     expRegulares.onlyText.test(TextNombre_moneda.value) &&
     expRegulares.onlyUppercase.test(TextSiglas_moneda.value) &&
-    Textnomenclador_moneda.value !== null &&
     expRegulares.condorTextID.test(TextIdCondor_moneda.value) &&
-    TazaCambio === true &&
-    TextmBase_moneda.value !== null
-
-  return InputValidated
+    expRegulares.exchangeRate.test(TextTasaCambio_moneda.value)
+  )
+    return true
+  else return false
 }
 
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  var isEmpty = InputEmpty()
-  var InputValidated = InputRegularExpressions()
-
-  if (isEmpty) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else if (!InputValidated) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else {
-    disabledBtnSave.value = ''
-  }
-
+  const isValid = InputEmpty() && InputRegularExpressions()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
+/* Variables del dialogo */
 const dialog = ref(false)
+const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
 
+/* Referencias de los modelos de los campos */
 const TextSiglas_moneda = ref('')
 const TextNombre_moneda = ref('')
 const TextTasaCambio_moneda = ref('')
@@ -331,27 +293,15 @@ const Textnomenclador_moneda = ref('')
 const TextmBase_moneda = ref('')
 const TextIdCondor_moneda = ref('')
 //const TextDetalles_moneda = ref('')
-
 const options = [1, 2, 3, 4]
 
-const backdropFilter = ref(null)
-
-const textNombre_moneda = ref(null)
+/* Referencia del campo key */
 const textSiglas_monedas = ref(null)
-const textTasaCambio_moneda = ref(null)
-const textmBase_moneda = ref(null)
-const textIdCondor_moneda = ref(null)
-//const textDetalles_moneda = ref(null)
 
+/* Referencia del botón de enviar datos */
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
-const EvaluarTazaCambio = () => {
-  return !isNaN(parseFloat(TextTasaCambio_moneda.value)) &&
-    parseFloat(TextTasaCambio_moneda.value) >= 0
-    ? true
-    : false
-}
-
+/* ("observadores") que permiten reaccionar a cambios en datos específicos del/los componente/s */
 watch(TextmBase_moneda, () => {
   checkStatusInputs()
 })
@@ -360,6 +310,7 @@ watch(Textnomenclador_moneda, () => {
   checkStatusInputs()
 })
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogAdd,
 })
