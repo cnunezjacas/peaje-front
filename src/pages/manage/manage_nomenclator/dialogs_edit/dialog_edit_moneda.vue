@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent ref="refDialogoEdit" :backdrop-filter="backdropFilter">
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -15,9 +15,8 @@
               <div class="q-px-sm">
                 <q-input
                   v-model="TextNombre_moneda"
-                  ref="textNombre_moneda"
                   color="green"
-                  :rules="rulesAddNombreMoneda"
+                  :rules="validaciones_generales.rulesOnlyText"
                   type="text"
                   :label="STRINGS.nombre_moneda"
                   @keyup="checkStatusInputs"
@@ -31,7 +30,7 @@
                   v-model="TextSiglas_moneda"
                   color="green"
                   type="text"
-                  :rules="rulesAddSiglasMoneda"
+                  :rules="validaciones_generales.rulesOnlyUppercase"
                   :label="STRINGS.siglas_moneda"
                   @keyup="checkStatusInputs"
                 />
@@ -42,10 +41,9 @@
               <div class="q-px-sm">
                 <q-input
                   v-model="TextTasaCambio_moneda"
-                  ref="textTasaCambio_moneda"
                   color="green"
-                  :rules="rulesAddTasaCambio_moneda"
-                  type="number"
+                  :rules="validaciones_generales.rulesExchangeRate"
+                  type="text"
                   :label="STRINGS.tasaCambio_moneda"
                   @keyup="checkStatusInputs"
                 />
@@ -58,13 +56,12 @@
               <div class="q-px-sm">
                 <q-select
                   v-model="Textnomenclador_moneda"
-                  ref="textnomenclador_moneda"
                   :options="options"
-                  :rules="rulesAddNomenclador_moneda"
+                  :rules="validaciones_generales.rulesNoEmpty"
                   color="green"
                   :label="STRINGS.nomenclador_moneda"
+                  @onchange="checkStatusInputs"
                   outlined
-                  @change="checkStatusInputs"
                 >
                   <!-- Slot para agregar un botón al final del select -->
                   <template v-slot:append>
@@ -81,21 +78,20 @@
               <div class="q-px-xs">
                 <q-radio
                   v-model="TextmBase_moneda"
-                  ref="textmBase_moneda"
                   checked-icon="task_alt"
                   unchecked-icon="panorama_fish_eye"
+                  @onchange="checkStatusInputs"
                   :val="STRINGS.yes"
                   :label="STRINGS.yes"
-                  @change="checkStatusInputs"
                 />
                 <q-radio
                   v-model="TextmBase_moneda"
                   ref="textmBase_moneda"
                   checked-icon="task_alt"
                   unchecked-icon="panorama_fish_eye"
+                  @onchange="checkStatusInputs"
                   :val="STRINGS.no"
                   :label="STRINGS.no"
-                  @change="checkStatusInputs"
                 />
               </div>
             </div>
@@ -106,9 +102,8 @@
               <div class="q-px-sm">
                 <q-input
                   v-model="TextIdCondor_moneda"
-                  ref="textIdCondor_moneda"
                   color="green"
-                  :rules="rulesAddIdCondor_moneda"
+                  :rules="validaciones_generales.rulesCondorTextID"
                   type="text"
                   :label="STRINGS.idCondor_moneda"
                   @keyup="checkStatusInputs"
@@ -140,8 +135,8 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
-                @click="Procesar_Edit()"
+                :class="disabledBtnSave"
+                @click="CheckData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -168,90 +163,65 @@
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteMoneda.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoEdit = ref(null)
-
-/*Validaciones*/
-const rulesAddNombreMoneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesAddSiglasMoneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-
-const rulesAddTasaCambio_moneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => {
-    // Reemplazar coma por punto para convertir a número
-    const normalizedVal = val.replace(',', '.')
-    // Validar que sea un número válido
-    return (
-      (!isNaN(parseFloat(normalizedVal)) && parseFloat(normalizedVal) >= 0) ||
-      STRINGS.decimalPositive
-    )
-  },
-]
-
-const rulesAddNomenclador_moneda = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesAddIdCondor_moneda = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.condorTextID.test(val) || STRINGS.condorTextID,
-]
-
-/*Validaciones*/
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
-const Procesar_Edit = async () => {
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiMoneda
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.siglasBD,
+    String(TextSiglas_moneda.value),
+  )
+  return existeCodigo
+}
+
+/* Comprueba que existan cambios y que el código key no sea repetido */
+const CheckData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    var existeCodigo = false
-
     // Verificar si el código ya existe
-    if (TextSiglas_moneda.value !== TextSiglas_moneda_copy.value)
-      existeCodigo = await verificarCodigoExistente(TextSiglas_moneda.value)
-
-    if (existeCodigo ? true : false) {
-      // Mostrar mensaje de error o alertar al usuario
-      notify_error(STRINGS.codigoRepetido)
-      textSiglas_monedas.value.focus()
-      return
+    if (InputDifferent() && TextSiglas_moneda.value !== TextSiglas_moneda_copy.value) {
+      if (await CheckCode()) {
+        // Mostrar mensaje de error o alertar al usuario
+        notify_error(STRINGS.codigoRepetido)
+        return textSiglas_monedas.value.focus()
+      } else {
+        SendData()
+      }
     } else {
-      const newItem = {
-        nombre: TextNombre_moneda.value,
-        siglas: TextSiglas_moneda.value,
-        nomenclador: Number(Textnomenclador_moneda.value),
-        tasa: Number(TextTasaCambio_moneda.value),
-        condor: TextIdCondor_moneda.value,
-        moneda: TextmBase_moneda.value,
-      }
-
-      console.log(newItem.val)
-
-      try {
-        await api.patch(STRINGS.urlApiMoneda + '/' + IdMoneda.value, newItem) // POST /items
-        notify_success(STRINGS.monedaEditSuccess)
-
-        emit('ActualizarTabla', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.municipioEditError)
-        emit('ActualizarTabla', false)
-      }
-      refDialogoEdit.value.hide()
-      Reset()
+      SendData()
     }
   }
+}
+
+/*Funcion de procesado de Datos*/
+const SendData = async () => {
+  const newItem = {
+    nombre: TextNombre_moneda.value.toUpperCase(),
+    siglas: TextSiglas_moneda.value,
+    nomenclador: Number(Textnomenclador_moneda.value),
+    tasa: Number(TextTasaCambio_moneda.value),
+    condor: TextIdCondor_moneda.value,
+    moneda: TextmBase_moneda.value,
+  }
+
+  try {
+    await api.patch(STRINGS.urlApiMoneda + '/' + _id.value, newItem) // POST /items
+    notify_success(STRINGS.monedaEditSuccess)
+
+    emit('ActualizarTabla', true)
+  } catch (error) {
+    console.error('Error al crear item:', error)
+    notify_error(STRINGS.municipioEditError)
+    emit('ActualizarTabla', false)
+  }
+  Reset()
 }
 
 /*Función que levanta el dialogo*/
@@ -272,64 +242,52 @@ const getUpDialogEdit = (siglas, nombre, tasaCambio, nomenclador, mBase, idCondo
   Textnomenclador_moneda_copy.value = nomenclador
   TextmBase_moneda_copy.value = mBase
   TextIdCondor_moneda_copy.value = idCondor
-  IdMoneda.value = id
+  _id.value = id
 }
 
+//Función para comprobar que los campos no estén vacíos
 const InputEmpty = () => {
   if (
-    TextNombre_moneda.value.trim() === '' ||
-    TextSiglas_moneda.value.trim() === '' ||
-    TextTasaCambio_moneda.value === '' ||
-    Textnomenclador_moneda.value === '' ||
-    TextmBase_moneda.value === '' ||
-    TextIdCondor_moneda.value.trim() === ''
+    TextNombre_moneda.value.trim() !== '' &&
+    TextSiglas_moneda.value.trim() !== '' &&
+    TextTasaCambio_moneda.value !== '' &&
+    Textnomenclador_moneda.value !== '' &&
+    TextmBase_moneda.value !== '' &&
+    TextIdCondor_moneda.value.trim() !== ''
   )
     return true
   else return false
 }
 
+/* Función para evaluar que los campos hallan sido modificados */
 const InputDifferent = () => {
-  let HaCambiado =
-    TextNombre_moneda.value !== TextNombre_moneda_copy.value ||
-    TextSiglas_moneda.value !== TextSiglas_moneda_copy.value ||
-    TextTasaCambio_moneda.value !== TextTasaCambio_moneda_copy.value ||
-    Textnomenclador_moneda.value !== Textnomenclador_moneda_copy.value ||
-    TextmBase_moneda.value !== TextmBase_moneda_copy.value ||
-    TextIdCondor_moneda.value !== TextIdCondor_moneda_copy.value
-
-  return HaCambiado
+  return !(
+    TextNombre_moneda.value === TextNombre_moneda_copy.value &&
+    TextSiglas_moneda.value === TextSiglas_moneda_copy.value &&
+    TextTasaCambio_moneda.value === TextTasaCambio_moneda_copy.value &&
+    Textnomenclador_moneda.value === Textnomenclador_moneda_copy.value &&
+    TextmBase_moneda.value === TextmBase_moneda_copy.value &&
+    TextIdCondor_moneda.value === TextIdCondor_moneda_copy.value
+  )
 }
 
+//Función para comprobar que los campos sean válidos
 const InputRegularExpressions = () => {
-  let TazaCambio = EvaluarTazaCambio()
-
-  let InputValidated =
+  if (
     expRegulares.onlyText.test(TextNombre_moneda.value) &&
     expRegulares.onlyUppercase.test(TextSiglas_moneda.value) &&
-    Textnomenclador_moneda.value !== null &&
     expRegulares.condorTextID.test(TextIdCondor_moneda.value) &&
-    TazaCambio === true &&
-    TextmBase_moneda.value !== null
-
-  return InputValidated
+    expRegulares.exchangeRate.test(TextTasaCambio_moneda.value)
+  )
+    return true
+  else return false
 }
 
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  var isEmpty = InputEmpty()
-  var noChange = InputDifferent()
-  var InputValidated = InputRegularExpressions()
-
-  if (isEmpty) {
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (!noChange) {
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else if (!InputValidated) {
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else {
-    disabledBtnSaveEdit.value = ''
-  }
-
-  return disabledBtnSaveEdit.value
+  const isValid = InputEmpty() && InputRegularExpressions() && InputDifferent()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -341,10 +299,13 @@ const Reset = () => {
   Textnomenclador_moneda.value = ''
   TextmBase_moneda.value = ''
   TextIdCondor_moneda.value = ''
-  disabledBtnSaveEdit.value = STRINGS.desabilitar
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
+/* Variables del dialogo */
 const dialog = ref(false)
+const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
 
 //Campos Originales
 const TextSiglas_moneda = ref('')
@@ -353,7 +314,8 @@ const TextTasaCambio_moneda = ref('')
 const Textnomenclador_moneda = ref('')
 const TextmBase_moneda = ref('')
 const TextIdCondor_moneda = ref('')
-const IdMoneda = ref('')
+const _id = ref('')
+const options = [1, 2, 3, 4]
 
 //Campos Copias
 const TextSiglas_moneda_copy = ref('')
@@ -363,24 +325,13 @@ const Textnomenclador_moneda_copy = ref('')
 const TextmBase_moneda_copy = ref('')
 const TextIdCondor_moneda_copy = ref('')
 
-const options = [1, 2, 3, 4]
-
-const backdropFilter = ref(null)
-
-const textNombre_moneda = ref(null)
+/* Referencia del campo key */
 const textSiglas_monedas = ref(null)
-const textTasaCambio_moneda = ref(null)
-const textmBase_moneda = ref(null)
-const textIdCondor_moneda = ref(null)
-const textnomenclador_moneda = ref(null)
-//const textDetalles_moneda = ref(null)
 
-const EvaluarTazaCambio = () => {
-  return parseFloat(TextTasaCambio_moneda.value) >= 0 ? true : false
-}
+/* Referencia del botón de enviar datos */
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
-
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
 watch(TextmBase_moneda, () => {
   checkStatusInputs()
 })
@@ -389,6 +340,7 @@ watch(Textnomenclador_moneda, () => {
   checkStatusInputs()
 })
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogEdit,
 })
