@@ -15,4 +15,5 @@ export const expRegulares = {
   ip: /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
   email: /^[a-zA-Z0-9_]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/,
   codeThreeLettersHyphenNumbers: /^[A-Z]{3}-\d+$/,
+  exchangeRate: /^\d+(?:.\d+)?$/,
 }
