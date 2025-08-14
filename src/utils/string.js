@@ -93,6 +93,8 @@ export const STRINGS = {
   codigo: 'Código',
   recepcion: 'Recepción',
   nombre_abreviado: 'Sigla',
+  siglasBD: 'siglas',
+  codigoBD: 'codigo',
 
   //*********** Campos Nomenclador **************
 
