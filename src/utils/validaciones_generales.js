@@ -68,13 +68,10 @@ const rulesCodeThreeLettersHyphenNumbers = [
 const rulesExchangeRate = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => {
-    // Reemplazar coma por punto para convertir a número
-    const normalizedVal = val.replace(',', '.')
-    // Validar que sea un número válido
-    return (
-      (!isNaN(parseFloat(normalizedVal)) && parseFloat(normalizedVal) >= 0) ||
-      STRINGS.decimalPositive
-    )
+    const normalizedVal = val.trim().replace(',', '.')
+    const isNumeric = /^\d+(?:.\d+)?$/.test(normalizedVal)
+
+    return (isNumeric && Number(normalizedVal) >= 0) || STRINGS.decimalPositive
   },
 ]
 
