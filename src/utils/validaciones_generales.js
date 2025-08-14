@@ -65,6 +65,24 @@ const rulesCodeThreeLettersHyphenNumbers = [
     expRegulares.codeThreeLettersHyphenNumbers.test(val) || STRINGS.codeThreeLettersHyphenNumbers,
 ]
 
+const rulesExchangeRate = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => {
+    // Reemplazar coma por punto para convertir a número
+    const normalizedVal = val.replace(',', '.')
+    // Validar que sea un número válido
+    return (
+      (!isNaN(parseFloat(normalizedVal)) && parseFloat(normalizedVal) >= 0) ||
+      STRINGS.decimalPositive
+    )
+  },
+]
+
+const rulesCondorTextID = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.condorTextID.test(val) || STRINGS.condorTextID,
+]
+
 /*Validaciones*/
 
 export default {
@@ -81,4 +99,6 @@ export default {
   rulesAddress,
   rulesNumberAndHyphen,
   rulesCodeThreeLettersHyphenNumbers,
+  rulesExchangeRate,
+  rulesCondorTextID,
 }
