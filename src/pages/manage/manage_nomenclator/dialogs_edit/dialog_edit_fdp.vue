@@ -1,14 +1,7 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialogEdit"
-      persistent
-      ref="refDialogoEdit"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
-      <q-card class="my-dialog-card">
+    <q-dialog v-model="dialogEdit" persistent :backdrop-filter="backdropFilter">
+      <q-card style="width: 600px; max-width: 80vw">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
@@ -23,7 +16,7 @@
                 v-model="TextDescripcion_fdp"
                 ref="textDescripcion_fdp"
                 color="green"
-                :rules="rulesDescripcion_fdp"
+                :rules="validaciones_generales.rulesNoEmpty"
                 type="text"
                 :label="STRINGS.descripcion_formas_pago"
                 @keyup="checkStatusInputs"
@@ -34,11 +27,10 @@
                 v-model="TextNomenclador_fdp"
                 ref="textNomenclador_fdp"
                 :options="options"
-                :rules="rulesNomenclador_fdp"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclador_formas_pago"
                 @onchange="checkStatusInputs"
-                outlined
               >
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -54,7 +46,6 @@
                 <q-input
                   ref="textDetalles_fdp"
                   v-model="TextDetalles_fdp"
-                  :rules="rulesDetalles_fdp"
                   class="q-pa-md q-pb-lg"
                   color="green"
                   autogrow
@@ -70,8 +61,8 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
-                @click="Procesar_Edit()"
+                :class="disabledBtnSave"
+                @click="SendData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -95,47 +86,19 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+/* Importaciones */
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-
 import api from 'src/axios.js'
-import { expRegulares } from 'src/utils/expresiones_regulares.js'
+/* import { expRegulares } from 'src/utils/expresiones_regulares.js' */
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-
-const list = STRINGS.OpacityDialog
-const refDialogoEdit = ref(null)
-const optionsMoneda = ref([])
-
-const loadCoins = async () => {
-  const response = await api.get(STRINGS.urlApiMoneda)
-  optionsMoneda.value = response.data.map((element) => element['siglas'])
-
-  if (optionsMoneda.value === null) {
-    notify_error('Problemas de carga de datos..')
-  }
-  return optionsMoneda.value !== null ? optionsMoneda : (optionsMoneda.value = ['Empty'])
-}
-
-onBeforeMount(() => {
-  loadCoins()
-})
-
-/*Validaciones*/
-const rulesDescripcion_fdp = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
-]
-
-const rulesNomenclador_fdp = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesDetalles_fdp = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /*Funcion de procesado de Datos*/
-const Procesar_Edit = async () => {
+const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
     const newItem = {
       descripcion: TextDescripcion_fdp.value,
@@ -156,8 +119,6 @@ const Procesar_Edit = async () => {
       emit('ActualizarTabla', false)
     }
     Reset()
-  } else {
-    refDialogoEdit.value.show()
   }
 }
 
@@ -177,39 +138,31 @@ const getUpDialogEdit = (nombre, nomenclador, detalles, id) => {
   TextDetalles_fdp_copy.value = detalles
 }
 
+//Función para comprobar que los campos no estén vacíos
 const InputEmpty = () => {
   if (
-    TextDescripcion_fdp.value.trim() === '' ||
-    TextNomenclador_fdp.value === '' ||
-    TextDetalles_fdp.value.trim() === ''
+    TextDescripcion_fdp.value.trim() !== '' &&
+    TextNomenclador_fdp.value !== '' /* &&
+    TextDetalles_fdp.value.trim() !== '' */
   )
     return true
   else return false
 }
 
+/* Función para evaluar que los campos hallan sido modificados */
 const InputDifferent = () => {
-  const HaCambiado =
-    TextDescripcion_fdp.value !== TextDescripcion_fdp_copy.value ||
-    TextNomenclador_fdp.value !== TextNomenclador_fdp_copy.value ||
-    TextDetalles_fdp.value !== TextDetalles_fdp_copy.value
-
-  return HaCambiado
+  return !(
+    TextDescripcion_fdp.value === TextDescripcion_fdp_copy.value &&
+    TextNomenclador_fdp.value === TextNomenclador_fdp_copy.value &&
+    TextDetalles_fdp.value === TextDetalles_fdp_copy.value
+  )
 }
 
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
-  // Verifica si algún campo está vacío
-  const isEmpty = InputEmpty()
-  // Verifica si hay cambios respecto a las copias
-  const hasChanged = InputDifferent()
-
-  if (isEmpty || !hasChanged) {
-    // Si algún campo está vacío o no hay cambios, deshabilitar
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else {
-    // Si hay cambios y todos los campos llenos, habilitar
-    disabledBtnSaveEdit.value = ''
-  }
-  return disabledBtnSaveEdit.value
+  const isValid = InputEmpty() && InputDifferent() /* && InputRegularExpressions() */
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -218,43 +171,35 @@ const Reset = () => {
   TextDescripcion_fdp.value = ''
   TextNomenclador_fdp.value = ''
   TextDetalles_fdp.value = ''
-  disabledBtnSaveEdit.value = STRINGS.desabilitar
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
+//Ref dialogo
 const dialogEdit = ref(false)
+const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
-const _id = ref('')
 
 //V-model
 const TextDescripcion_fdp = ref('')
 const TextNomenclador_fdp = ref('')
 const TextDetalles_fdp = ref('')
+const options = [1, 2, 3, 4]
+const _id = ref('')
 
 //V-model Copy
 const TextDescripcion_fdp_copy = ref('')
 const TextNomenclador_fdp_copy = ref('')
 const TextDetalles_fdp_copy = ref('')
 
-//ref
-const textDescripcion_fdp = ref(null)
-const textNomenclador_fdp = ref(null)
-const textDetalles_fdp = ref(null)
-
-const options = [1, 2, 3, 4]
-
-import { watch } from 'vue'
-
-/*watch(TextNomenclador_comprobante, (newVal) => {
-  TextValueNomenclador_comprobante.value = newVal
-  checkStatusInputs()
-})*/
-
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
 watch(TextNomenclador_fdp, () => {
   checkStatusInputs()
 })
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+/* Referencia del botón de enviar datos */
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogEdit,
 })
