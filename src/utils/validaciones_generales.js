@@ -7,6 +7,11 @@ const rulesOnlyNumbers = [
   (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
 ]
 
+const rulesUppercaseAndNumber = [
+  (val) => val != '' || STRINGS.inputEmpty,
+  (val) => expRegulares.uppercaseAndNumber.test(val) || STRINGS.uppercaseAndNumber,
+]
+
 const rulesOnlyUppercase = [
   (val) => val != '' || STRINGS.inputEmpty,
   (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
@@ -85,6 +90,7 @@ const rulesCondorTextID = [
 export default {
   rulesOnlyNumbers,
   rulesNoEmpty,
+  rulesUppercaseAndNumber,
   rulesOnlyUppercase,
   rulesOnlyText,
   rulesFullTextAndNumber,
