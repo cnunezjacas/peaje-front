@@ -1,14 +1,7 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
-      <q-card class="my-dialog-card">
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
+      <q-card style="width: 600px; max-width: 80vw">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
@@ -23,7 +16,7 @@
                 v-model="TextDescripcion_fdp"
                 ref="textDescripcion_fdp"
                 color="green"
-                :rules="rulesDescripcion_fdp"
+                :rules="validaciones_generales.rulesNoEmpty"
                 type="text"
                 :label="STRINGS.descripcion_formas_pago"
                 @keyup="checkStatusInputs"
@@ -34,11 +27,10 @@
                 v-model="TextNomenclador_fdp"
                 ref="textNomenclador_fdp"
                 :options="options"
-                :rules="rulesNomenclador_fdp"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclador_formas_pago"
                 @onchange="checkStatusInputs"
-                outlined
               >
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -54,7 +46,6 @@
                 <q-input
                   ref="textDetalles_fdp"
                   v-model="TextDetalles_fdp"
-                  :rules="rulesDetalles_fdp"
                   class="q-pa-md q-pb-lg"
                   color="green"
                   autogrow
@@ -95,31 +86,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+/* Importaciones */
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import { expRegulares } from 'src/utils/expresiones_regulares.js'
+/* import { expRegulares } from 'src/utils/expresiones_regulares.js' */
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-//import imports from 'src/utils/imports.js'
-
-const list = STRINGS.OpacityDialog
-const refDialogoAdd = ref(null)
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 const openModal = () => {
   console.log('Hi')
 }
-
-/*Validaciones*/
-const rulesDescripcion_fdp = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
-]
-
-const rulesNomenclador_fdp = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesDetalles_fdp = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
 
 const emit = defineEmits(['ActualizarTabla'])
 
@@ -134,7 +112,7 @@ const SendData = async () => {
     }
 
     try {
-      await api.post(STRINGS.urlApiFormaDePago, newItem) // POST /items
+      await api.post(STRINGS.urlApiFormaDePago, newItem)
 
       // Mostrar alerta positiva de éxito
       notify_success(STRINGS.fdp_AddSuccess)
@@ -156,6 +134,30 @@ const getUpDialogAdd = () => {
   dialog.value = true
 }
 
+//Función para comprobar que los campos no estén vacíos
+const InputEmpty = () => {
+  if (
+    TextDescripcion_fdp.value.trim() !== '' &&
+    TextNomenclador_fdp.value !== '' /* &&
+    TextDetalles_fdp.value.trim() !== '' */
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar que los campos sean válidos
+/* const InputRegularExpressions = () => {
+  if (expRegulares.onlyText.test(TextDescripcion_fdp.value)) return true
+  else return false
+} */
+
+//Función para comprobar los campos y habilitar botón GUARDAR
+const checkStatusInputs = () => {
+  const isValid = InputEmpty() /* && InputRegularExpressions() */
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
+}
+
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
   dialog.value = false
@@ -165,66 +167,27 @@ const Reset = () => {
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
-const InputEmpty = () => {
-  if (
-    TextDescripcion_fdp.value.trim() === '' ||
-    TextNomenclador_fdp.value === '' ||
-    TextDetalles_fdp.value.trim() === ''
-  )
-    return true
-  else return false
-}
-
-const InputRegularExpressions = () => {
-  let InputValidated =
-    expRegulares.onlyText.test(TextDescripcion_fdp.value) &&
-    TextDetalles_fdp.value !== '' &&
-    TextNomenclador_fdp.value !== null
-
-  console.log('TextDetalles_fdp.value:', TextDetalles_fdp.value)
-
-  console.log('InputValidated.value:', InputValidated)
-
-  return InputValidated
-}
-
-const checkStatusInputs = () => {
-  var isEmpty = InputEmpty()
-  var InputValidated = InputRegularExpressions()
-
-  if (isEmpty) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else if (!InputValidated) {
-    disabledBtnSave.value = STRINGS.desabilitar
-  } else {
-    disabledBtnSave.value = ''
-  }
-
-  return disabledBtnSave.value
-}
-
+//Ref dialogo
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
 
 //V-model
 const TextDescripcion_fdp = ref('')
 const TextNomenclador_fdp = ref('')
 const TextDetalles_fdp = ref('')
-
-//ref
-const textDescripcion_fdp = ref(null)
-const textNomenclador_fdp = ref(null)
-const textDetalles_fdp = ref(null)
-
 const options = [1, 2, 3, 4]
+
+/* Referencia del botón de enviar datos */
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
-import { watch } from 'vue'
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
 
 watch(TextNomenclador_fdp, () => {
   checkStatusInputs()
 })
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogAdd,
 })
