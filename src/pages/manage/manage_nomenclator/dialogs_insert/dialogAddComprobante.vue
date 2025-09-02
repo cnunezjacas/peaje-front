@@ -1,14 +1,7 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
-      <q-card class="my-dialog-card">
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter">
+      <q-card style="width: 600px; max-width: 80vw">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
@@ -17,13 +10,13 @@
         </q-card-section>
 
         <q-card-section>
-          <div class="row flex justify-between">
+          <div class="row flex justify-between q-mb-lg">
             <div class="col-5">
               <q-input
                 v-model="TextNombre_Comprobante"
                 ref="textNombre_Comprobante"
                 color="green"
-                :rules="rulesNombre_Comprobante"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
                 type="text"
                 :label="STRINGS.nombre_comprobante"
                 @keyup="checkStatusInputs"
@@ -35,14 +28,14 @@
                 v-model="TextCodigo_comprobante"
                 color="green"
                 type="text"
-                :rules="rulesCodigo_comprobante"
+                :rules="validaciones_generales.rulesUppercaseAndNumber"
                 :label="STRINGS.codigo_comprobante"
                 @keyup="checkStatusInputs"
               />
             </div>
           </div>
 
-          <div class="row flex justify-between q-mt-lg">
+          <div class="row flex justify-between q-mb-lg">
             <div class="col-12">
               <q-select
                 v-model="TextNomenclador_comprobante"
@@ -53,7 +46,6 @@
                 color="green"
                 :label="STRINGS.nomenclador_comprobante"
                 @onchange="checkStatusInputs"
-                outlined
               >
                 <!-- Slot para agregar un botón al final del select -->
                 <template v-slot:append>
@@ -61,14 +53,16 @@
                 </template>
               </q-select>
             </div>
+          </div>
 
+          <div class="row flex justify-between q-mb-lg">
             <div class="col-5">
               <q-input
                 ref="textValor_comprobante"
                 v-model="TextValor_comprobante"
                 color="green"
                 type="text"
-                :rules="rulesValor_comprobante"
+                :rules="validaciones_generales.rulesExchangeRate"
                 :label="STRINGS.valor_comprobante"
                 @keyup="checkStatusInputs"
               />
@@ -78,11 +72,10 @@
                 v-model="TextMoneda_comprobante"
                 ref="textMoneda_comprobante"
                 :options="optionsMoneda"
-                :rules="rulesNomenclador_comprobante"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.moneda_comprobante"
                 @onchange="checkStatusInputs"
-                outlined
               >
               </q-select>
             </div>
@@ -119,77 +112,54 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+/* Importaciones */
+import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteComprobante.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-import imports from 'src/utils/imports.js'
-
-const list = STRINGS.OpacityDialog
-const refDialogoAdd = ref(null)
-const optionsMoneda = ref([])
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
+import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 
 const loadCoins = async () => {
-  const response = await api.get(STRINGS.urlApiMoneda)
-  optionsMoneda.value = response.data.map((element) => element['siglas'])
-
-  if (optionsMoneda.value === null) {
-    notify_error('Problemas de carga de datos..')
-  }
-  return optionsMoneda.value !== null ? optionsMoneda : (optionsMoneda.value = ['Empty'])
+  optionsMoneda.value = await getNomenclator.loadCoins()
 }
 
 onBeforeMount(() => {
   loadCoins()
 })
 
-/*Validaciones*/
-const rulesNombre_Comprobante = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
-]
-
-const rulesCodigo_comprobante = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.uppercaseAndNumber.test(val) || STRINGS.uppercaseAndNumber,
-]
-
-const rulesNomenclador_comprobante = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesValor_comprobante = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
-]
-/*const rulesDetalles_exento = [(val) => val != '' || STRINGS.inputEmpty]*/
-/*Validaciones*/
-
 const emit = defineEmits(['ActualizarTabla'])
+
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiComprobante
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_comprobante.value),
+  )
+  return existeCodigo
+}
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_comprobante.value)
-    if (existeCodigo) {
+    if (await CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
       textCodigo_comprobante.value.focus()
       return
     } else {
-      let nameMoneda = TextValueMoneda_comprobante.value
-      const coinId = await imports.getIdCoin(nameMoneda)
-
+      console.log('TexMoneda:', TextMoneda_comprobante.value['value'])
       const newItem = {
         nombre: TextNombre_Comprobante.value,
-        codigo: TextCodigo_comprobante.value.toUpperCase(),
+        codigo: TextCodigo_comprobante.value,
         valor: Number(TextValor_comprobante.value),
         //TODO: nomenclador: Number(TextNomenclador_comprobante.value),
-        moneda: coinId,
+        moneda: TextMoneda_comprobante.value['value'],
         /*TODO: detalles: TextDetalles_exento.value,*/
       }
 
@@ -218,6 +188,36 @@ const getUpDialogAdd = () => {
   dialog.value = true
 }
 
+//Función para comprobar que los campos no estén vacíos
+const InputEmpty = () => {
+  if (
+    TextNombre_Comprobante.value.trim() !== '' &&
+    TextCodigo_comprobante.value.trim() !== '' &&
+    TextValor_comprobante.value.trim() !== '' &&
+    TextValueMoneda_comprobante.value !== '' /* &&
+    TextValueNomenclador_comprobante.value !== '' */
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar que los campos sean válidos
+const InputRegularExpressions = () => {
+  if (
+    expRegulares.uppercaseAndNumber.test(TextCodigo_comprobante.value.trim()) &&
+    expRegulares.TextAndNumber.test(TextNombre_Comprobante.value.trim())
+  )
+    return true
+  else return false
+}
+
+//Función para comprobar los campos y habilitar botón GUARDAR
+const checkStatusInputs = () => {
+  const isValid = InputEmpty() && InputRegularExpressions()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
+}
+
 /*Función para limpiar los campos del dialogo luego del submit*/
 const Reset = () => {
   TextNombre_Comprobante.value = ''
@@ -228,72 +228,42 @@ const Reset = () => {
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
-const InputEmpty = () => {
-  if (
-    TextNombre_Comprobante.value.trim() !== '' &&
-    TextCodigo_comprobante.value.trim() !== '' &&
-    TextValor_comprobante.value.trim() !== '' &&
-    TextValueMoneda_comprobante.value !== '' &&
-    TextValueNomenclador_comprobante.value !== ''
-  )
-    return true
-  else return false
-}
-
-/*const InputRegularExpressions = () => {
-  if (
-    expRegulares.onlyUppercase.test(TextCodigo_comprobante.value.trim()) &&
-    expRegulares.TextAndNumber.test(TextNombre_Comprobante.value.trim())
-  )
-    return true
-  else return false
-}*/
-
-const checkStatusInputs = () => {
-  const isValid = InputEmpty() /*&& InputRegularExpressions()*/
-  console.log('isValid:' + isValid)
-  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
-  return disabledBtnSave.value
-}
-
+/* Variables del dialogo */
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const refDialogoAdd = ref(null)
+const list = STRINGS.OpacityDialog
 
 //V-model
 const TextCodigo_comprobante = ref('')
 const TextNombre_Comprobante = ref('')
 const TextNomenclador_comprobante = ref('')
-
+const optionsMoneda = ref([])
 const TextValueNomenclador_comprobante = ref('')
-
-//const TextDetalles_exento = ref('')
 const TextValor_comprobante = ref('')
 const TextMoneda_comprobante = ref('')
 const TextValueMoneda_comprobante = ref('')
-
-//ref
-const textNombre_Comprobante = ref(null)
-const textCodigo_comprobante = ref(null)
-const textValor_comprobante = ref(null)
-const textMoneda_comprobante = ref(null)
-//const textDetalles_exento = ref(null)
-
-const textNomenclador_exento = ref(null)
 const options = [1, 2, 3, 4]
-const disabledBtnSave = ref(STRINGS.desabilitar)
+//const TextDetalles_exento = ref('')
 
-import { watch } from 'vue'
+/* Referencia del campo key */
+const textCodigo_comprobante = ref(null)
+
+/* Referencia del botón de enviar datos */
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
 watch(TextNomenclador_comprobante, (newVal) => {
   TextValueNomenclador_comprobante.value = newVal
   checkStatusInputs()
 })
 
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
 watch(TextMoneda_comprobante, (newVal) => {
   TextValueMoneda_comprobante.value = newVal
   checkStatusInputs()
 })
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogAdd,
 })
