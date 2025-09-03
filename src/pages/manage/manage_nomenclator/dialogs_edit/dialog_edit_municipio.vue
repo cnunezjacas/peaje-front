@@ -75,6 +75,7 @@
 </template>
 
 <script setup>
+/* Importaciones */
 import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
@@ -91,6 +92,19 @@ const options = ref([])
 const loadProvincias = async () => {
   options.value = await getNomenclator.loadProvincias()
 }
+
+/* Funcion encargada de asignar label y value de la provincia traida de BD al Select de Provincias */
+const loadProvinciaSelected = async (provincia) => {
+  options.value.forEach((element) => {
+    if (element.label == provincia)
+      SelectNombre_prov.value = { label: element.label, value: element.value }
+  })
+}
+
+/*
+  Método del ciclo de VUE
+  Cuándo se ejecuta: Justo antes de que el componente se monte en el DOM
+ */
 
 onBeforeMount(() => {
   loadProvincias()
@@ -145,7 +159,7 @@ const SendData = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (name, codigo, provincia, id) => {
+const getUpDialogEdit = async (name, codigo, provincia, id) => {
   /* Se levanta el dialogo */
   backdropFilter.value = list
   dialog.value = true
@@ -153,13 +167,14 @@ const getUpDialogEdit = (name, codigo, provincia, id) => {
   //Contenido de modelos de los capos en pantalla
   TextCodigo_mun.value = String(codigo)
   TextNombre_mun.value = name
-  SelectNombre_prov.value = provincia
   _id.value = id
 
   //Copias de Seguridad
   TextCodigo_mun_copy.value = String(codigo)
   TextNombre_mun_copy.value = name
   SelectNombre_prov_copy.value = provincia
+
+  await loadProvinciaSelected(provincia)
 }
 
 //Función para comprobar que los campos no estén vacíos
@@ -178,7 +193,7 @@ const InputDifferent = () => {
   return !(
     TextNombre_mun.value === TextNombre_mun_copy.value &&
     TextCodigo_mun.value === TextCodigo_mun_copy.value &&
-    SelectNombre_prov.value === SelectNombre_prov_copy.value
+    SelectNombre_prov.value['label'] === SelectNombre_prov_copy.value
   )
 }
 
