@@ -33,7 +33,7 @@ const searchWebPath = (path) => {
 }
 
 const getNumberForPage = () => {
-  let aux = [5, 10, 15, 20, 50, 0]
+  let aux = [5, 7, 10, 15, 20, 50, 0]
   return aux
 }
 
