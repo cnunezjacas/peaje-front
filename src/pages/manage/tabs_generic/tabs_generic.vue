@@ -2,9 +2,13 @@
   <div class="q-pb-sm">
     <q-toolbar class="bg-green-10 text-white shadow-2">
       <q-tabs v-model="tab" shrink bordered>
-        <q-tab name="tab1" icon="note_add" class="small-font" @click="onItemClick(STRINGS.add)">{{
-          STRINGS.add
-        }}</q-tab>
+        <q-tab
+          name="tab1"
+          icon="note_add"
+          class="small-font-tabs"
+          @click="onItemClick(STRINGS.add)"
+          >{{ STRINGS.add }}</q-tab
+        >
         <q-tab name="tab2" icon="edit" :class="disabledEdit" @click="onItemClick(STRINGS.edit)">{{
           STRINGS.edit
         }}</q-tab>
@@ -18,7 +22,7 @@
         <q-tab
           name="tab6"
           icon="picture_as_pdf"
-          class="small-font"
+          class="small-font-tabs"
           @click="onItemClick(STRINGS.export)"
           >{{ STRINGS.export }}</q-tab
         >
@@ -697,10 +701,10 @@ const dialogAddSalidaTarjetaProducida = ref(null)
 var arraySelected = ref([])
 
 //Variables a evaluar clases de tabsBotton
-const disabledEdit = ref('small-font disabled')
-const disabledDelete = ref('small-font disabled')
-const disabledDetalle = ref('small-font disabled')
-const disabledUpdate = ref('small-font')
+const disabledEdit = ref('small-font-tabs disabled')
+const disabledDelete = ref('small-font-tabs disabled')
+const disabledDetalle = ref('small-font-tabs disabled')
+const disabledUpdate = ref('small-font-tabs')
 
 const tableUpdater = (value) => {
   var ruta = route.fullPath
@@ -752,13 +756,13 @@ const ErrorUpdateTable = () => {
 
 const EnableTabs = (variable) => {
   if (variable) {
-    disabledEdit.value = 'small-font disabled'
-    disabledDelete.value = 'small-font disabled'
-    disabledDetalle.value = 'small-font disabled'
+    disabledEdit.value = 'small-font-tabs disabled'
+    disabledDelete.value = 'small-font-tabs disabled'
+    disabledDetalle.value = 'small-font-tabs disabled'
   } else {
-    disabledEdit.value = 'small-font'
-    disabledDelete.value = 'small-font'
-    disabledDetalle.value = 'small-font'
+    disabledEdit.value = 'small-font-tabs'
+    disabledDelete.value = 'small-font-tabs'
+    disabledDetalle.value = 'small-font-tabs'
   }
 }
 

@@ -8,7 +8,7 @@
 
         <q-space />
 
-        <q-btn-dropdown class="small-font" stretch flat :label="STRINGS.gestion">
+        <q-btn-dropdown class="small-font-items-nav-left" stretch flat :label="STRINGS.gestion">
           <q-list>
             <template v-for="item in linksNavLeft" :key="item.id">
               <treeItems :item="item" @navigate="handleNavigation" />

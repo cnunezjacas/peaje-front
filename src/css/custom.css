@@ -1,6 +1,21 @@
-.small-font {
+.small-font-bold {
   font-size: 11px; /* Ajusta el tamaño según necesites */
   font-weight: bold;
+}
+
+.small-font-tabs {
+  font-size: 9px; /* Ajusta el tamaño según necesites */
+  font-weight: bold;
+}
+
+.small-font-items-nav-left {
+  font-size: 9px; /* Ajusta el tamaño según necesites */
+  font-weight: bold;
+}
+
+.small-font {
+  font-size: 11px; /* Ajusta el tamaño según necesites */
+  font-weight: normal;
 }
 
 .my-div-full {
