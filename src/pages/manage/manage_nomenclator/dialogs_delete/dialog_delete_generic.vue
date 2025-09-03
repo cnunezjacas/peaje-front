@@ -1,11 +1,6 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialogDelete"
-      persistent
-      ref="refDialogoDelete"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -24,6 +19,12 @@
             <div class="col-12 text-center q-pt-md">
               <p>{{ titleContent }} {{ CategoryItemDelete }}: {{ nameItemDelete }} ?</p>
             </div>
+
+            <div v-if="ShowChildNodesToDelete()" class="col-12 text-center q-px-lg">
+              <p class="noStyle text-red small-font-bold">
+                Puede perder elementos de otras tablas vinculados con esta provincia.
+              </p>
+            </div>
           </div>
         </q-card-section>
 
@@ -32,7 +33,7 @@
             <div class="">
               <q-btn
                 icon="check"
-                @click="Procesar_Delete"
+                @click="DeleteItem"
                 :label="STRINGS.access"
                 color="green"
                 :size="STRINGS.SizeBottom"
@@ -46,7 +47,7 @@
                 :label="STRINGS.cancel"
                 color="dark"
                 :size="STRINGS.SizeBottom"
-                v-close-popup
+                @click="Reset()"
               />
             </div>
           </div>
@@ -64,22 +65,12 @@ import api from 'src/axios.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
 import imports from 'src/utils/imports.js'
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoDelete = ref(null)
-
-const nameItemDelete = ref('')
-const idDelete = ref('')
-const Ruta = ref([])
-const titleContent = ref('')
-const CategoryItemDelete = ref('')
-const AutenticCategoryItemDelete = ref('')
+import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
-const Procesar_Delete = async () => {
+/*Funcion de procesado de Datos para ejecutar el eliminar elemento*/
+const DeleteItem = async () => {
   try {
     switch (AutenticCategoryItemDelete.value) {
       //Caso Provincia
@@ -217,11 +208,11 @@ const Procesar_Delete = async () => {
         break
     }
   }
-  refDialogoDelete.value.hide()
+  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogDelete = (codigo, id, path) => {
+const getUpDialogDelete = async (codigo, id, path) => {
   nameItemDelete.value = codigo
   idDelete.value = id
   Ruta.value = path
@@ -238,17 +229,53 @@ const getUpDialogDelete = (codigo, id, path) => {
     titleContent.value = STRINGS.PreguntaDeleteMasculino
   }
 
+  await SearchChildNodesToDelete()
+  ShowChildNodesToDelete()
   //Se levanta el dialogo
   backdropFilter.value = list
-  dialogDelete.value = true
+  dialog.value = true
 }
 
+/* Busca si el elemnto a borrar presenta relación de datos con otras tablas */
+const SearchChildNodesToDelete = async () => {
+  switch (AutenticCategoryItemDelete.value) {
+    //Caso Provincia
+    case STRINGS.provinciaLowercase:
+      var provinciaObjet = { label: nameItemDelete.value, value: idDelete.value }
+      elementChildrenDelete.value = await getNomenclator.loadMunicipiosByProvincia(
+        provinciaObjet,
+        false,
+      )
+      break
+  }
+}
+
+/* Muestra si el elemnto a borrar presenta relación de datos con otras tablas  */
+const ShowChildNodesToDelete = () => {
+  return elementChildrenDelete.value.length > 0 ? true : false
+}
+
+/* Función encargada de cerrar el dialogo */
+const Reset = () => {
+  dialog.value = false
+}
+
+/* Referencias del dialogo */
+const list = STRINGS.OpacityDialog
+const dialog = ref(false)
+const backdropFilter = ref(null)
+
+/* v-model */
+const nameItemDelete = ref('')
+const idDelete = ref('')
+const Ruta = ref([])
+const titleContent = ref('')
+const CategoryItemDelete = ref('')
+const AutenticCategoryItemDelete = ref('')
+const elementChildrenDelete = ref([])
+
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogDelete,
 })
-
-const dialogDelete = ref(false)
-const backdropFilter = ref(null)
-
-//const dialogModel = ref(false)
 </script>
