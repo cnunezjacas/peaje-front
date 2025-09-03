@@ -3,7 +3,6 @@
     <q-dialog
       v-model="dialog"
       persistent
-      ref="refDialogoAdd"
       :backdrop-filter="backdropFilter"
       content-class="dialog-xl"
       :style="{ '--q-dialog-max-width': '800px' }"
@@ -23,7 +22,7 @@
                 v-model="TextNombre_vehiculo"
                 ref="textNombre_vehiculo"
                 color="green"
-                :rules="rulesNombre_vehiculo"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
                 type="text"
                 :label="STRINGS.nombre_vehiculo"
                 @keyup="checkStatusInputs"
@@ -35,7 +34,7 @@
                 v-model="TextCodigo_vehiculo"
                 color="green"
                 type="text"
-                :rules="rulesCodigo_vehiculo"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.codigo_vehiculo"
                 @keyup="checkStatusInputs"
               />
@@ -48,11 +47,10 @@
                 v-model="TextNomenclador_vehiculo"
                 ref="textnomenclador_vehiculo"
                 :options="options"
-                :rules="rulesNomenclador_vehiculo"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclador_vehiculo"
                 @onchange="checkStatusInputs"
-                outlined
               >
                 <!-- Slot para agregar un botón al final del select -->
                 <template v-slot:append>
@@ -66,7 +64,7 @@
                 v-model="TextTasaDePeaje_vehiculo"
                 ref="textTasaDePeaje_vehiculo"
                 color="green"
-                :rules="rulesTasaDePeaje_vehiculo"
+                :rules="validaciones_generales.rulesOnlyNumbers"
                 type="number"
                 :label="STRINGS.tasa_de_peajes_vehiculo"
                 @keyup="checkStatusInputs"
@@ -92,7 +90,7 @@
                 flat
                 icon="close"
                 :label="STRINGS.close"
-                v-on:click="Reset"
+                v-on:click="Reset()"
                 color="dark"
                 v-close-popup
               />
@@ -105,51 +103,37 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+/* Importaciones */
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import api from 'src/axios.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteVehiculo.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import notify_success from 'src/utils/notify/notify_success.js'
 import notify_error from 'src/utils/notify/notify_error.js'
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesNombre_vehiculo = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.onlyLetters,
-]
-
-const rulesCodigo_vehiculo = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-
-const rulesTasaDePeaje_vehiculo = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyNumber.test(val) || STRINGS.onlyNumbers,
-]
-
-const rulesNomenclador_vehiculo = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 const emit = defineEmits(['ActualizarTabla'])
+
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiMoneda
+  const existeCodigo = await verificarExistente(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_vehiculo.value),
+  )
+  return existeCodigo
+}
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
     // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_vehiculo.value)
-    if (existeCodigo) {
+    if (await CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
-      textCodigo_vehiculo.value.focus()
-      return
+      return textCodigo_vehiculo.value.focus()
     } else {
       const newItem = {
         nombre: TextNombre_vehiculo.value,
@@ -171,7 +155,6 @@ const SendData = async () => {
 
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
       Reset()
     }
   }
@@ -183,15 +166,7 @@ const getUpDialogAdd = () => {
   dialog.value = true
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
-const Reset = () => {
-  TextNombre_vehiculo.value = ''
-  TextCodigo_vehiculo.value = ''
-  TextTasaDePeaje_vehiculo.value = ''
-  TextNomenclador_vehiculo.value = ''
-  disabledBtnSave.value = STRINGS.desabilitar
-}
-
+//Función para comprobar que los campos no estén vacíos
 const InputEmpty = () => {
   if (
     TextCodigo_vehiculo.value.trim() !== '' &&
@@ -203,6 +178,7 @@ const InputEmpty = () => {
   else return false
 }
 
+//Función para comprobar que los campos sean válidos
 const InputRegularExpressions = () => {
   if (
     expRegulares.onlyUppercase.test(TextCodigo_vehiculo.value) &&
@@ -213,29 +189,46 @@ const InputRegularExpressions = () => {
   else return false
 }
 
+//Función para comprobar los campos y habilitar botón GUARDAR
 const checkStatusInputs = () => {
   const isValid = InputEmpty() && InputRegularExpressions()
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
+/*Función para limpiar los campos del dialogo luego del submit*/
+const Reset = () => {
+  dialog.value = false
+  TextNombre_vehiculo.value = ''
+  TextCodigo_vehiculo.value = ''
+  TextTasaDePeaje_vehiculo.value = ''
+  TextNomenclador_vehiculo.value = ''
+  disabledBtnSave.value = STRINGS.desabilitar
+}
+
+/* Variables del dialogo */
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
 
 //V-model
 const TextCodigo_vehiculo = ref('')
 const TextNombre_vehiculo = ref('')
 const TextTasaDePeaje_vehiculo = ref('')
 const TextNomenclador_vehiculo = ref(null)
-
-//ref
-const textNombre_vehiculo = ref(null)
-const textCodigo_vehiculo = ref(null)
-const textTasaDePeaje_vehiculo = ref(null)
-const textnomenclador_vehiculo = ref(null)
 const options = [1, 2, 3, 4]
+
+/* Referencia del campo key */
+const textCodigo_vehiculo = ref(null)
+
+/* Referencia del botón de enviar datos */
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
+watch(TextNomenclador_vehiculo, () => {
+  checkStatusInputs()
+})
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogAdd,
 })
