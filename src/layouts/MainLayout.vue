@@ -53,7 +53,7 @@
       </div>
 
       <q-list>
-        <q-item-label header class="text-grey-5"> {{ STRINGS.gestionPeaje }} </q-item-label>
+        <!--   <q-item-label header class="text-grey-5"> {{ STRINGS.gestionPeaje }} </q-item-label> -->
 
         <!-- <EssentialLink v-for="item in linksList" :key="item.title" v-bind="item" /> -->
 
