@@ -18,6 +18,10 @@
   font-weight: normal;
 }
 
+.textBreadcrumbs {
+  font-size: 11px;
+}
+
 .my-div-full {
   min-height: 100vh; /* La altura de la ventana del navegador */
   display: flex; /* Opcional, si quieres distribuir contenido */
@@ -88,6 +92,16 @@
   padding-top: 0xp !important;
   margin-top: 0px !important;
   background-color: aqua;
+}
+
+.q-table__top {
+  color: white;
+}
+
+.q-table__title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px !important;
 }
 
 .Search {
