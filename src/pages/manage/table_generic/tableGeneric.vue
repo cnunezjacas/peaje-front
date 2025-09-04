@@ -1,9 +1,6 @@
 <template>
   <div class="q-px-md">
-    <div class="flex justify-between padding_minimo">
-      <div class="text-center bg-green-10 rounded-borders my-cell">
-        <p class="text-tittle-table">{{ props.title }}</p>
-      </div>
+    <div class="flex justify-end padding_minimo">
       <div>
         <autoBreadcrumbs />
       </div>
@@ -28,9 +25,14 @@
       :selected-rows-label="customSelectedLabel"
       v-model:selected="selectedRows"
       @update:selected="onSelectedRowsChange"
-      class="shadow-2 custom-horizontal-lines"
+      class="shadow-2 custom-horizontal-lines my-sticky-virtscroll-table"
+      virtual-scroll
       table-header-class="bg-green-10 text-white"
       ref="tableRef"
+      flat
+      bordered
+      :title="props.title"
+      dense
     />
   </div>
 </template>
@@ -81,3 +83,28 @@ defineExpose({
   selectedRows,
 })
 </script>
+
+<style lang="sass">
+.my-sticky-virtscroll-table
+  /* height or max-height is important */
+  height: 360px
+
+  .q-table__top,
+  thead tr:first-child th /* bg color is important for th; just specify one */
+    background-color: #1b5e20
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  /* this will be the loading indicator */
+  thead tr:last-child th
+    /* height of all previous header rows */
+    top: 48px
+  thead tr:first-child th
+    top: 0
+
+  /* prevent scrolling behind sticky top row on focus */
+  tbody
+    /* height of all previous header rows */
+    scroll-margin-top: 48px
+</style>
