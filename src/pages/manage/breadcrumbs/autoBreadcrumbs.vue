@@ -6,7 +6,7 @@
       :label="crumb.label"
       :icon="crumb.icon"
       :to="crumb.to"
-      class="text-green-10"
+      class="text-green-10 textBreadcrumbs"
     />
   </q-breadcrumbs>
 </template>
