@@ -38,7 +38,7 @@ const loadMunicipios = async () => {
   return options
 }
 
-const loadMunicipiosByProvincia = async (newVal) => {
+const loadMunicipiosByProvincia = async (newVal, opcional = true) => {
   const response = await api.get(STRINGS.urlApiMunicipio)
 
   const options = response.data
@@ -48,7 +48,8 @@ const loadMunicipiosByProvincia = async (newVal) => {
       value: element['_id'],
     }))
 
-  if (options.length === 0) notify_warning(STRINGS.NoLoadMunicipality + ' ' + newVal.label)
+  if (opcional)
+    if (options.length === 0) notify_warning(STRINGS.NoLoadMunicipality + ' ' + newVal.label)
 
   return options
 }
