@@ -2,10 +2,16 @@
   <div>
     <q-item
       clickable
+      :header-inset-level="item.level"
+      :content-inset-level="item.level"
+      switch-toggle-side
+      dense-toggle
+      expand-separator
       :active="isActiveItem(item)"
       active-class="my-menu-link"
       @click="handleItemClick"
       v-ripple
+      :style="getIndentStyle"
     >
       <q-item-section avatar>
         <q-icon :name="item.icon" />
@@ -25,10 +31,11 @@
     </q-item>
     <!-- Renderizar hijos recursivamente -->
     <transition name="accordion">
-      <q-list v-if="hasChildren && isExpanded" class="collapse-list" style="padding-left: 20px">
+      <q-list v-if="hasChildren && isExpanded" class="collapse-list">
         <MenuItems
           v-for="child in item.children"
           :key="child.id"
+          class="children-nav-left"
           :item="child"
           @item-clicked="forwardItemClick"
         />
@@ -84,35 +91,12 @@ const handleItemClick = () => {
 const forwardItemClick = (childItem) => {
   emit('item-clicked', childItem)
 }
+
+const getIndentStyle = computed(() => {
+  // Calculamos el padding-left en función del nivel
+  const indentationPx = 20 // cantidad de px por nivel
+  return {
+    paddingLeft: `${(props.item.level || 1 - 1) * indentationPx}px`,
+  }
+})
 </script>
-
-<style lang="sass">
-.my-menu-link
-  color: green
-  background: white
-  margin-left: -30px
-  padding-left:60px
-
-  .small-font
-  font-size: 11px
-  font-weight: bold
-
-/* estilos para la transición */
-.accordion-enter-active,
-.accordion-leave-active
-  transition: max-height 0.3s ease, opacity 0.3s ease
-  overflow: hidden
-
-.accordion-enter-from,
-.accordion-leave-to
-  max-height: 0
-  opacity: 0
-
-.accordion-enter-to,
-.accordion-leave-from
-  max-height: 500px
-  opacity: 1
-
-.collapse-list
-  overflow: hidden
-</style>
