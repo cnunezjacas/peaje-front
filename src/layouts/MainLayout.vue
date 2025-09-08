@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-green-5">
-      <q-toolbar class="bg-green-5 text-white q-my-md">
+      <q-toolbar class="bg-green-5 text-white">
         <q-btn flat round dense icon="menu" class="q-mr-sm" @click="toggleLeftDrawer" />
         <q-separator dark vertical inset />
         <q-btn stretch flat :to="'/'">{{ STRINGS.tittleSite }}</q-btn>
@@ -111,41 +111,48 @@ const linksNavLeft = [
     id: STRINGS.gestionNomencladoresLowercase,
     label: STRINGS.gestionNomencladores,
     icon: 'folder',
+    level: 1,
     children: [
       {
         id: 'gest_' + STRINGS.provinciaLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
         label: STRINGS.provinciaLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.municipioLowercase,
         label: STRINGS.municipioLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.organismoLowercase,
         label: STRINGS.organismoLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: STRINGS.gestionBancoLowercase,
         label: STRINGS.gestionBanco,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'folder',
         children: [
           {
             id: 'gest_' + STRINGS.tipoCuentaLowercaseURL,
-            idPadre: STRINGS.gestionNomencladoresLowercase,
+            idPadre: STRINGS.gestionBancoLowercase,
             label: STRINGS.tipoCuentaLowercase,
+            level: 3,
             icon: 'post_add',
           },
           {
             id: 'gest_' + STRINGS.bancoLowercase,
             label: STRINGS.bancoLowercase,
-            idPadre: STRINGS.gestionNomencladoresLowercase,
+            idPadre: STRINGS.gestionBancoLowercase,
+            level: 3,
             icon: 'post_add',
           },
         ],
@@ -154,30 +161,35 @@ const linksNavLeft = [
         id: 'gest_' + STRINGS.monedasLowercase,
         label: STRINGS.monedasLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.vehiculosLowercase,
         label: STRINGS.vehiculosLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.exentoLowercase,
         label: STRINGS.exentoLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.comprobanteLowercase,
         label: STRINGS.comprobanteLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.formaDePagoLowercaseURL,
         label: STRINGS.formaDePagoLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
+        level: 2,
         icon: 'post_add',
       },
     ],
@@ -187,53 +199,62 @@ const linksNavLeft = [
     id: STRINGS.gestionEntidadLowercase,
     label: STRINGS.gestionEntidad,
     icon: 'folder',
+    level: 1,
     children: [
       {
         id: 'gest_' + STRINGS.cuentaLowercase,
         label: STRINGS.cuentaLowercase,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.estacionesLowercase,
         label: STRINGS.name_estaciones,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.areasDeTrabajoLowercase,
         label: STRINGS.name_areas_trabajo,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.puntosDeVentasLowercase,
         label: STRINGS.name_puntos_venta,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.terminalLowercase,
         label: STRINGS.name_terminal,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.operadoresLowercase,
         label: STRINGS.name_operadores,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.clientesLowercase,
         label: STRINGS.name_clientes,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.tramitadorLowercase,
         label: STRINGS.name_tramitador,
         idPadre: STRINGS.gestionEntidadLowercase,
+        level: 2,
         icon: 'post_add',
       },
     ],
@@ -242,47 +263,55 @@ const linksNavLeft = [
     id: STRINGS.gestionAlmacenLowercase,
     label: STRINGS.gestionAlmacen,
     icon: 'folder',
+    level: 1,
     children: [
       {
         id: 'gest_' + STRINGS.tarjeta_blancaLowercase,
         label: STRINGS.name_tarjeta_blanca,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.tarjeta_producidaLowercase,
         label: STRINGS.name_tarjeta_producida,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.proveedorLowercase,
         label: STRINGS.name_proveedor,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.recepcion_de_tarjeta_blancaLowercase,
         label: STRINGS.name_recepcion_de_tarjeta_blanca,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.recepcion_de_tarjeta_producidaLowercase,
         label: STRINGS.name_recepcion_de_tarjeta_producida,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.salida_de_tarjeta_producidaLowercase,
         label: STRINGS.name_salida_de_tarjeta_producida,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
       {
         id: 'gest_' + STRINGS.visualizar_movimientos_internosLowercase,
         label: STRINGS.name_visualizar_movimientos_internos,
         idPadre: STRINGS.gestionAlmacenLowercase,
+        level: 2,
         icon: 'post_add',
       },
     ],
@@ -292,16 +321,19 @@ const linksNavLeft = [
     id: 'pageConfiguracion',
     label: 'Configuración',
     icon: 'settings',
+    level: 1,
   },
   {
     id: 'pageAyuda',
     label: STRINGS.help,
     icon: 'help',
+    level: 1,
   },
   {
     id: 'pageLogin',
     label: STRINGS.close_seccion,
     icon: 'door_back',
+    level: 1,
   },
 ]
 
