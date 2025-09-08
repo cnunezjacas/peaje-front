@@ -1,7 +1,7 @@
 <template>
   <gestGlobal ref="gestGlobalRef" style="display: none" />
   <div class="text-uppercase small-font-items-nav-left">
-    <q-list padding class="rounded-borders text-white">
+    <q-list class="rounded-borders text-white">
       <MenuItems
         v-for="(item, index) in menuItems"
         :key="index"
