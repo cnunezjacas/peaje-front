@@ -205,3 +205,73 @@
 .custom-horizontal-lines td {
   border-bottom: 1px solid #dcdcdc;
 }
+
+/* Estilos de la los items de la barra larteral izquierda */
+.my-menu-link {
+  color: green;
+  background: white;
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+  border-radius: 60px 0px 0px 20px;
+  transition: all 1.5s;
+  /*margin-left: -30px;
+  padding-left: 60px;
+  */
+  -webkit-border-radius: 20px 20px 20px 20px;
+  -moz-border-radius: 60px 0px 0px 20px;
+  -ms-border-radius: 60px 0px 0px 20px;
+  -o-border-radius: 60px 0px 0px 20px;
+  -webkit-border-radius: 60px 0px 0px 20px;
+  -webkit-transition: all 1.5s;
+  -moz-transition: all 1.5s;
+  -ms-transition: all 1.5s;
+  -o-transition: all 1.5s;
+}
+
+/* .children-nav-left {
+  padding-left: 25px;
+}
+
+.children-nav-left:hover {
+  border-radius: 60px 0px 0px 20px;
+} */
+
+/* .q-list > .q-item {
+  padding-left: 25px;
+} */
+
+/* .children-nav-left:hover {
+  padding-left: 25px;
+  background-color: #ffffffe6;
+  color: darkgreen;
+}
+ */
+.my-menu-link .small-font {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* estilos para la transición */
+.accordion-enter-active,
+.accordion-leave-active {
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.accordion-enter-from,
+.accordion-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.accordion-enter-to,
+.accordion-leave-from {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.collapse-list {
+  overflow: hidden;
+}
