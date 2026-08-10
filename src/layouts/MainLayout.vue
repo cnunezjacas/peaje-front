@@ -8,7 +8,7 @@
 
         <q-space />
 
-        <q-btn-dropdown class="small-font-items-nav-left" stretch flat :label="STRINGS.gestion">
+        <q-btn-dropdown class="text-sm text-bold" stretch flat :label="STRINGS.gestion">
           <q-list>
             <template v-for="item in linksNavLeft" :key="item.id">
               <treeItems :item="item" @navigate="handleNavigation" />
@@ -18,7 +18,7 @@
 
         <q-separator dark vertical />
 
-        <q-btn-dropdown class="small-font" stretch flat :label="STRINGS.textConfig">
+        <q-btn-dropdown class="text-sm text-bold" icon="settings" stretch flat :label="STRINGS.textConfig">
           <div class="bg-green-10">
             <div class="row flex justify-start">
               <div class="q-pa-md">
@@ -30,13 +30,18 @@
                 <q-separator color="green-5" horizontal />
                 <p class="noStyle textSubtittle">Administrador</p>
               </div>
+
             </div>
           </div>
+
 
           <div class="row">
             <div class="col-12">
               <div class="q-ma-sm">
-                <p><q-icon name="code" /> v0.01</p>
+                <q-list>
+                  <PrincipalNavLeft :nav-link-on="false" class-color-text="dark" :menuItems="linksNavsConfig" />
+                </q-list>
+
               </div>
             </div>
           </div>
@@ -53,19 +58,15 @@
       </div>
 
       <q-list>
-        <!--   <q-item-label header class="text-grey-5"> {{ STRINGS.gestionPeaje }} </q-item-label> -->
-
-        <!-- <EssentialLink v-for="item in linksList" :key="item.title" v-bind="item" /> -->
-
-        <PrincipalNavLeft :menuItems="linksNavLeft" />
+        <PrincipalNavLeft :nav-link-on="true" class-color-text="white" :menuItems="linksNavLeft" />
       </q-list>
     </q-drawer>
 
     <q-page-container>
       <q-page>
-        <transition name="fade" mode="out-in">
-          <router-view />
-        </transition>
+        <!--   <transition name="fade" mode="out-in"> -->
+        <router-view />
+        <!--  </transition> -->
       </q-page>
     </q-page-container>
     <!-- Footer con mismo color que la toolbar -->
@@ -74,8 +75,11 @@
         <!-- Aquí puedes poner lo que desees en el footer -->
         <div class="flex justify-center">
           <div>
-            <p class="tittle-fotter">© 2025 {{ STRINGS.tittleSite }}.</p>
-            <p class="SubTittle-fotter">Todos los derechos reservados.</p>
+            <!-- class: tittle-fotter -->
+            <!-- class: SubTittle-fotter -->
+            <p class="text-sm no-margin">© {{ STRINGS.year_project }} {{ STRINGS.tittleSite }}</p>
+            <p class="text-xs no-margin">Todos los derechos reservados.</p>
+            <p class="text-xs no-margin"><q-icon name="code" /> {{ STRINGS.version }}</p>
           </div>
         </div>
       </div>
@@ -106,235 +110,336 @@ import PrincipalNavLeft from 'components/PrincipalNavLeft.vue'
 
 import { STRINGS } from 'utils/string.js'
 
+const linksNavsConfig = [{
+  id: 'config',
+  label: 'Configuración',
+  icon: 'settings',
+  level: 1,
+},
+{
+  id: 'help',
+  label: STRINGS.help,
+  icon: 'help',
+  level: 1,
+},
+{
+  id: 'pageLogin',
+  label: STRINGS.close_seccion,
+  icon: 'door_back',
+  level: 1,
+},]
+
 const linksNavLeft = [
   {
     id: STRINGS.gestionNomencladoresLowercase,
-    label: STRINGS.gestionNomencladores,
-    icon: 'folder',
+    label: STRINGS.nomenclator,
+    icon: 'bi-boxes',
     level: 1,
-    children: [
-      {
-        id: 'gest_' + STRINGS.provinciaLowercase,
+    children: [{
+      idPadre: STRINGS.gestionNomencladoresLowercase,
+      label: STRINGS.components,
+      level: 2,
+      icon: 'bi-box',
+      children: [{
+        id: STRINGS.province.toLowerCase(),
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        label: STRINGS.provinciaLowercase,
-        level: 2,
-        icon: 'post_add',
+        label: STRINGS.province,
+        level: 3,
+        icon: 'bi-geo-alt-fill',
       },
       {
-        id: 'gest_' + STRINGS.municipioLowercase,
-        label: STRINGS.municipioLowercase,
+        id: STRINGS.municipality.toLowerCase(),
+        label: STRINGS.municipality,
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-geo-alt',
       },
       {
-        id: 'gest_' + STRINGS.organismoLowercase,
+        id: STRINGS.organismoLowercase,
         label: STRINGS.organismoLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-building',
       },
       {
         id: STRINGS.gestionBancoLowercase,
         label: STRINGS.gestionBanco,
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
+        level: 3,
         icon: 'folder',
         children: [
           {
-            id: 'gest_' + STRINGS.tipoCuentaLowercaseURL,
+            id: STRINGS.tipoCuentaLowercaseURL,
             idPadre: STRINGS.gestionBancoLowercase,
-            label: STRINGS.tipoCuentaLowercase,
-            level: 3,
-            icon: 'post_add',
+            label: STRINGS.tipoCuentaLowercaseURL,
+            level: 4,
+            icon: 'bi-credit-card',
           },
           {
-            id: 'gest_' + STRINGS.bancoLowercase,
+            id: STRINGS.bancoLowercase,
             label: STRINGS.bancoLowercase,
             idPadre: STRINGS.gestionBancoLowercase,
-            level: 3,
-            icon: 'post_add',
+            level: 4,
+            icon: 'bi-bank',
           },
         ],
       },
       {
-        id: 'gest_' + STRINGS.monedasLowercase,
-        label: STRINGS.monedasLowercase,
+        id: STRINGS.currency.toLowerCase(),
+        label: STRINGS.currency.toLowerCase(),
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-coin',
       },
       {
-        id: 'gest_' + STRINGS.vehiculosLowercase,
+        id: STRINGS.vehiculosLowercase,
         label: STRINGS.vehiculosLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-car-front',
       },
       {
-        id: 'gest_' + STRINGS.exentoLowercase,
-        label: STRINGS.exentoLowercase,
+        id: STRINGS.exempt.toLowerCase(),
+        label: STRINGS.exempt.toLowerCase(),
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-collection',
       },
       {
-        id: 'gest_' + STRINGS.comprobanteLowercase,
-        label: STRINGS.comprobanteLowercase,
+        id: STRINGS.voucher.toLowerCase(),
+        label: STRINGS.voucher.toLowerCase(),
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
+        level: 3,
+        icon: 'bi-receipt-cutoff',
       },
       {
-        id: 'gest_' + STRINGS.formaDePagoLowercaseURL,
+        id: STRINGS.formaDePagoLowercaseURL,
         label: STRINGS.formaDePagoLowercase,
         idPadre: STRINGS.gestionNomencladoresLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
+        level: 3,
+        icon: 'bi-cash-coin',
+      },]
+    }, {
+      idPadre: STRINGS.gestionNomencladoresLowercase,
+      label: STRINGS.reports,
+      level: 2,
+      icon: 'bi-file-earmark-pdf',
+    }
     ],
   },
 
   {
     id: STRINGS.gestionEntidadLowercase,
-    label: STRINGS.gestionEntidad,
-    icon: 'folder',
+    label: STRINGS.entity,
+    icon: 'bi-house-gear',
     level: 1,
     children: [
       {
-        id: 'gest_' + STRINGS.cuentaLowercase,
-        label: STRINGS.cuentaLowercase,
         idPadre: STRINGS.gestionEntidadLowercase,
+        label: STRINGS.components,
         level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.estacionesLowercase,
-        label: STRINGS.name_estaciones,
+        icon: 'bi-box',
+        children: [{
+          id: STRINGS.account.toLowerCase(),
+          label: STRINGS.account.toLowerCase(),
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-person-lines-fill',
+        },
+        {
+          id: STRINGS.estacionesLowercase,
+          label: STRINGS.name_estaciones,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-cloud-sun',
+        },
+        {
+          id: STRINGS.areasDeTrabajoLowercase,
+          label: STRINGS.name_areas_trabajo,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-cone-striped',
+        },
+        {
+          id: STRINGS.puntosDeVentasLowercase,
+          label: STRINGS.name_puntos_venta,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-shop-window',
+        },
+        {
+          id: STRINGS.terminalLowercase,
+          label: STRINGS.name_terminal,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-buildings',
+        },
+        {
+          id: STRINGS.operadoresLowercase,
+          label: STRINGS.name_operadores,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-person-video3',
+        },
+        {
+          id: STRINGS.clientesLowercase,
+          label: STRINGS.name_clientes,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-people-fill',
+        },
+        {
+          id: STRINGS.tramitadorLowercase,
+          label: STRINGS.name_tramitador,
+          idPadre: STRINGS.gestionEntidadLowercase,
+          level: 3,
+          icon: 'bi-person-raised-hand',
+        },]
+      }, {
         idPadre: STRINGS.gestionEntidadLowercase,
+        label: STRINGS.reports,
         level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.areasDeTrabajoLowercase,
-        label: STRINGS.name_areas_trabajo,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.puntosDeVentasLowercase,
-        label: STRINGS.name_puntos_venta,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.terminalLowercase,
-        label: STRINGS.name_terminal,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.operadoresLowercase,
-        label: STRINGS.name_operadores,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.clientesLowercase,
-        label: STRINGS.name_clientes,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.tramitadorLowercase,
-        label: STRINGS.name_tramitador,
-        idPadre: STRINGS.gestionEntidadLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
+        icon: 'bi-file-earmark-pdf',
+      }
     ],
   },
   {
     id: STRINGS.gestionAlmacenLowercase,
-    label: STRINGS.gestionAlmacen,
-    icon: 'folder',
+    label: STRINGS.store,
+    icon: 'bi-shop',
     level: 1,
     children: [
       {
-        id: 'gest_' + STRINGS.tarjeta_blancaLowercase,
-        label: STRINGS.name_tarjeta_blanca,
-        idPadre: STRINGS.gestionAlmacenLowercase,
+        idPadre: STRINGS.gestionEntidadLowercase,
+        label: STRINGS.components,
         level: 2,
-        icon: 'post_add',
+        icon: 'bi-box',
+        children: [
+          {
+            id: STRINGS.tarjeta_blancaLowercase,
+            label: STRINGS.name_tarjeta_blanca,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-credit-card-2-front',
+          },
+          {
+            id: STRINGS.tarjeta_producidaLowercase,
+            label: STRINGS.name_tarjeta_producida,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-card-heading',
+          },
+          {
+            id: STRINGS.proveedorLowercase,
+            label: STRINGS.name_proveedor,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-person-vcard',
+          },
+          {
+            id: STRINGS.recepcion_de_tarjeta_blancaLowercase,
+            label: STRINGS.name_recepcion_de_tarjeta_blanca,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-postcard',
+          },
+          {
+            id: STRINGS.recepcion_de_tarjeta_producidaLowercase,
+            label: STRINGS.name_recepcion_de_tarjeta_producida,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-postcard-fill',
+          },
+          {
+            id: STRINGS.salida_de_tarjeta_producidaLowercase,
+            label: STRINGS.name_salida_de_tarjeta_producida,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-send-check',
+          },
+          {
+            id: STRINGS.visualizar_movimientos_internosLowercase,
+            label: STRINGS.name_visualizar_movimientos_internos,
+            idPadre: STRINGS.gestionAlmacenLowercase,
+            level: 3,
+            icon: 'bi-arrow-down-up',
+          },
+        ],
+      }, {
+        idPadre: STRINGS.gestionEntidadLowercase,
+        label: STRINGS.reports,
+        level: 2,
+        icon: 'bi-file-earmark-pdf',
+      }, {
+        id: 'visualizar_movimientos_internos',
+        label: 'Visualizar Movimientos Internos',
+        icon: 'bi-clipboard-pulse',
+        level: 2,
       },
       {
-        id: 'gest_' + STRINGS.tarjeta_producidaLowercase,
-        label: STRINGS.name_tarjeta_producida,
-        idPadre: STRINGS.gestionAlmacenLowercase,
+        id: 'subMayor',
+        label: 'Submayor',
+        icon: 'bi-list-ol',
         level: 2,
-        icon: 'post_add',
       },
       {
-        id: 'gest_' + STRINGS.proveedorLowercase,
-        label: STRINGS.name_proveedor,
-        idPadre: STRINGS.gestionAlmacenLowercase,
+        id: 'gestionar_ajuste',
+        label: 'Gestionar ajuste',
+        icon: 'bi-file-earmark-medical',
         level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.recepcion_de_tarjeta_blancaLowercase,
-        label: STRINGS.name_recepcion_de_tarjeta_blanca,
-        idPadre: STRINGS.gestionAlmacenLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.recepcion_de_tarjeta_producidaLowercase,
-        label: STRINGS.name_recepcion_de_tarjeta_producida,
-        idPadre: STRINGS.gestionAlmacenLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.salida_de_tarjeta_producidaLowercase,
-        label: STRINGS.name_salida_de_tarjeta_producida,
-        idPadre: STRINGS.gestionAlmacenLowercase,
-        level: 2,
-        icon: 'post_add',
-      },
-      {
-        id: 'gest_' + STRINGS.visualizar_movimientos_internosLowercase,
-        label: STRINGS.name_visualizar_movimientos_internos,
-        idPadre: STRINGS.gestionAlmacenLowercase,
-        level: 2,
-        icon: 'post_add',
       },
     ],
   },
+  // 🔥 SEPARADOR (agrega esto)
+  {
+    type: 'separator',  // 👈 Tipo especial para separador
+    id: 'separator-1',
+  },
 
   {
-    id: 'pageConfiguracion',
-    label: 'Configuración',
-    icon: 'settings',
+    id: 'orden_de_trabajo',
+    label: 'Orden de Trabajo',
+    icon: 'bi-card-checklist',
     level: 1,
   },
   {
-    id: 'pageAyuda',
-    label: STRINGS.help,
-    icon: 'help',
+    id: 'tarjeta',
+    label: 'Tarjeta',
+    icon: 'bi-card-heading',
     level: 1,
   },
   {
-    id: 'pageLogin',
-    label: STRINGS.close_seccion,
-    icon: 'door_back',
+    id: 'transaccion',
+    label: 'Transacción',
+    icon: 'bi-minecart-loaded',
     level: 1,
   },
+  {
+    id: 'facturación',
+    label: 'Facturación',
+    icon: 'bi-currency-exchange',
+    level: 1,
+  },
+  {
+    id: 'contabilizacion',
+    label: 'Contabilización',
+    icon: 'bi-ui-checks',
+    level: 1,
+  },
+  {
+    id: 'colecta',
+    label: 'Colecta',
+    icon: 'bi-safe',
+    level: 1,
+  }, {
+    idPadre: STRINGS.gestionEntidadLowercase,
+    label: STRINGS.report,
+    level: 1,
+    icon: 'bi-file-earmark-pdf',
+  }
+
+
+
 ]
 
 // Componente recursivo para renderizar items

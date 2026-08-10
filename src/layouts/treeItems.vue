@@ -2,22 +2,10 @@
 <template>
   <div>
     <!-- Nodo con hijos (expansible) -->
-    <q-expansion-item
-      v-if="hasChildren"
-      :label="item.label"
-      :icon="item.icon"
-      :default-expanded="expanded"
-      @update:expanded="expanded = $event"
-      expand-separator
-      @click.stop="handleClick"
-    >
+    <q-expansion-item v-if="hasChildren" :label="item.label" :icon="item.icon" :default-expanded="expanded"
+      @update:expanded="expanded = $event" expand-separator @click.stop="handleClick">
       <template v-slot:default>
-        <TreeItem
-          v-for="child in item.children"
-          :key="child.id"
-          :item="child"
-          @navigate="handleNavigate"
-        />
+        <TreeItem v-for="child in item.children" :key="child.id" :item="child" @navigate="handleNavigate" />
       </template>
     </q-expansion-item>
 
@@ -31,7 +19,6 @@
       </q-item-section>
     </q-item>
   </div>
-  <gestGlobal ref="gestGlobalRef" style="display: none" />
 </template>
 
 <script setup>
@@ -39,7 +26,6 @@ import { defineProps, defineEmits, ref } from 'vue'
 
 // Para evitar conflictos con componente hijo, usar mayúscula en la importación
 import TreeItem from 'layouts/treeItems.vue'
-import gestGlobal from 'viewsManage/gest_global.vue'
 
 const props = defineProps({
   item: Object,

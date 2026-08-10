@@ -1,37 +1,71 @@
 <template>
-  <gestGlobal ref="gestGlobalRef" style="display: none" />
-  <div class="text-uppercase small-font-items-nav-left">
-    <q-list class="rounded-borders text-white">
-      <MenuItems
-        v-for="(item, index) in menuItems"
-        :key="index"
-        :item="item"
-        @item-clicked="handleItemClick"
-      />
+  <div class="text-uppercase text-xs text-bold" :class="textColorClass">
+    <q-list class='rounded-borders' :class="textColorClass">
+      <template v-for="(item, index) in menuItems" :key="item.id || index">
+
+        <!-- 🔥 Renderizar separador -->
+        <q-separator v-if="item.type === 'separator'" class="q-my-md bg-green-2" :class="separatorColorClass" />
+
+        <!-- Renderizar item normal -->
+        <MenuItems :nav-link-on="navLinkOn" :colorClass="textColorClass" v-else :item="item"
+          @item-clicked="handleItemClick" />
+      </template>
     </q-list>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import gestGlobal from 'viewsManage/gest_global.vue'
 import MenuItems from 'layouts/MenuItems.vue' // componente recursivo
 
 // Props
-defineProps({
+const props = defineProps({
   menuItems: {
     type: Array,
     required: true,
   },
+  classColorText: {  // 👈 camelCase en JS (se usa kebab-case en template: class-color-text)
+    type: String,
+    default: 'text-dark'  // 👈 Valor por defecto
+  },
+  navLinkOn: {
+    type: Boolean,
+    default: false
+  }
 })
 
 // Refs y hooks
 const router = useRouter()
 //const route = useRoute()
 
-const gestGlobalRef = ref(null)
 const ItemTab = ref({})
+
+
+// 🔥 Computed para mapear el prop a clase de Quasar
+const textColorClass = computed(() => {
+  const map = {
+    'dark': 'text-dark',
+    'white': 'text-white',
+    'red': 'text-red',      // 👈 Clases nativas de Quasar
+    'blue': 'text-primary',
+    'green': 'text-green',
+    'grey': 'text-grey',
+  }
+  return map[props.classColorText] || props.classColorText || 'text-dark'
+})
+
+// 🔥 Color del separador (más sutil)
+const separatorColorClass = computed(() => {
+  const map = {
+    'text-white': 'bg-white',
+    'text-dark': 'bg-grey-3',
+    'text-primary': 'bg-primary',
+    'text-green': 'bg-green',
+    'text-red': 'bg-red',
+  }
+  return map[textColorClass.value] || 'bg-grey-3'
+})
 
 // Estado de items expandidos (si quieres mantenerlo en la raíz)
 
@@ -42,9 +76,7 @@ const handleItemClick = async (item) => {
     gestGlobalRef.value.CheckItemFather(item)
     //toggleExpand(item)*/
   } else {
-    //ItemTab.value = item
     ItemTab.value = item
-    await gestGlobalRef.value.CheckItemChildren(item)
     router.push('/' + item.id)
   }
 }

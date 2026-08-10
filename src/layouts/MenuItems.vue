@@ -1,44 +1,25 @@
 <template>
   <div>
-    <q-item
-      clickable
-      :header-inset-level="item.level"
-      :content-inset-level="item.level"
-      switch-toggle-side
-      dense-toggle
-      expand-separator
-      :active="isActiveItem(item)"
-      active-class="my-menu-link"
-      @click="handleItemClick"
-      v-ripple
-      :style="getIndentStyle"
-    >
+    <q-item clickable :header-inset-level="item.level" :content-inset-level="item.level" switch-toggle-side dense-toggle
+      expand-separator :active="isActiveItem(item)" :class="activeClassList" @click="handleItemClick" v-ripple
+      :style="getIndentStyle">
       <q-item-section avatar>
-        <q-icon :name="item.icon" />
+        <q-icon :name="item.icon" size='20px' />
       </q-item-section>
       <q-item-section>
-        <div style="display: flex; align-items: center; justify-content: space-between">
+        <div class="flex justify-between">
           {{ item.label }}
           <!-- Mostrar icono de expandir si tiene hijos -->
-          <q-icon
-            v-if="hasChildren"
-            :name="isExpanded ? 'expand_less' : 'expand_more'"
-            @click.stop="toggleExpand"
-            style="cursor: pointer"
-          />
+          <q-icon v-if="hasChildren" :name="isExpanded ? 'expand_less' : 'expand_more'" @click.stop="toggleExpand"
+            style="cursor: pointer" />
         </div>
       </q-item-section>
     </q-item>
     <!-- Renderizar hijos recursivamente -->
     <transition name="accordion">
       <q-list v-if="hasChildren && isExpanded" class="collapse-list">
-        <MenuItems
-          v-for="child in item.children"
-          :key="child.id"
-          class="children-nav-left"
-          :item="child"
-          @item-clicked="forwardItemClick"
-        />
+        <MenuItems v-for="child in item.children" :key="child.id" :item="child" @item-clicked="forwardItemClick"
+          :nav-link-on="navLinkOn" />
       </q-list>
     </transition>
   </div>
@@ -46,10 +27,12 @@
 </template>
 
 <script setup>
+
 import { defineEmits, defineProps, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 // import gestGlobal from 'viewsManage/gest_global.vue'
 import MenuItems from './MenuItems.vue' // referencia recursiva
+
 
 //const router = useRouter()
 const route = useRoute()
@@ -60,8 +43,32 @@ const props = defineProps({
   item: {
     type: Object,
     required: true,
-  },
+  }, navLinkOn: { type: Boolean, default: false }  // ✅ Booleano
 })
+
+
+// 🔥 Computed para clases condicionales - VERSIÓN ROBUSTA
+const activeClassList = computed(() => {
+  const classes = []
+
+  // 🔍 Debug del valor real
+  const navLinkValue = props.navLinkOn
+
+  // Normalizar: convertir string "true"/"false" a booleano
+  const isNavLinkOn = navLinkValue === true || navLinkValue === 'true'
+
+  // Clase base según estado activo
+  if (isActiveItem(props.item)) {
+    classes.push(isNavLinkOn ? 'aside-menu-link' : 'simple-menu-link')
+  } else {
+    // Item no activo: también aplicar clase base
+    classes.push(isNavLinkOn ? 'aside-menu-item' : 'simple-menu-item')
+  }
+
+
+  return classes
+})
+
 
 // Emite evento cuando un item es clickeado
 const emit = defineEmits(['item-clicked'])
@@ -75,9 +82,8 @@ const toggleExpand = () => {
 }
 
 // Función para determinar si un item está activo
-const isActiveItem = (item) => {
-  return route.path === '/' + item.id
-}
+const isActiveItem = (item) => route.path === '/' + item.id
+
 
 // Cuando se hace clic en un elemento
 const handleItemClick = () => {
