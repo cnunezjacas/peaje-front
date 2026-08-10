@@ -1,5 +1,29 @@
+.text-xs {
+  font-size: 9px !important;
+}
+
+.text-sm {
+  font-size: 10px !important;
+}
+
+.text-md {
+  font-size: 12px !important;
+}
+
+.text-lg {
+  font-size: 14px !important;
+}
+
+.text-xxl {
+  font-size: 16px !important;
+}
+
+.text-bold {
+  font-weight: bold !important;
+}
+
 .small-font-bold {
-  font-size: 11px; /* Ajusta el tamaño según necesites */
+  font-size: 9px; /* Ajusta el tamaño según necesites */
   font-weight: bold;
 }
 
@@ -31,6 +55,14 @@
 .noStyle {
   padding: 0px !important;
   margin: 0px !important;
+}
+
+.no-margin {
+  margin: 0px !important;
+}
+
+.no-padding {
+  padding: 0px !important;
 }
 
 .small-font-user {
@@ -207,10 +239,10 @@
 }
 
 /* Estilos de la los items de la barra larteral izquierda */
-.my-menu-link {
-  color: green;
+.aside-menu-link {
+  color: green !important;
   background: white;
-  padding-left: 50px !important;
+  padding-left: 80px !important;
   padding-right: 50px !important;
   border-radius: 60px 0px 0px 20px;
   transition: all 1.5s;
@@ -226,6 +258,24 @@
   -moz-transition: all 1.5s;
   -ms-transition: all 1.5s;
   -o-transition: all 1.5s;
+}
+.aside-menu-item {
+  transition: background 0.2s ease;
+}
+.aside-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.simple-menu-link {
+  color: green;
+  background: white;
+}
+
+.simple-menu-item {
+  transition: background 0.2s ease;
+}
+.simple-menu-item:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 /* .children-nav-left {
@@ -246,7 +296,7 @@
   color: darkgreen;
 }
  */
-.my-menu-link .small-font {
+.aside-menu-link .small-font {
   font-size: 11px;
   font-weight: bold;
 }
