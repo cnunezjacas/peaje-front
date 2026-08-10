@@ -12,25 +12,12 @@
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input
-                v-model="TextNombre_proveedor"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyText"
-                type="text"
-                :label="STRINGS.nombre"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNombre_proveedor" color="green" :rules="validaciones_generales.rulesOnlyText"
+                type="text" :label="STRINGS.nombre" @keyup="checkStatusInputs" />
             </div>
             <div class="col-5">
-              <q-input
-                v-model="TextCodigo_proveedor"
-                ref="textCodigo_proveedor"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                :label="STRINGS.codigo"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCodigo_proveedor" ref="textCodigo_proveedor" color="green" type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.codigo" @keyup="checkStatusInputs" />
             </div>
           </div>
         </q-card-section>
@@ -38,24 +25,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -67,13 +41,15 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-/* import api from 'src/axios.js' */
-/* import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js' */
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
-/* import notify_error from 'src/utils/notify/notify_error.js' */
 import validaciones_generales from 'src/utils/validaciones_generales'
 validaciones_generales
+import { useNotify } from 'src/utils/notify/notify.js'
+
+/* =================================================== */
+/*  ===== DECLARACIONES ===== */
+/* =================================================== */
+const { notify_success/*, notify_error*/ } = useNotify()
 
 /* const emit = defineEmits(['ActualizarTabla']) */
 

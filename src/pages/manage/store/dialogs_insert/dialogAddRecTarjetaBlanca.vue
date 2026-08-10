@@ -12,70 +12,39 @@
         <q-card-section>
           <div class="row flex justify-between q-mb-lg">
             <div class="col-4">
-              <q-select
-                v-model="TextProveedor_RTB"
-                @update:model-value="TextProveedor_RTB = $event"
-                :options="options"
-                disable
-                :label="imports.JoinCamelCase(STRINGS.proveedorLowercase)"
-                :rules="validaciones_generales.rulesNoEmpty"
-              />
+              <q-select v-model="TextProveedor_RTB" @update:model-value="TextProveedor_RTB = $event" :options="options"
+                disable :label="imports.JoinCamelCase(STRINGS.proveedorLowercase)"
+                :rules="validaciones_generales.rulesNoEmpty" />
             </div>
             <div class="col-4">
-              <q-select
-                v-model="TextProducto_RTB"
-                @update:model-value="TextProducto_RTB = $event"
-                :options="options"
-                disable
-                :label="STRINGS.producto_RecTarjetaProducida"
-                :rules="validaciones_generales.rulesNoEmpty"
-              />
+              <q-select v-model="TextProducto_RTB" @update:model-value="TextProducto_RTB = $event" :options="options"
+                disable :label="STRINGS.producto_RecTarjetaProducida" :rules="validaciones_generales.rulesNoEmpty" />
             </div>
 
             <div class="col-3">
-              <q-input
-                v-model="TextCantidad_RTB"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                :label="STRINGS.cantidad_RecTarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCantidad_RTB" color="green" type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.cantidad_RecTarjetaProducida"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
           <!-- Costo- Factura- Cheque -->
           <div class="row flex justify-between q-mb-md">
             <div class="col-2">
-              <q-input
-                v-model="TextCosto_RTB"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                :label="STRINGS.costo_RecTarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCosto_RTB" color="green" type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.costo_RecTarjetaProducida"
+                @keyup="checkStatusInputs" />
             </div>
             <div class="col-4">
-              <q-input
-                v-model="TextNumFactura_RTB"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                :label="STRINGS.NumFactura_RecTarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNumFactura_RTB" color="green" type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.NumFactura_RecTarjetaProducida"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-4">
-              <q-input
-                v-model="TextCheque_RTB"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                :label="STRINGS.cheque_RecTarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCheque_RTB" color="green" type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.cheque_RecTarjetaProducida"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
         </q-card-section>
@@ -83,24 +52,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -113,10 +69,15 @@
 import { ref /* , watch */, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import imports from 'src/utils/imports'
 validaciones_generales
+import { useNotify } from 'src/utils/notify/notify.js'
+
+/* =================================================== */
+/*  ===== DECLARACIONES ===== */
+/* =================================================== */
+const { notify_success/*, notify_error */ } = useNotify()
 
 const Titulo = ref('')
 

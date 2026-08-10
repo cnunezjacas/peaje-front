@@ -8,82 +8,48 @@
           </span>
           <span class="icon-text">{{
             imports.JoinCamelCase(STRINGS.tarjeta_producidaLowercase, true).toUpperCase()
-          }}</span>
+            }}</span>
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between q-mb-lg">
             <!-- Codigo -->
             <div class="col-3">
-              <q-input
-                v-model="TextCodigo_TP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyUppercase"
-                type="text"
-                :label="STRINGS.codigo"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCodigo_TP" color="green" :rules="validaciones_generales.rulesOnlyUppercase"
+                type="text" :label="STRINGS.codigo" @keyup="checkStatusInputs" />
             </div>
 
             <!-- Modelo -->
             <div class="col-3">
-              <q-select
-                v-model="TextModelo_TP"
-                @update:model-value="TextModelo_TP = $event"
-                :options="optionsModelo_TP"
-                :label="STRINGS.modelo"
-                :rules="validaciones_generales.rulesNoEmpty"
-              />
+              <q-select v-model="TextModelo_TP" @update:model-value="TextModelo_TP = $event" :options="optionsModelo_TP"
+                :label="STRINGS.modelo" :rules="validaciones_generales.rulesNoEmpty" />
             </div>
 
             <!-- Categoria -->
             <div class="col-5">
-              <q-select
-                v-model="TextCategoria_TP"
-                @update:model-value="TextCategoria_TP = $event"
-                :options="optionsCategoria_TP"
-                :label="STRINGS.category"
-                :rules="validaciones_generales.rulesNoEmpty"
-              />
+              <q-select v-model="TextCategoria_TP" @update:model-value="TextCategoria_TP = $event"
+                :options="optionsCategoria_TP" :label="STRINGS.category" :rules="validaciones_generales.rulesNoEmpty" />
             </div>
           </div>
 
           <div class="row flex justify-between q-mb-lg">
             <!-- Balance -->
             <div class="col-3">
-              <q-input
-                v-model="TextBalance_TP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                type="text"
-                :label="STRINGS.balance_tarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextBalance_TP" color="green" :rules="validaciones_generales.rulesOnlyNumbers"
+                type="text" :label="STRINGS.balance_tarjetaProducida" @keyup="checkStatusInputs" />
             </div>
 
             <!-- Precio de venta -->
             <div class="col-4">
-              <q-input
-                v-model="TextPrecioVenta_TP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyNumbers"
-                type="text"
-                :label="STRINGS.precioDeVenta_tarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextPrecioVenta_TP" color="green" :rules="validaciones_generales.rulesOnlyNumbers"
+                type="text" :label="STRINGS.precioDeVenta_tarjetaProducida" @keyup="checkStatusInputs" />
             </div>
 
             <!-- Moneda -->
             <div class="col-4">
-              <q-select
-                v-model="TextMoneda_TP"
-                :options="optionsMoneda"
-                :rules="validaciones_generales.rulesNoEmpty"
-                color="green"
-                :label="imports.JoinCamelCase(STRINGS.monedasLowercase)"
-                :disable="optionsMoneda.length > 0 ? false : true"
-                @onchange="checkStatusInputs"
-              >
+              <q-select v-model="TextMoneda_TP" :options="optionsMoneda" :rules="validaciones_generales.rulesNoEmpty"
+                color="green" :label="imports.JoinCamelCase(STRINGS.monedasLowercase)"
+                :disable="optionsMoneda.length > 0 ? false : true" @onchange="checkStatusInputs">
               </q-select>
             </div>
           </div>
@@ -92,41 +58,20 @@
             <!-- Anverso -->
             <div class="col-3">
               <!--  <qUploader /> -->
-              <q-input
-                v-model="TextAnverso_TP"
-                color="green"
-                disable
-                :rules="validaciones_generales.rulesNoEmpty"
-                type="text"
-                :label="STRINGS.anverso_tarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextAnverso_TP" color="green" disable :rules="validaciones_generales.rulesNoEmpty"
+                type="text" :label="STRINGS.anverso_tarjetaProducida" @keyup="checkStatusInputs" />
             </div>
 
             <!-- Fichero Chip -->
             <div class="col-4">
-              <q-input
-                v-model="TextFicheroChip_TP"
-                disable
-                color="green"
-                :rules="validaciones_generales.rulesNoEmpty"
-                type="text"
-                :label="STRINGS.ficheroChip_tarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextFicheroChip_TP" disable color="green" :rules="validaciones_generales.rulesNoEmpty"
+                type="text" :label="STRINGS.ficheroChip_tarjetaProducida" @keyup="checkStatusInputs" />
             </div>
 
             <!-- Bin -->
             <div class="col-4">
-              <q-input
-                v-model="TextBin_TP"
-                disable
-                color="green"
-                :rules="validaciones_generales.rulesNoEmpty"
-                type="text"
-                :label="STRINGS.bin_tarjetaProducida"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextBin_TP" disable color="green" :rules="validaciones_generales.rulesNoEmpty"
+                type="text" :label="STRINGS.bin_tarjetaProducida" @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -139,12 +84,7 @@
                 </div>
 
                 <div class="col-6 text-center">
-                  <q-checkbox
-                    v-model="TextExpira_TP"
-                    keep-color
-                    color="green-5"
-                    @change="checkStatusInputs"
-                  />
+                  <q-checkbox v-model="TextExpira_TP" keep-color color="green-5" @change="checkStatusInputs" />
                 </div>
               </div>
             </div>
@@ -157,12 +97,7 @@
                 </div>
 
                 <div class="col-6 text-center">
-                  <q-checkbox
-                    v-model="TextChekMoneda_TP"
-                    keep-color
-                    color="green-5"
-                    @change="checkStatusInputs"
-                  />
+                  <q-checkbox v-model="TextChekMoneda_TP" keep-color color="green-5" @change="checkStatusInputs" />
                 </div>
               </div>
             </div>
@@ -175,12 +110,7 @@
                 </div>
 
                 <div class="col-6 text-center">
-                  <q-checkbox
-                    v-model="TextImporte_TP"
-                    keep-color
-                    color="green-5"
-                    @change="checkStatusInputs"
-                  />
+                  <q-checkbox v-model="TextImporte_TP" keep-color color="green-5" @change="checkStatusInputs" />
                 </div>
               </div>
             </div>
@@ -193,12 +123,7 @@
                 </div>
 
                 <div class="col-6 text-center">
-                  <q-checkbox
-                    v-model="TextSam_TP"
-                    keep-color
-                    color="green-5"
-                    @change="checkStatusInputs"
-                  />
+                  <q-checkbox v-model="TextSam_TP" keep-color color="green-5" @change="checkStatusInputs" />
                 </div>
               </div>
             </div>
@@ -217,24 +142,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -247,15 +159,16 @@
 import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import imports from 'src/utils/imports'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
-/* import qUploader from 'src/pages/utils/qUploader.vue'
- */
-/* import { useRoute } from 'vue-router'
+import { useNotify } from 'src/utils/notify/notify.js'
 
-const route = useRoute() */
+/* =================================================== */
+/*  ===== DECLARACIONES ===== */
+/* =================================================== */
+const { notify_success/*, notify_error*/ } = useNotify()
+
 
 /* Variables */
 const optionsModelo_TP = ['Cliente', 'Llave', 'Operador']

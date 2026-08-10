@@ -8,20 +8,15 @@
           </span>
           <span class="icon-text">{{
             imports.JoinCamelCase(STRINGS.tarjeta_blancaLowercase, true).toUpperCase()
-          }}</span>
+            }}</span>
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-7">
-              <q-input
-                v-model="TextCodigoProducto_TB"
-                color="green"
-                :rules="validaciones_generales.rulesFullTextAndNumber"
-                type="text"
-                :label="STRINGS.codigo_tarjetaBanca"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCodigoProducto_TB" color="green"
+                :rules="validaciones_generales.rulesFullTextAndNumber" type="text" :label="STRINGS.codigo_tarjetaBanca"
+                @keyup="checkStatusInputs" />
             </div>
             <div class="col-3">
               <div class="row border-box-radio">
@@ -30,12 +25,7 @@
                 </div>
 
                 <div class="col-6 text-center">
-                  <q-checkbox
-                    v-model="TextSam_TB"
-                    keep-color
-                    color="green-5"
-                    @change="checkStatusInputs"
-                  />
+                  <q-checkbox v-model="TextSam_TB" keep-color color="green-5" @change="checkStatusInputs" />
                 </div>
               </div>
             </div>
@@ -54,24 +44,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -84,10 +61,15 @@
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import imports from 'src/utils/imports'
 validaciones_generales
+import { useNotify } from 'src/utils/notify/notify.js'
+
+/* =================================================== */
+/*  ===== DECLARACIONES ===== */
+/* =================================================== */
+const { notify_success/*, notify_error*/ } = useNotify()
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {

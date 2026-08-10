@@ -14,73 +14,39 @@
         <q-card-section>
           <div class="row flex justify-between q-mb-lg">
             <div class="col-4">
-              <q-input
-                v-model="TextNumero_STP"
-                color="green"
-                :rules="validaciones_generales.rulesCodeThreeLettersHyphenNumbers"
-                type="text"
-                :label="STRINGS.numero_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNumero_STP" color="green"
+                :rules="validaciones_generales.rulesCodeThreeLettersHyphenNumbers" type="text"
+                :label="STRINGS.numero_STP" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-4">
-              <q-input
-                v-model="TextTipoSalida_STP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyText"
-                type="text"
-                :label="STRINGS.tipoSalida_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextTipoSalida_STP" color="green" :rules="validaciones_generales.rulesOnlyText"
+                type="text" :label="STRINGS.tipoSalida_STP" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-3">
-              <q-input
-                v-model="TextFechaCreada_STP"
-                color="green"
-                type="date"
-                :rules="validaciones_generales.rulesNoEmpty"
-                :label="STRINGS.fechaCreada_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextFechaCreada_STP" color="green" type="date"
+                :rules="validaciones_generales.rulesNoEmpty" :label="STRINGS.fechaCreada_STP"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
           <!-- Destinatario - Registado - Numero de Orden de Trabajo -->
           <div class="row flex justify-between">
             <div class="col-4">
-              <q-input
-                v-model="TextDestinatario_STP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyText"
-                type="text"
-                :label="STRINGS.destinatario_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextDestinatario_STP" color="green" :rules="validaciones_generales.rulesOnlyText"
+                type="text" :label="STRINGS.destinatario_STP" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-4">
-              <q-input
-                v-model="TextRegistrado_STP"
-                color="green"
-                :rules="validaciones_generales.rulesOnlyText"
-                type="text"
-                :label="STRINGS.registrado_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextRegistrado_STP" color="green" :rules="validaciones_generales.rulesOnlyText"
+                type="text" :label="STRINGS.registrado_STP" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-3">
-              <q-input
-                v-model="TextNumOrdenTrabajo_STP"
-                ref="textCodigo_proveedor"
-                color="green"
-                type="text"
-                :rules="validaciones_generales.rulesCodeThreeLettersHyphenNumbers"
-                :label="STRINGS.numOrdenTrabajo_STP"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNumOrdenTrabajo_STP" ref="textCodigo_proveedor" color="green" type="text"
+                :rules="validaciones_generales.rulesCodeThreeLettersHyphenNumbers" :label="STRINGS.numOrdenTrabajo_STP"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -90,24 +56,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -119,13 +72,15 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-/* import api from 'src/axios.js' */
-/* import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteProvincia.js' */
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
-/* import notify_error from 'src/utils/notify/notify_error.js' */
 import validaciones_generales from 'src/utils/validaciones_generales'
 import imports from 'src/utils/imports'
+import { useNotify } from 'src/utils/notify/notify.js'
+
+/* =================================================== */
+/*  ===== DECLARACIONES ===== */
+/* =================================================== */
+const { notify_success/*, notify_error*/ } = useNotify()
 
 /* const emit = defineEmits(['ActualizarTabla']) */
 
