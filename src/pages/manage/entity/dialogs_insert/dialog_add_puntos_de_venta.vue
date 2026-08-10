@@ -1,49 +1,28 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter"
+      content-class="dialog-xl" :style="{ '--q-dialog-max-width': '800px' }">
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text"
-            >{{ STRINGS.add.toUpperCase() }} {{ STRINGS.name_puntos_venta.toUpperCase() }}</span
-          >
+          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} {{ STRINGS.name_puntos_venta.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
           <!-- codigo y nombre -->
           <div class="row flex justify-between q-mb-lg">
             <div class="col-5">
-              <q-input
-                v-model="TextCodigo_PDV"
-                ref="textCodigo_PDV"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesOnlyNumbers"
-                :label="STRINGS.codigo_PDV"
-                lazy-rules
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCodigo_PDV" ref="textCodigo_PDV" color="green" type="text"
+                :rules="validacionesGenerales.rulesOnlyNumbers" :label="STRINGS.codigo_PDV" lazy-rules
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-5">
-              <q-input
-                v-model="TextDescripcion_PDV"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesFullTextAndNumber"
-                lazy-rules
-                :label="STRINGS.descripcion_PDV"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextDescripcion_PDV" color="green" type="text"
+                :rules="validacionesGenerales.rulesFullTextAndNumber" lazy-rules :label="STRINGS.descripcion_PDV"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -54,35 +33,18 @@
               </div>
 
               <div class="col-6 text-center">
-                <q-checkbox
-                  v-model="TextCabina_PDV"
-                  keep-color
-                  color="green-5"
-                  @change="checkStatusInputs"
-                />
+                <q-checkbox v-model="TextCabina_PDV" keep-color color="green-5" @change="checkStatusInputs" />
               </div>
             </div>
 
             <div class="col-4">
-              <q-input
-                v-model="TextIPGaveta_PDV"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesIP"
-                :label="STRINGS.ipGaveta_PDV"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextIPGaveta_PDV" color="green" type="text" :rules="validacionesGenerales.rulesIP"
+                :label="STRINGS.ipGaveta_PDV" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-4">
-              <q-input
-                v-model="TextIPBarrera_PDV"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesIP"
-                :label="STRINGS.ipBarrera_PDV"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextIPBarrera_PDV" color="green" type="text" :rules="validacionesGenerales.rulesIP"
+                :label="STRINGS.ipBarrera_PDV" @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -93,25 +55,15 @@
 
             <div class="col-12 row flex justify-between">
               <div class="col-5">
-                <q-input
-                  v-model="TextMaxDiasSinColectar_PDV"
-                  color="green"
-                  type="text"
-                  :rules="validacionesGenerales.rulesOnlyNumbers"
-                  :label="STRINGS.maxDiasSinColectar_PDV"
-                  @keyup="checkStatusInputs"
-                />
+                <q-input v-model="TextMaxDiasSinColectar_PDV" color="green" type="text"
+                  :rules="validacionesGenerales.rulesOnlyNumbers" :label="STRINGS.maxDiasSinColectar_PDV"
+                  @keyup="checkStatusInputs" />
               </div>
 
               <div class="col-5">
-                <q-input
-                  v-model="TextDuracionMaximaDelTurno_PDV"
-                  color="green"
-                  type="time"
-                  :rules="validacionesGenerales.rulesNoEmpty"
-                  :label="STRINGS.DuracionMaximaDelTurno_PDV"
-                  @keyup="checkStatusInputs"
-                />
+                <q-input v-model="TextDuracionMaximaDelTurno_PDV" color="green" type="time"
+                  :rules="validacionesGenerales.rulesNoEmpty" :label="STRINGS.DuracionMaximaDelTurno_PDV"
+                  @keyup="checkStatusInputs" />
               </div>
             </div>
           </div>
@@ -120,24 +72,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -153,13 +92,14 @@ import { STRINGS } from 'utils/string.js'
 //import verificarCuentaDeBanco from 'utils/utils_axios/entity/verificarCuentaDeBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import validacionesGenerales from 'utils/validaciones_generales.js'
-import notify_success from 'src/utils/notify/notify_success.js'
-//import notify_error from 'src/utils/notify/notify_error.js'
-//import imports from 'src/utils/imports'
+import { useNotify } from 'src/utils/notify/notify.js'
 
-//import imports from 'src/utils/imports'
 
-//const emit = defineEmits(['ActualizarTabla'])
+/* =================================================== */
+/*  ===== DECLARACIONES REF ===== */
+/* =================================================== */
+const { notify_success/*, notify_warning, notify_error*/ } = useNotify()
+
 
 /*Funcion de procesado de Datos*/
 const SendData = async () => {

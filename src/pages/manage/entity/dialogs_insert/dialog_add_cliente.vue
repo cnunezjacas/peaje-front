@@ -1,84 +1,45 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      full-width
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-    >
+    <q-dialog v-model="dialog" persistent full-width ref="refDialogoAdd" :backdrop-filter="backdropFilter">
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text"
-            >{{ STRINGS.add.toUpperCase() }} {{ STRINGS.clientesLowercase.toUpperCase() }}</span
-          >
+          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} {{ STRINGS.clientesLowercase.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
           <!-- codigo,categoria y nombre -->
           <div class="row flex justify-between q-mb-md">
             <div class="col-3">
-              <q-input
-                v-model="TextNombre_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesOnlyText"
-                lazy-rules
-                :label="STRINGS.nombre_cliente"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNombre_cliente" color="green" type="text"
+                :rules="validacionesGenerales.rulesOnlyText" lazy-rules :label="STRINGS.nombre_cliente"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-2">
-              <q-input
-                v-model="TextCodigo_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesNumberAndHyphen"
-                :label="STRINGS.codigo_cliente"
-                lazy-rules
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCodigo_cliente" color="green" type="text"
+                :rules="validacionesGenerales.rulesNumberAndHyphen" :label="STRINGS.codigo_cliente" lazy-rules
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-2">
-              <q-select
-                v-model="TextCategoria_cliente"
-                color="green"
-                :options="options"
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="STRINGS.categoria_cliente"
-                @keyup="checkStatusInputs"
-              />
+              <q-select v-model="TextCategoria_cliente" color="green" :options="options"
+                :rules="validacionesGenerales.rulesNoEmpty" lazy-rules :label="STRINGS.categoria_cliente"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-1">
-              <q-input
-                v-model="TextSiglas_cliente"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesOnlyUppercase"
-                lazy-rules
-                :label="STRINGS.siglas_cliente"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextSiglas_cliente" color="green" type="text"
+                :rules="validacionesGenerales.rulesOnlyUppercase" lazy-rules :label="STRINGS.siglas_cliente"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-2">
-              <q-select
-                v-model="TextEstacion_cliente"
-                color="green"
-                :options="options"
-                disable
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="STRINGS.estacion_cliente"
-                @keyup="checkStatusInputs"
-              />
+              <q-select v-model="TextEstacion_cliente" color="green" :options="options" disable
+                :rules="validacionesGenerales.rulesNoEmpty" lazy-rules :label="STRINGS.estacion_cliente"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -91,90 +52,48 @@
             <div class="col-9">
               <div class="row flex justify-between">
                 <div class="col-2 q-mb-xl">
-                  <q-select
-                    v-model="TextOrganismo_cliente"
-                    color="green"
-                    :options="optionsOrganismo"
-                    :rules="validacionesGenerales.rulesNoEmpty"
-                    lazy-rules
-                    :label="STRINGS.organismo_cliente"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-select v-model="TextOrganismo_cliente" color="green" :options="optionsOrganismo"
+                    :rules="validacionesGenerales.rulesNoEmpty" lazy-rules :label="STRINGS.organismo_cliente"
+                    @keyup="checkStatusInputs" />
                 </div>
 
                 <div class="col-3 q-mb-xl">
-                  <q-input
-                    v-model="TextIdTributaria_cliente"
-                    color="green"
-                    type="text"
-                    :rules="validacionesGenerales.rulesOnlyNumbers"
-                    lazy-rules
-                    :label="STRINGS.idTributaria_cliente"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-input v-model="TextIdTributaria_cliente" color="green" type="text"
+                    :rules="validacionesGenerales.rulesOnlyNumbers" lazy-rules :label="STRINGS.idTributaria_cliente"
+                    @keyup="checkStatusInputs" />
                 </div>
 
                 <div class="col-3 q-mb-xl">
-                  <q-input
-                    v-model="TextRegistroComercial_cliente"
-                    color="green"
-                    type="text"
-                    :rules="validacionesGenerales.rulesFullTextAndNumber"
-                    lazy-rules
-                    :label="STRINGS.registroComercial_cliente"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-input v-model="TextRegistroComercial_cliente" color="green" type="text"
+                    :rules="validacionesGenerales.rulesFullTextAndNumber" lazy-rules
+                    :label="STRINGS.registroComercial_cliente" @keyup="checkStatusInputs" />
                 </div>
 
                 <div class="col-3 q-mb-xl">
-                  <q-input
-                    v-model="TextRegistroMercantil_cliente"
-                    color="green"
-                    type="text"
-                    :rules="validacionesGenerales.rulesFullTextAndNumber"
-                    lazy-rules
-                    :label="STRINGS.registroMercantil_cliente"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-input v-model="TextRegistroMercantil_cliente" color="green" type="text"
+                    :rules="validacionesGenerales.rulesFullTextAndNumber" lazy-rules
+                    :label="STRINGS.registroMercantil_cliente" @keyup="checkStatusInputs" />
                 </div>
 
                 <!-- Continuidad de Items -->
 
                 <div class="col-2 q-mb-xl">
-                  <q-select
-                    v-model="TextSelectNombre_prov"
-                    color="green"
-                    :options="optionsProvincia"
-                    :rules="validacionesGenerales.rulesNoEmpty"
-                    lazy-rules
-                    :label="imports.capitalizeWords(STRINGS.provinciaLowercase)"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-select v-model="TextSelectNombre_prov" color="green" :options="optionsProvincia"
+                    :rules="validacionesGenerales.rulesNoEmpty" lazy-rules
+                    :label="imports.capitalizeWords(STRINGS.provinciaLowercase)" @keyup="checkStatusInputs" />
                 </div>
 
                 <div class="col-2 q-mb-xl">
-                  <q-select
-                    v-model="TextSelectNombre_mun"
-                    color="green"
-                    :options="optionsMunicipio"
+                  <q-select v-model="TextSelectNombre_mun" color="green" :options="optionsMunicipio"
                     :disable="optionsMunicipio.length === 0 ? true : disabledSelectMun"
-                    :rules="validacionesGenerales.rulesNoEmpty"
-                    lazy-rules
-                    :label="imports.capitalizeWords(STRINGS.municipioLowercase)"
-                    @keyup="checkStatusInputs"
-                  />
+                    :rules="validacionesGenerales.rulesNoEmpty" lazy-rules
+                    :label="imports.capitalizeWords(STRINGS.municipioLowercase)" @keyup="checkStatusInputs" />
                 </div>
 
                 <div class="col-7 q-mb-xl">
-                  <q-input
-                    v-model="TextDireccion_cliente"
-                    color="green"
-                    type="text"
-                    :rules="validacionesGenerales.rulesAddress"
-                    lazy-rules
-                    :label="STRINGS.direccion_cliente"
-                    @keyup="checkStatusInputs"
-                  />
+                  <q-input v-model="TextDireccion_cliente" color="green" type="text"
+                    :rules="validacionesGenerales.rulesAddress" lazy-rules :label="STRINGS.direccion_cliente"
+                    @keyup="checkStatusInputs" />
                 </div>
 
                 <!-- Items 3era fila -->
@@ -183,37 +102,24 @@
                   <!-- Banco CUC & Banco CUP-->
                   <div class="row flex justify-between">
                     <div class="col-5">
-                      <p>{{ STRINGS.bancoCUC.toUpperCase() }}</p>
+                      <p>{{ STRINGS.cuentaCUC.toUpperCase() }}</p>
                     </div>
 
                     <div class="col-5">
-                      <p>{{ STRINGS.bancoCUP.toUpperCase() }}</p>
+                      <p>{{ STRINGS.cuentaCUP.toUpperCase() }}</p>
                     </div>
                   </div>
                   <div class="row flex justify-between border-box-bank-box-small">
                     <div class="col-5">
-                      <q-input
-                        v-model="TextCuenta_CUC"
-                        ref="textCuenta_CUC"
-                        color="green"
-                        maxlength="19"
-                        type="text"
-                        :rules="validacionesGenerales.rulesCardOfBank"
-                        :label="STRINGS.cuenta"
-                        @keyup="checkStatusInputs"
-                      />
+                      <q-input v-model="TextCuenta_CUC" ref="textCuenta_CUC" color="green" maxlength="19" type="text"
+                        :rules="validacionesGenerales.rulesCardOfBank" :label="STRINGS.cuenta"
+                        @keyup="checkStatusInputs" />
                     </div>
 
                     <div class="col-5">
-                      <q-input
-                        ref="textCuenta_CUP"
-                        v-model="TextCuenta_CUP"
-                        color="green"
-                        type="text"
-                        :rules="validacionesGenerales.rulesCardOfBank"
-                        :label="STRINGS.cuenta"
-                        @keyup="checkStatusInputs"
-                      />
+                      <q-input ref="textCuenta_CUP" v-model="TextCuenta_CUP" color="green" type="text"
+                        :rules="validacionesGenerales.rulesCardOfBank" :label="STRINGS.cuenta"
+                        @keyup="checkStatusInputs" />
                     </div>
                   </div>
                 </div>
@@ -225,24 +131,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -258,11 +151,16 @@ import { STRINGS } from 'utils/string.js'
 //import verificarCuentaDeBanco from 'utils/utils_axios/entity/verificarCuentaDeBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import validacionesGenerales from 'utils/validaciones_generales.js'
-import notify_success from 'src/utils/notify/notify_success.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator.js'
 import imports from 'src/utils/imports'
 import Phone from 'src/pages/utils/PhoneNumberInput.vue'
-//import notify_error from 'src/utils/notify/notify_error.js'
+import { useNotify } from 'src/utils/notify/notify.js'
+
+
+/* =================================================== */
+/*  ===== DECLARACIONES REF ===== */
+/* =================================================== */
+const { notify_success/*, notify_warning, notify_error*/ } = useNotify()
 
 const options = ref([])
 const optionsOrganismo = ref([])

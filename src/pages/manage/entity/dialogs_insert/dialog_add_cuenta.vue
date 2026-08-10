@@ -1,21 +1,13 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter"
+      content-class="dialog-xl" :style="{ '--q-dialog-max-width': '800px' }">
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text"
-            >{{ STRINGS.add.toUpperCase() }} {{ STRINGS.cuentaLowercase.toUpperCase() }}</span
-          >
+          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} {{ STRINGS.cuentaLowercase.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
@@ -23,54 +15,23 @@
           <div class="row flex justify-between">
             <!-- Banco CUC -->
             <div class="col-6">
-              <q-input
-                v-model="TextTitularCuenta"
-                ref="textTitularCuenta"
-                color="green"
-                type="text"
-                :rules="rulesAddTitularCuenta"
-                :label="STRINGS.titular_de_la_cuenta"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextTitularCuenta" ref="textTitularCuenta" color="green" type="text"
+                :rules="rulesAddTitularCuenta" :label="STRINGS.titular_de_la_cuenta" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-5">
-              <q-select
-                v-model="TextTipoCuenta"
-                ref="textTipoCuenta"
-                color="green"
-                :options="optionsCuenta"
-                type="text"
-                :rules="rulesAddNombreProvinciaAndMunicipio"
-                :label="STRINGS.tipoCuenta"
-                @keyup="checkStatusInputs"
-              />
+              <q-select v-model="TextTipoCuenta" ref="textTipoCuenta" color="green" :options="optionsCuenta" type="text"
+                :rules="rulesAddNombreProvinciaAndMunicipio" :label="STRINGS.tipoCuenta" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-5">
-              <q-select
-                v-model="TextBanco"
-                ref="textBanco"
-                color="green"
-                :options="optionsBanco"
-                type="text"
-                :rules="rulesAddNombreProvinciaAndMunicipio"
-                :label="STRINGS.banco_cuenta"
-                @keyup="checkStatusInputs"
-              />
+              <q-select v-model="TextBanco" ref="textBanco" color="green" :options="optionsBanco" type="text"
+                :rules="rulesAddNombreProvinciaAndMunicipio" :label="STRINGS.banco_cuenta" @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-5">
-              <q-input
-                v-model="TextCuenta"
-                ref="textCuenta"
-                color="green"
-                maxlength="19"
-                type="text"
-                :rules="rulesAddCuenta"
-                :label="STRINGS.cuenta"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCuenta" ref="textCuenta" color="green" maxlength="19" type="text"
+                :rules="rulesAddCuenta" :label="STRINGS.cuenta" @keyup="checkStatusInputs" />
             </div>
           </div>
         </q-card-section>
@@ -78,24 +39,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -107,12 +55,19 @@
 <script setup>
 import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+//import api from 'src/axios.js'
+import { useApi } from 'src/composables/useApi'
 import verificarCuentaDeBanco from 'utils/utils_axios/entity/verificarCuentaDeBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import notify_success from 'src/utils/notify/notify_success.js'
-import notify_error from 'src/utils/notify/notify_error.js'
-import imports from 'src/utils/imports'
+import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
+import { useNotify } from 'src/utils/notify/notify.js'
+
+
+/* =================================================== */
+/*  ===== DECLARACIONES REF ===== */
+/* =================================================== */
+const { notify_success/*, notify_warning*/, notify_error } = useNotify()
+const { fetchData, postData } = useApi()
 
 //import imports from 'src/utils/imports'
 const list = STRINGS.OpacityDialog
@@ -122,19 +77,12 @@ const refDialogoAdd = ref(null)
 const optionsBanco = ref([])
 const optionsCuenta = ref([])
 
-const CargarBancos = async () => {
-  const response = await api.get(STRINGS.urlApiBanco)
-  // Suponiendo que response.data es un array de objetos como:
-  // { nombre: 'Ciudad1', ... }
-  optionsBanco.value = response.data.map((element) => ({
-    label: element['codigo'],
-    value: element['_id'],
-  }))
-  return optionsBanco
+const loadBank = async () => {
+  optionsBanco.value = await getNomenclator.loadBank()
 }
 
 const CargarCuentas = async () => {
-  const response = await api.get(STRINGS.urlApiTipoCuenta)
+  const response = await fetchData(STRINGS.urlApiTipoCuenta)
   // Suponiendo que response.data es un array de objetos como:
   // { nombre: 'Ciudad1', ... }
   optionsCuenta.value = response.data.map((element) => ({
@@ -145,7 +93,7 @@ const CargarCuentas = async () => {
 }
 
 onBeforeMount(() => {
-  CargarBancos()
+  loadBank()
   CargarCuentas()
 })
 
@@ -169,49 +117,46 @@ const emit = defineEmits(['ActualizarTabla'])
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
 
     // Verificar si el código ya existe
-    const existeCodigo = await verificarCuentaDeBanco(imports.cardOfBankToNumber(TextCuenta.value))
-    if (existeCodigo) {
+    const existeCodigo = await verificarCuentaDeBanco(TextCuenta.value)
+    if (!existeCodigo) {
       // Mostrar mensaje de error o alertar al usuario
 
-      notify_error(STRINGS.codigoRepetido)
-      textCuenta.value.focus()
-      return
-    } else {
       /*CapturarIDTipoCuenta()
       CapturarIDBanco()*/
 
       const newItem = {
         titular: TextTitularCuenta.value,
-        numero: imports.cardOfBankToNumber(TextCuenta.value),
+        numero: TextCuenta.value,
         banco: String(TextBanco.value['value']),
         tipo: String(TextTipoCuenta.value['value']),
       }
-      console.log('newItem: =>')
-      console.log(newItem)
-      console.log(JSON.stringify(newItem))
 
-      try {
-        await api.post(STRINGS.urlApiCuenta, newItem) // POST /items
 
-        // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.cuenta_AddSuccess)
 
+      const { data, error } = await postData(STRINGS.urlApiCuenta, newItem) // POST /items
+
+      // Mostrar alerta positiva de éxito
+      if (data && !error) {
+        notify_success(STRINGS.successAdd)
         emit('ActualizarTabla', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.cuenta_AddError)
+      } else {
+        console.error(STRINGS.errorAdd, error)
+        notify_error(STRINGS.errorAdd)
 
         emit('ActualizarTabla', false)
       }
-      refDialogoAdd.value.hide()
-      Reset()
-    }
-  }
 
-  Reset()
+      dialog.value = false
+      Reset()
+      return
+    }
+
+    notify_error(STRINGS.codigoRepetido)
+    textCuenta.value.focus()
+    return
+  }
 }
 
 /*Función que levanta el dialogo*/

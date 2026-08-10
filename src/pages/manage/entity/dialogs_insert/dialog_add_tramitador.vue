@@ -1,49 +1,28 @@
 <template>
   <div class="">
-    <q-dialog
-      v-model="dialog"
-      persistent
-      ref="refDialogoAdd"
-      :backdrop-filter="backdropFilter"
-      content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }"
-    >
+    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter"
+      content-class="dialog-xl" :style="{ '--q-dialog-max-width': '800px' }">
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text"
-            >{{ STRINGS.add.toUpperCase() }} {{ STRINGS.tramitadorLowercase.toUpperCase() }}</span
-          >
+          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} {{ STRINGS.tramitadorLowercase.toUpperCase() }}</span>
         </q-card-section>
 
         <q-card-section>
           <!-- codigo,categoria y nombre -->
           <div class="row flex justify-between q-mb-md">
             <div class="col-8">
-              <q-input
-                v-model="TextNombre_tramitador"
-                color="green"
-                type="text"
-                :rules="validacionesGenerales.rulesOnlyText"
-                lazy-rules
-                :label="STRINGS.nombre_tramitador"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextNombre_tramitador" color="green" type="text"
+                :rules="validacionesGenerales.rulesOnlyText" lazy-rules :label="STRINGS.nombre_tramitador"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-3">
-              <q-input
-                v-model="TextID_tramitador"
-                color="green"
-                type="text"
-                maxlength="11"
-                :rules="validacionesGenerales.rulesOnlyNumbers"
-                :label="STRINGS.id_tramitador"
-                lazy-rules
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextID_tramitador" color="green" type="text" maxlength="11"
+                :rules="validacionesGenerales.rulesOnlyNumbers" :label="STRINGS.id_tramitador" lazy-rules
+                @keyup="checkStatusInputs" />
             </div>
           </div>
 
@@ -56,49 +35,25 @@
           <div class="row flex justify-between q-mb-xl">
             <div class="col-3 row border-box-radio">
               <div class="col-12 text-start">
-                <q-radio
-                  v-model="TextEstado_tramitador"
-                  checked-icon="task_alt"
-                  unchecked-icon="panorama_fish_eye"
-                  :val="STRINGS.active"
-                  :label="STRINGS.active"
-                  @change="checkStatusInputs"
-                />
+                <q-radio v-model="TextEstado_tramitador" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
+                  :val="STRINGS.active" :label="STRINGS.active" @change="checkStatusInputs" />
               </div>
               <div class="col-12 text-start">
-                <q-radio
-                  v-model="TextEstado_tramitador"
-                  checked-icon="task_alt"
-                  unchecked-icon="panorama_fish_eye"
-                  :val="STRINGS.noActive"
-                  :label="STRINGS.noActive"
-                  @change="checkStatusInputs"
-                />
+                <q-radio v-model="TextEstado_tramitador" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
+                  :val="STRINGS.noActive" :label="STRINGS.noActive" @change="checkStatusInputs" />
               </div>
             </div>
 
             <div class="col-5">
-              <q-input
-                v-model="TextCorreo_tramitador"
-                color="green"
-                type="email"
-                :rules="validacionesGenerales.rulesEmail"
-                :label="STRINGS.correo_tramitador"
-                @keyup="checkStatusInputs"
-              />
+              <q-input v-model="TextCorreo_tramitador" color="green" type="email"
+                :rules="validacionesGenerales.rulesEmail" :label="STRINGS.correo_tramitador"
+                @keyup="checkStatusInputs" />
             </div>
 
             <div class="col-3">
-              <q-select
-                v-model="TextCliente_tramitador"
-                color="green"
-                :options="options"
-                disable
-                :rules="validacionesGenerales.rulesNoEmpty"
-                lazy-rules
-                :label="STRINGS.cliente_tramitador"
-                @keyup="checkStatusInputs"
-              />
+              <q-select v-model="TextCliente_tramitador" color="green" :options="options" disable
+                :rules="validacionesGenerales.rulesNoEmpty" lazy-rules :label="STRINGS.cliente_tramitador"
+                @keyup="checkStatusInputs" />
             </div>
           </div>
         </q-card-section>
@@ -106,24 +61,11 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn
-                icon="check"
-                :class="disabledBtnSave"
-                @click="SendData()"
-                :label="STRINGS.save"
-                color="green"
-              />
+              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
             </div>
 
             <div class="">
-              <q-btn
-                flat
-                icon="close"
-                :label="STRINGS.close"
-                v-on:click="Reset"
-                color="dark"
-                v-close-popup
-              />
+              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
             </div>
           </div>
         </q-card-section>
@@ -139,11 +81,16 @@ import { STRINGS } from 'utils/string.js'
 //import verificarCuentaDeBanco from 'utils/utils_axios/entity/verificarCuentaDeBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import validacionesGenerales from 'utils/validaciones_generales.js'
-import notify_success from 'src/utils/notify/notify_success.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator.js'
-//import imports from 'src/utils/imports'
-//import notify_error from 'src/utils/notify/notify_error.js'
-//import imports from 'src/utils/imports'
+import { useNotify } from 'src/utils/notify/notify.js'
+
+
+/* =================================================== */
+/*  ===== DECLARACIONES REF ===== */
+/* =================================================== */
+const { notify_success/*, notify_warning, notify_error*/ } = useNotify()
+
+
 
 const options = ref([])
 const optionsOrganismo = ref([])

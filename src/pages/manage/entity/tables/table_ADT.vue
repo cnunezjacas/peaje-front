@@ -2,15 +2,17 @@
   <div class="q-px-md">
     <div class="flex justify-between padding_minimo">
       <div class="text-center bg-green-10 rounded-borders my-cell">
-        <p class="text-tittle-table">{{ STRINGS.gestion }} {{ STRINGS.estacionesLowercase }}</p>
+        <p class="text-tittle-table">
+          {{ STRINGS.gestion }} {{ STRINGS.name_areas_trabajo.toLowerCase() }}
+        </p>
       </div>
 
       <div>
         <q-breadcrumbs>
-          <q-breadcrumbs-el class="text-green-10" label="Inicio" to="/" icon="home" />
+          <q-breadcrumbs-el class="text-green-10" label="Inicio" icon="home" />
           <q-breadcrumbs-el class="text-green-10" :label="STRINGS.gestion" icon="folder" />
 
-          <q-breadcrumbs-el :label="STRINGS.estacionesLowercase" icon="post_add" />
+          <q-breadcrumbs-el :label="Titulo" icon="post_add" />
         </q-breadcrumbs>
       </div>
     </div>
@@ -20,42 +22,31 @@
     </div>
     <!-- Mostrar la tabla cuando no está cargando -->
 
-    <q-table
-      v-else
-      class="shadow-2 custom-horizontal-lines"
-      table-header-class="bg-green-10 text-white"
-      ref="tableAddProvincia"
-      :rows-per-page-label="STRINGS.record_page"
-      :rows="rows"
-      :columns="columns"
-      :rows-per-page-options="numberForPage"
-      :no-data-label="STRINGS.no_data_available"
-      row-key="_id"
-      :separator="separator"
-      selection="single"
-      v-model:selected="selectedRows"
-      @update:selected="onSelectedRowsChange"
-    />
+    <q-table v-else class="shadow-2 custom-horizontal-lines" table-header-class="bg-green-10 text-white"
+      ref="tableAddProvincia" :rows-per-page-label="STRINGS.record_page" :rows="row" :columns="columns"
+      :rows-per-page-options="numberForPage" :no-data-label="STRINGS.no_data_available" row-key="_id"
+      :separator="separator" selection="single" v-model:selected="selectedRows"
+      @update:selected="onSelectedRowsChange" />
   </div>
 </template>
 
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+//import api from 'src/axios.js'
 import imports from 'src/utils/imports.js'
-import { notify_error } from 'src/utils/import_files_nomenclador'
 
 // Datos
 const numberForPage = imports.getNumberForPage()
 //Spinner Carga Datos
 const isLoading = ref(true)
+const Titulo = ref('')
 
 const columns = [
   {
     name: 'nombre',
     required: true,
-    label: STRINGS.nombre,
+    label: STRINGS.nombre_ADT,
     align: STRINGS.TableAlign,
     field: (row) => row.nombre,
     format: (val) => `${val}`,
@@ -64,54 +55,28 @@ const columns = [
   {
     name: 'codigo',
     align: STRINGS.TableAlign,
-    label: STRINGS.codigo_prov,
+    label: STRINGS.codigo_ADT,
     field: 'codigo',
-    sortable: true,
-  },
-  {
-    name: 'direccion',
-    align: STRINGS.TableAlign,
-    label: STRINGS.direccion_estacion,
-    field: 'direccion',
-    sortable: true,
-  },
-  {
-    name: 'provincia',
-    align: STRINGS.TableAlign,
-    label: STRINGS.name_provincia,
-    field: 'provincia',
-    sortable: true,
-  },
-  {
-    name: 'municipio',
-    align: STRINGS.TableAlign,
-    label: STRINGS.name_municipio,
-    field: 'municipio',
     sortable: true,
   },
 ]
 
-//import notify_error from 'src/utils/notify/notify_error.js'
+const row = [
+  {
+    nombre: 'Area de Trabajo 1',
+    codigo: 'DSGRTS',
+    _id: '12345678',
+  },
+]
 
-const InitDataTable = async () => {
-  isLoading.value = true
-  try {
-    const response = await api.get(STRINGS.urlApiEstacion)
-    rows.value = response.data
-  } catch (error) {
-    console.error('Error cargando datos:', error)
-    notify_error(STRINGS.loadingTablesError)
-  } finally {
-    isLoading.value = false
-  }
-}
 
 onBeforeMount(() => {
-  InitDataTable()
+  //InitDataTable()
   isLoading.value = false
+  Titulo.value = imports.JoinCamelCase(STRINGS.areasDeTrabajoLowercase)
 })
 
-const rows = ref([])
+//const rows = ref([])
 const separator = ref('vertical')
 const selectedRows = ref([])
 
@@ -135,7 +100,7 @@ const selectedRows = ref([])
 })*/
 
 // Emite eventos
-const emit = defineEmits(['seleccionado', 'onEnable'])
+const emit = defineEmits(['seleccionado', 'onBlockTabs'])
 //Manejador de los botones de la navBottom
 var EnableItemsTabs = ref(true)
 
@@ -143,20 +108,20 @@ var EnableItemsTabs = ref(true)
 const onSelectedRowsChange = (newSelected) => {
   if (newSelected.length > 0) {
     emit('seleccionado', newSelected.length > 0 ? newSelected[0] : null)
-    emit('onEnable', (EnableItemsTabs.value = false))
+    emit('onBlockTabs', (EnableItemsTabs.value = false))
   } else {
-    emit('onEnable', (EnableItemsTabs.value = true))
+    emit('onBlockTabs', (EnableItemsTabs.value = true))
   }
 }
 
-const UpdateTable = async () => {
+/*const UpdateTable = async () => {
   InitDataTable()
   selectedRows.value = []
-}
+}*/
 
 // Exponemos `filteredRows` si el padre necesita acceder directamente
-defineExpose({
-  // filteredRows,
+/*defineExpose({
+  filteredRows,
   UpdateTable,
-})
+})*/
 </script>
