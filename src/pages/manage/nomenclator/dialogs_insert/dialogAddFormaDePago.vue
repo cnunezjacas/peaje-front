@@ -6,20 +6,34 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.method_of_payment.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.method_of_payment.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextDescripcion_fdp" ref="textDescripcion_fdp" color="green"
-                :rules="validaciones_generales.rulesNoEmpty" type="text" :label="STRINGS.descripcion"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextDescripcion_fdp"
+                ref="textDescripcion_fdp"
+                color="green"
+                :rules="validaciones_generales.rulesNoEmpty"
+                type="text"
+                :label="STRINGS.descripcion"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-select v-model="TextNomenclador_fdp" ref="textNomenclador_fdp" :options="options"
-                :rules="validaciones_generales.rulesNoEmpty" color="green" :label="STRINGS.nomenclador_formas_pago"
-                @onchange="checkStatusInputs">
+              <q-select
+                v-model="TextNomenclador_fdp"
+                ref="textNomenclador_fdp"
+                :options="options"
+                :rules="validaciones_generales.rulesNoEmpty"
+                color="green"
+                :label="STRINGS.nomenclador_formas_pago"
+                @onchange="checkStatusInputs"
+              >
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
                 </template>
@@ -31,8 +45,14 @@
             <div class="col-12">
               <p>{{ STRINGS.detalles_formas_pago }}:</p>
               <div class="bg-grey-4">
-                <q-input ref="textDetalles_fdp" v-model="TextDetalles_fdp" class="q-pa-md q-pb-lg" color="green"
-                  autogrow @keyup="checkStatusInputs" />
+                <q-input
+                  ref="textDetalles_fdp"
+                  v-model="TextDetalles_fdp"
+                  class="q-pa-md q-pb-lg"
+                  color="green"
+                  autogrow
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
           </div>
@@ -41,11 +61,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="SendData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -58,7 +91,7 @@
 /* Importaciones */
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 

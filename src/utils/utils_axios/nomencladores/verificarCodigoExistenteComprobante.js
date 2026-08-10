@@ -1,5 +1,5 @@
 import { STRINGS } from '../../string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 
 /* Función para verificar si el código ya existe */
 const verificarCodigoExistente = async (codigo) => {

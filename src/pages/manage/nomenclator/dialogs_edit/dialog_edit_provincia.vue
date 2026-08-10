@@ -1,23 +1,41 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent ref="refDialogoEditProvincia" :backdrop-filter="backdropFilter">
+    <q-dialog
+      v-model="dialog"
+      persistent
+      ref="refDialogoEditProvincia"
+      :backdrop-filter="backdropFilter"
+    >
       <q-card>
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.province.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.province.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_prov" color="green" :rules="validaciones_generales.rulesOnlyText" type="text"
-                :label="STRINGS.name" />
+              <q-input
+                v-model="TextNombre_prov"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyText"
+                type="text"
+                :label="STRINGS.name"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_prov" v-model="TextCodigo_prov" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.code" />
+              <q-input
+                ref="textCodigo_prov"
+                v-model="TextCodigo_prov"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers"
+                :label="STRINGS.code"
+              />
             </div>
           </div>
         </q-card-section>
@@ -25,11 +43,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="CheckData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="CheckData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" @click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                @click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -42,7 +73,7 @@
 /* Importaciones */
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'

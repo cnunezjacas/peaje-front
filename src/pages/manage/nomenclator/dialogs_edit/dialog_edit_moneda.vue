@@ -6,29 +6,49 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.currency.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.currency.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-4">
               <div class="q-px-sm">
-                <q-input v-model="TextNombre_moneda" color="green" :rules="validaciones_generales.rulesOnlyText"
-                  type="text" :label="STRINGS.name" @keyup="checkStatusInputs" />
+                <q-input
+                  v-model="TextNombre_moneda"
+                  color="green"
+                  :rules="validaciones_generales.rulesOnlyText"
+                  type="text"
+                  :label="STRINGS.name"
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
             <div class="col-4">
               <div class="q-px-sm">
-                <q-input ref="textSiglas_monedas" v-model="TextSiglas_moneda" color="green" type="text"
-                  :rules="validaciones_generales.rulesOnlyUppercase" :label="STRINGS.acronym"
-                  @keyup="checkStatusInputs" />
+                <q-input
+                  ref="textSiglas_monedas"
+                  v-model="TextSiglas_moneda"
+                  color="green"
+                  type="text"
+                  :rules="validaciones_generales.rulesOnlyUppercase"
+                  :label="STRINGS.acronym"
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
 
             <div class="col-4">
               <div class="q-px-sm">
-                <q-input v-model="TextTasaCambio_moneda" color="green" :rules="validaciones_generales.rulesExchangeRate"
-                  type="text" :label="STRINGS.tasa_de_Cambio" @keyup="checkStatusInputs" />
+                <q-input
+                  v-model="TextTasaCambio_moneda"
+                  color="green"
+                  :rules="validaciones_generales.rulesExchangeRate"
+                  type="text"
+                  :label="STRINGS.tasa_de_Cambio"
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
           </div>
@@ -36,9 +56,15 @@
           <div class="row flex justify-between q-mt-lg">
             <div class="col-6">
               <div class="q-px-sm">
-                <q-select v-model="Textnomenclador_moneda" :options="options"
-                  :rules="validaciones_generales.rulesNoEmpty" color="green" :label="STRINGS.nomenclator"
-                  @onchange="checkStatusInputs" outlined>
+                <q-select
+                  v-model="Textnomenclador_moneda"
+                  :options="options"
+                  :rules="validaciones_generales.rulesNoEmpty"
+                  color="green"
+                  :label="STRINGS.nomenclator"
+                  @onchange="checkStatusInputs"
+                  outlined
+                >
                   <!-- Slot para agregar un botón al final del select -->
                   <template v-slot:append>
                     <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -52,11 +78,23 @@
                 <p>{{ STRINGS.moneda_base }}:</p>
               </div>
               <div class="q-px-xs">
-                <q-radio v-model="TextmBase_moneda" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                  @onchange="checkStatusInputs" :val="STRINGS.yes" :label="STRINGS.yes" />
-                <q-radio v-model="TextmBase_moneda" ref="textmBase_moneda" checked-icon="task_alt"
-                  unchecked-icon="panorama_fish_eye" @onchange="checkStatusInputs" :val="STRINGS.no"
-                  :label="STRINGS.no" />
+                <q-radio
+                  v-model="TextmBase_moneda"
+                  checked-icon="task_alt"
+                  unchecked-icon="panorama_fish_eye"
+                  @onchange="checkStatusInputs"
+                  :val="STRINGS.yes"
+                  :label="STRINGS.yes"
+                />
+                <q-radio
+                  v-model="TextmBase_moneda"
+                  ref="textmBase_moneda"
+                  checked-icon="task_alt"
+                  unchecked-icon="panorama_fish_eye"
+                  @onchange="checkStatusInputs"
+                  :val="STRINGS.no"
+                  :label="STRINGS.no"
+                />
               </div>
             </div>
           </div>
@@ -64,8 +102,14 @@
           <div class="row flex justify-between q-mt-md">
             <div class="col-12">
               <div class="q-px-sm">
-                <q-input v-model="TextIdCondor_moneda" color="green" :rules="validaciones_generales.rulesCondorTextID"
-                  type="text" :label="STRINGS.id_condor" @keyup="checkStatusInputs" />
+                <q-input
+                  v-model="TextIdCondor_moneda"
+                  color="green"
+                  :rules="validaciones_generales.rulesCondorTextID"
+                  type="text"
+                  :label="STRINGS.id_condor"
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
           </div>
@@ -91,11 +135,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="CheckData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="CheckData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -107,7 +164,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales'

@@ -81,7 +81,7 @@
 /* Importaciones */
 import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
 import validaciones_generales from 'src/utils/validaciones_generales'

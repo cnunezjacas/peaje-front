@@ -1,33 +1,59 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter" content-class="dialog-xl"
-      :style="{ '--q-dialog-max-width': '800px' }">
+    <q-dialog
+      v-model="dialog"
+      persistent
+      :backdrop-filter="backdropFilter"
+      content-class="dialog-xl"
+      :style="{ '--q-dialog-max-width': '800px' }"
+    >
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.vehicle.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.vehicle.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_vehiculo" ref="textNombre_vehiculo" color="green"
-                :rules="validaciones_generales.rulesFullTextAndNumber" type="text" :label="STRINGS.name"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombre_vehiculo"
+                ref="textNombre_vehiculo"
+                color="green"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
+                type="text"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_vehiculo" v-model="TextCodigo_vehiculo" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyUppercase" :label="STRINGS.code" @keyup="checkStatusInputs" />
+              <q-input
+                ref="textCodigo_vehiculo"
+                v-model="TextCodigo_vehiculo"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyUppercase"
+                :label="STRINGS.code"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
           <div class="row flex justify-between q-mt-lg">
             <div class="col-7">
-              <q-select v-model="TextNomenclador_vehiculo" ref="textnomenclador_vehiculo" :options="options"
-                :rules="validaciones_generales.rulesNoEmpty" color="green" :label="STRINGS.nomenclator"
-                @onchange="checkStatusInputs">
+              <q-select
+                v-model="TextNomenclador_vehiculo"
+                ref="textnomenclador_vehiculo"
+                :options="options"
+                :rules="validaciones_generales.rulesNoEmpty"
+                color="green"
+                :label="STRINGS.nomenclator"
+                @onchange="checkStatusInputs"
+              >
                 <!-- Slot para agregar un botón al final del select -->
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -36,9 +62,15 @@
             </div>
 
             <div class="col-4">
-              <q-input v-model="TextTasaDePeaje_vehiculo" ref="textTasaDePeaje_vehiculo" color="green"
-                :rules="validaciones_generales.rulesOnlyNumbers" type="number" :label="STRINGS.tasa_de_peajes"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextTasaDePeaje_vehiculo"
+                ref="textTasaDePeaje_vehiculo"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyNumbers"
+                type="number"
+                :label="STRINGS.tasa_de_peajes"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
         </q-card-section>
@@ -46,11 +78,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="SendData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -63,7 +108,7 @@
 /* Importaciones */
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales'

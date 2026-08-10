@@ -1,4 +1,4 @@
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 
 export function useApi() {
   const fetchData = async (endpoint) => {

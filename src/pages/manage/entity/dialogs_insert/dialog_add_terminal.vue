@@ -1,26 +1,47 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent ref="refDialogoAdd" :backdrop-filter="backdropFilter"
-      content-class="dialog-xl" :style="{ '--q-dialog-max-width': '800px' }">
+    <q-dialog
+      v-model="dialog"
+      persistent
+      ref="refDialogoAdd"
+      :backdrop-filter="backdropFilter"
+      content-class="dialog-xl"
+      :style="{ '--q-dialog-max-width': '800px' }"
+    >
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} {{ STRINGS.terminalLowercase.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} {{ STRINGS.terminalLowercase.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <!-- codigo y nombre -->
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNumero_terminal" ref="textNumero_terminal" color="green" type="text"
-                :rules="rulesOnlyNumbers" :label="STRINGS.numero_terminal" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNumero_terminal"
+                ref="textNumero_terminal"
+                color="green"
+                type="text"
+                :rules="rulesOnlyNumbers"
+                :label="STRINGS.numero_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
 
             <div class="col-5">
-              <q-input v-model="TextNumeroInventario_terminal" color="green" type="text" :rules="rulesOnlyNumbers"
-                :label="STRINGS.numeroInventario_terminal" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNumeroInventario_terminal"
+                color="green"
+                type="text"
+                :rules="rulesOnlyNumbers"
+                :label="STRINGS.numeroInventario_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
@@ -30,42 +51,84 @@
           <div class="row flex justify-between">
             <div class="col-6 row border-box-radio">
               <div class="col-4 text-center">
-                <q-radio v-model="TextEstado_terminal" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                  :val="STRINGS.estadoActivo_terminal" :label="STRINGS.estadoActivo_terminal"
-                  @change="checkStatusInputs" />
+                <q-radio
+                  v-model="TextEstado_terminal"
+                  checked-icon="task_alt"
+                  unchecked-icon="panorama_fish_eye"
+                  :val="STRINGS.estadoActivo_terminal"
+                  :label="STRINGS.estadoActivo_terminal"
+                  @change="checkStatusInputs"
+                />
               </div>
               <div class="col-4 text-center">
-                <q-radio v-model="TextEstado_terminal" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                  :val="STRINGS.estadoInactivo_terminal" :label="STRINGS.estadoInactivo_terminal"
-                  @change="checkStatusInputs" />
+                <q-radio
+                  v-model="TextEstado_terminal"
+                  checked-icon="task_alt"
+                  unchecked-icon="panorama_fish_eye"
+                  :val="STRINGS.estadoInactivo_terminal"
+                  :label="STRINGS.estadoInactivo_terminal"
+                  @change="checkStatusInputs"
+                />
               </div>
 
               <div class="col-4 text-center">
-                <q-radio v-model="TextEstado_terminal" checked-icon="task_alt" unchecked-icon="panorama_fish_eye"
-                  :val="STRINGS.estadoRoto_terminal" :label="STRINGS.estadoRoto_terminal" @change="checkStatusInputs" />
+                <q-radio
+                  v-model="TextEstado_terminal"
+                  checked-icon="task_alt"
+                  unchecked-icon="panorama_fish_eye"
+                  :val="STRINGS.estadoRoto_terminal"
+                  :label="STRINGS.estadoRoto_terminal"
+                  @change="checkStatusInputs"
+                />
               </div>
             </div>
 
             <div class="col-5">
-              <q-select v-model="TextPuntoDeVenta_terminal" ref="textTipoCuenta" color="green" :options="optionsCuenta"
-                type="text" :rules="rulesNoEmpty" :label="STRINGS.puntoDeVenta_terminal" @keyup="checkStatusInputs" />
+              <q-select
+                v-model="TextPuntoDeVenta_terminal"
+                ref="textTipoCuenta"
+                color="green"
+                :options="optionsCuenta"
+                type="text"
+                :rules="rulesNoEmpty"
+                :label="STRINGS.puntoDeVenta_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
           <div class="row flex justify-between q-mt-md">
             <div class="col-5">
-              <q-input v-model="TextUltimaColecta_terminal" color="green" type="datetime-local" :rules="rulesNoEmpty"
-                :label="STRINGS.ultimaColecta_terminal" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextUltimaColecta_terminal"
+                color="green"
+                type="datetime-local"
+                :rules="rulesNoEmpty"
+                :label="STRINGS.ultimaColecta_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
 
             <div class="col-3">
-              <q-input v-model="TextUltimaDiasSinColectar_terminal" color="green" type="text" :rules="rulesOnlyNumbers"
-                :label="STRINGS.diasSinColecta_terminal" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextUltimaDiasSinColectar_terminal"
+                color="green"
+                type="text"
+                :rules="rulesOnlyNumbers"
+                :label="STRINGS.diasSinColecta_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
 
             <div class="col-3">
-              <q-input v-model="TextCodigoAcceso_terminal" color="green" type="text" :rules="rulesOnlyNumbers"
-                :label="STRINGS.codigoAcceso_terminal" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextCodigoAcceso_terminal"
+                color="green"
+                type="text"
+                :rules="rulesOnlyNumbers"
+                :label="STRINGS.codigoAcceso_terminal"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
@@ -82,11 +145,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="SendData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -98,16 +174,15 @@
 <script setup>
 import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 //import verificarCuentaDeBanco from 'utils/utils_axios/entity/verificarCuentaDeBanco.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
-
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success/*, notify_warning, notify_error*/ } = useNotify()
+const { notify_success /*, notify_warning, notify_error*/ } = useNotify()
 
 const list = STRINGS.OpacityDialog
 

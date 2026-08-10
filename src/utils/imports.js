@@ -1,7 +1,7 @@
 //Función para realizar el Capitalize del nombre del organismo
 
 import { STRINGS } from 'utils/string'
-import api from 'src/axios'
+import api from 'src/boot/api'
 
 function capitalizeWords(str, capitalizeFirstWord = false) {
   // Dividimos la cadena en palabras

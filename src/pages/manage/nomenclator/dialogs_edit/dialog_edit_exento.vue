@@ -6,26 +6,49 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.exempt.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.exempt.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_exento" ref="textNombre_exento" color="green" :rules="rulesNombre_exento"
-                type="text" :label="STRINGS.name" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombre_exento"
+                ref="textNombre_exento"
+                color="green"
+                :rules="rulesNombre_exento"
+                type="text"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_exento" v-model="TextCodigo_exento" color="green" type="text"
-                :rules="rulesCodigo_exento" :label="STRINGS.code" @keyup="checkStatusInputs" />
+              <q-input
+                ref="textCodigo_exento"
+                v-model="TextCodigo_exento"
+                color="green"
+                type="text"
+                :rules="rulesCodigo_exento"
+                :label="STRINGS.code"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
           <div class="row flex justify-between q-mt-lg">
             <div class="col-12">
-              <q-select v-model="TextNomenclador_exento" ref="textNomenclador_exento" :options="options"
-                :rules="rulesNomenclador_exento" color="green" :label="STRINGS.nomenclator"
-                @onchange="checkStatusInputs" outlined>
+              <q-select
+                v-model="TextNomenclador_exento"
+                ref="textNomenclador_exento"
+                :options="options"
+                :rules="rulesNomenclador_exento"
+                color="green"
+                :label="STRINGS.nomenclator"
+                @onchange="checkStatusInputs"
+                outlined
+              >
                 <!-- Slot para agregar un botón al final del select -->
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -36,8 +59,15 @@
             <div class="col-12 q-mt-md">
               <p>{{ STRINGS.details }}:</p>
               <div class="bg-grey-4 q-pb-lg">
-                <q-input ref="textDetalles_exento" v-model="TextDetalles_exento" :rules="rulesDetalles_exento"
-                  class="q-pa-md" color="green" autogrow @keyup="checkStatusInputs" />
+                <q-input
+                  ref="textDetalles_exento"
+                  v-model="TextDetalles_exento"
+                  :rules="rulesDetalles_exento"
+                  class="q-pa-md"
+                  color="green"
+                  autogrow
+                  @keyup="checkStatusInputs"
+                />
               </div>
             </div>
           </div>
@@ -46,12 +76,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSaveEdit" @click="Procesar_Edit()" :label="STRINGS.save"
-                color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSaveEdit"
+                @click="Procesar_Edit()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -63,7 +105,7 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteExento.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
@@ -157,7 +199,7 @@ const equalFields = () => {
     TextCodigo_exento.value.trim() === TextCodigo_exento_copy.value.trim() &&
     TextNombre_exento.value.trim() === TextNombre_exento_copy.value.trim() &&
     String(TextNomenclador_exento.value).trim() ===
-    String(TextNomenclador_exento_copy.value).trim() &&
+      String(TextNomenclador_exento_copy.value).trim() &&
     TextDetalles_exento.value.trim() === TextDetalles_exento_copy.value.trim()
 
   return camposIguales

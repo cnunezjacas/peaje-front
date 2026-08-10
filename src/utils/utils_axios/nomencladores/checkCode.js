@@ -1,5 +1,5 @@
 // utils/verificarCodigo.js
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 
 /**
  * Función genérica para verificar si un valor ya existe en una API.

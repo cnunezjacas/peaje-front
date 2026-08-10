@@ -6,28 +6,49 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.voucher.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.voucher.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between q-mb-lg">
             <div class="col-5">
-              <q-input v-model="TextNombre_Comprobante" ref="textNombre_Comprobante" color="green"
-                :rules="validaciones_generales.rulesFullTextAndNumber" type="text" :label="STRINGS.name"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombre_Comprobante"
+                ref="textNombre_Comprobante"
+                color="green"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
+                type="text"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_comprobante" v-model="TextCodigo_comprobante" color="green" type="text"
-                :rules="validaciones_generales.rulesUppercaseAndNumber" :label="STRINGS.code"
-                @keyup="checkStatusInputs" />
+              <q-input
+                ref="textCodigo_comprobante"
+                v-model="TextCodigo_comprobante"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesUppercaseAndNumber"
+                :label="STRINGS.code"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
 
           <div class="row flex justify-between q-mb-lg">
             <div class="col-12">
-              <q-select v-model="TextNomenclador_comprobante" ref="textNomenclador_exento" :options="options"
-                :rules="rulesNomenclador_comprobante" disable color="green" :label="STRINGS.nomenclator"
-                @onchange="checkStatusInputs">
+              <q-select
+                v-model="TextNomenclador_comprobante"
+                ref="textNomenclador_exento"
+                :options="options"
+                :rules="rulesNomenclador_comprobante"
+                disable
+                color="green"
+                :label="STRINGS.nomenclator"
+                @onchange="checkStatusInputs"
+              >
                 <!-- Slot para agregar un botón al final del select -->
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -38,13 +59,26 @@
 
           <div class="row flex justify-between q-mb-lg">
             <div class="col-5">
-              <q-input ref="textValor_comprobante" v-model="TextValor_comprobante" color="green" type="text"
-                :rules="validaciones_generales.rulesExchangeRate" :label="STRINGS.valor" @keyup="checkStatusInputs" />
+              <q-input
+                ref="textValor_comprobante"
+                v-model="TextValor_comprobante"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesExchangeRate"
+                :label="STRINGS.valor"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-select v-model="TextMoneda_comprobante" ref="textMoneda_comprobante" :options="optionsMoneda"
-                :rules="validaciones_generales.rulesNoEmpty" color="green" :label="STRINGS.currency"
-                @onchange="checkStatusInputs">
+              <q-select
+                v-model="TextMoneda_comprobante"
+                ref="textMoneda_comprobante"
+                :options="optionsMoneda"
+                :rules="validaciones_generales.rulesNoEmpty"
+                color="green"
+                :label="STRINGS.currency"
+                @onchange="checkStatusInputs"
+              >
               </q-select>
             </div>
           </div>
@@ -53,11 +87,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="CheckData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="CheckData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" @click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                @click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -70,19 +117,17 @@
 /* Importaciones */
 import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
-
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success/*, notify_warning*/, notify_error } = useNotify()
-
+const { notify_success /*, notify_warning*/, notify_error } = useNotify()
 
 /* Carga todas las monedas de la BD */
 const loadCoins = async () => {

@@ -6,23 +6,43 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.municipality.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.municipality.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_mun" color="green" :rules="validaciones_generales.rulesOnlyText" type="text"
-                :label="STRINGS.name" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombre_mun"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyText"
+                type="text"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_Mun" v-model="TextCodigo_mun" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.code" @keyup="checkStatusInputs" />
+              <q-input
+                ref="textCodigo_Mun"
+                v-model="TextCodigo_mun"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers"
+                :label="STRINGS.code"
+                @keyup="checkStatusInputs"
+              />
             </div>
 
             <div class="col-12">
-              <q-select v-model="SelectNombre_prov" @update:model-value="SelectNombre_prov = $event" :options="options"
-                :label="STRINGS.province" :rules="validaciones_generales.rulesNoEmpty" />
+              <q-select
+                v-model="SelectNombre_prov"
+                @update:model-value="SelectNombre_prov = $event"
+                :options="options"
+                :label="STRINGS.province"
+                :rules="validaciones_generales.rulesNoEmpty"
+              />
             </div>
           </div>
         </q-card-section>
@@ -30,11 +50,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="CheckData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="CheckData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" @click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                @click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -47,7 +80,7 @@
 /* Importaciones */
 import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'

@@ -6,17 +6,31 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.bank.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.bank.toUpperCase() }}</span
+          >
         </q-card-section>
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_banco" ref="textNombre_banco" color="green"
-                :rules="validaciones_generales.rulesOnlyText" type="text" :label="STRINGS.name" />
+              <q-input
+                v-model="TextNombre_banco"
+                ref="textNombre_banco"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyText"
+                type="text"
+                :label="STRINGS.name"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_banco" v-model="TextCodigo_banco" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyUppercase" :label="STRINGS.code" />
+              <q-input
+                ref="textCodigo_banco"
+                v-model="TextCodigo_banco"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyUppercase"
+                :label="STRINGS.code"
+              />
             </div>
 
             <div class="col-12 q-mt-md">
@@ -31,11 +45,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="CheckData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="CheckData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" @click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                @click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -47,18 +74,16 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
-
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success/*, notify_warning,*/, notify_error } = useNotify()
-
+const { notify_success /*, notify_warning,*/, notify_error } = useNotify()
 
 const emit = defineEmits(['ActualizarTabla'])
 

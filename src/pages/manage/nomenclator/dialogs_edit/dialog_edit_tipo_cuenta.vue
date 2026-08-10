@@ -1,25 +1,46 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialogEdit" persistent ref="refDialogoEdit" :backdrop-filter="backdropFilter"
-      content-class="dialog-xl" :style="{ '--q-dialog-max-width': '800px' }">
+    <q-dialog
+      v-model="dialogEdit"
+      persistent
+      ref="refDialogoEdit"
+      :backdrop-filter="backdropFilter"
+      content-class="dialog-xl"
+      :style="{ '--q-dialog-max-width': '800px' }"
+    >
       <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
           </span>
-          <span class="icon-text">{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.type_of_account.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.edit.toUpperCase() }} - {{ STRINGS.type_of_account.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_tipoCuenta" ref="textNombre_tipoCuenta" color="green"
-                :rules="rulesAddNombre_tipoCuenta" type="text" :label="STRINGS.nombre_tipoCuenta"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombre_tipoCuenta"
+                ref="textNombre_tipoCuenta"
+                color="green"
+                :rules="rulesAddNombre_tipoCuenta"
+                type="text"
+                :label="STRINGS.nombre_tipoCuenta"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input v-model="TextCodigo_tipoCuenta" ref="textCodigo_tipoCuenta" color="green" type="text"
-                :rules="rulesAddCodigo_tipoCuenta" :label="STRINGS.codigo_tipoCuenta" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextCodigo_tipoCuenta"
+                ref="textCodigo_tipoCuenta"
+                color="green"
+                type="text"
+                :rules="rulesAddCodigo_tipoCuenta"
+                :label="STRINGS.codigo_tipoCuenta"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
         </q-card-section>
@@ -27,12 +48,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSaveEdit" @click="Procesar_Edit()" :label="STRINGS.save"
-                color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSaveEdit"
+                @click="Procesar_Edit()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" @click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                @click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -45,7 +78,7 @@
 import { ref, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 
-import api from 'src/axios.js'
+import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
