@@ -1,9 +1,16 @@
-import api from 'src/axios'
+import { useApi } from 'src/composables/useApi'
 import { STRINGS } from 'src/utils/string'
-import notify_warning from 'src/utils/notify/notify_warning'
+import { useNotify } from 'src/utils/notify/notify.js'
+
+/* =================================================== */
+/*  ===== DECLARACIONES REF ===== */
+/* =================================================== */
+const { /*notify_success,*/ notify_warning /*, notify_error*/ } = useNotify()
+
+const { fetchData /*, postData, putData, deleteData */ } = useApi()
 
 const loadOrganismo = async () => {
-  const response = await api.get(STRINGS.urlApiOrganismo)
+  const response = await fetchData(STRINGS.urlApiOrganismo)
   const options = response.data.map((element) => ({
     label: element['siglas'],
     value: element['_id'],
@@ -12,7 +19,7 @@ const loadOrganismo = async () => {
 }
 
 const loadProvincias = async () => {
-  const response = await api.get(STRINGS.urlApiProvincia)
+  const response = await fetchData(STRINGS.urlApiProvincia)
   const options = response.data.map((element) => ({
     label: element['nombre'],
     value: element['_id'],
@@ -21,7 +28,7 @@ const loadProvincias = async () => {
 }
 
 const loadCoins = async () => {
-  const response = await api.get(STRINGS.urlApiMoneda)
+  const response = await fetchData(STRINGS.urlApiMoneda)
   const options = response.data.map((element) => ({
     label: element['siglas'],
     value: element['_id'],
@@ -30,7 +37,7 @@ const loadCoins = async () => {
 }
 
 const loadMunicipios = async () => {
-  const response = await api.get(STRINGS.urlApiMunicipio)
+  const response = await fetchData(STRINGS.urlApiMunicipio)
   const options = response.data.map((element) => ({
     label: element['nombre'],
     value: element['_id'],
@@ -38,8 +45,17 @@ const loadMunicipios = async () => {
   return options
 }
 
+const loadBank = async () => {
+  const response = await fetchData(STRINGS.urlApiBanco)
+  const options = response.data.map((element) => ({
+    label: element['codigo'],
+    value: element['_id'],
+  }))
+  return options
+}
+
 const loadMunicipiosByProvincia = async (newVal, opcional = true) => {
-  const response = await api.get(STRINGS.urlApiMunicipio)
+  const response = await fetchData(STRINGS.urlApiMunicipio)
 
   const options = response.data
     .filter((item) => item['provincia'] === newVal.value)
@@ -60,4 +76,5 @@ export default {
   loadMunicipios,
   loadMunicipiosByProvincia,
   loadCoins,
+  loadBank,
 }

@@ -1,5 +1,6 @@
 export const STRINGS = {
   tittleSite: 'PEAJESIG',
+  version: 'v0.01',
   textConfig: 'Configuración',
   gestion: 'Gestión',
   gestionNomencladores: 'Gestión nomencladores',
@@ -7,6 +8,49 @@ export const STRINGS = {
   gestionBanco: 'Gestión Banco',
   gestionAlmacen: 'Gestión Almacén',
   gestionPeaje: 'Acciones de peaje',
+
+  nomenclator: 'Nomenclador',
+  entity: 'entidad',
+  store: 'almacén',
+  components: 'componentes',
+  reports: 'reportes',
+  report: 'reporte',
+
+  //Textos golabales genericos formulario
+  name: 'Nombre',
+  code: 'Código',
+  date: 'Fecha',
+  phone: 'Teléfono',
+  adress: 'Dirección',
+  email: 'Correo',
+  acronym: 'Siglas',
+
+  /* NOMENCLATOR NAME */
+  province: 'Provincia',
+  municipality: 'Municipio',
+  body: 'Organismo',
+  bank: 'Banco',
+  account: 'Cuenta',
+  currency: 'Moneda',
+  vehicle: 'Vehículo',
+  exempt: 'Exento',
+  voucher: 'Comprobante',
+  method_of_payment: 'Forma de pago',
+  type_of_account: 'Tipo de cuenta',
+
+  errorFetch: 'Error cargando datos:',
+
+  successDelete: 'Item eliminado con éxito',
+  errorDelete: 'Error al eliminar item',
+
+  successAdd: 'Item añadido con éxito',
+  errorAdd: 'Error al añadir item',
+
+  successEdit: 'Item actualizado con éxito',
+  errorEdit: 'Error al actualizar item',
+
+  exportSuccess: 'Exportación exitosa',
+  exportError: 'Error de exportación',
 
   //manage
   gestionNomencladoresLowercase: 'gestion_nomencladores',
@@ -18,69 +62,15 @@ export const STRINGS = {
   add: 'Adicionar',
   edit: 'Modificar',
   delete: 'Eliminar',
-  details: 'Detalle',
+  details: 'Detalles',
   export: 'Exportar',
   update: 'Actualizar',
 
   //ERRORES
   errorMessage: 'Ha ocurrido un error, por favor intenta de nuevo.',
 
-  //PROVINCIA
-  addProvincia: 'Adicionar provincia',
-  editProvincia: 'Modificar provincia',
-  deleteProvincia: 'Eliminar provincia',
-
-  //MUNICIPIO
-  addMunicipio: 'Adicionar municipio',
-  editMunicipio: 'Modificar municipio',
-  deleteMunicipio: 'Eliminar municipio',
-
-  //ORGANISMO
-  addOrganismo: 'Adicionar organismo',
-  editOrganismo: 'Modificar organismo',
-  deleteOrganismo: 'Eliminar organismo',
-
-  //Banco
-  addBanco: 'Adicionar banco',
-  editBanco: 'Modificar banco',
-  deleteBanco: 'Eliminar banco',
-
-  //Moneda
-  addMoneda: 'Adicionar moneda',
-  editMoneda: 'Modificar moneda',
-  deleteMoneda: 'Eliminar moneda',
-
-  //Vehiculo
-  addVehiculo: 'Adicionar vehículo',
-  editVehiculo: 'Modificar vehículo',
-  deleteVehiculo: 'Eliminar vehículo',
-
-  //Vehiculo
-  addExento: 'Adicionar exento',
-  editExento: 'Modificar exento',
-  deleteExento: 'Eliminar exento',
-
-  //Comprobante
-  addComprobante: 'Adicionar comprobante',
-  editComprobante: 'Modificar comprobante',
-  deleteComprobante: 'Eliminar comprobante',
-
-  //Forma de Pago
-  addFormaDePago: 'Adicionar Forma de pago',
-  editFormaDePago: 'Modificar Forma de pago',
-  deleteFormaDePago: 'Eliminar Forma de pago',
-
   //Preguntas de Eliminar
-  PreguntaDeleteProvincia: '¿Está seguro de eliminar la provincia: ',
-  PreguntaDeleteMunicipio: '¿Está seguro de eliminar el municipio ',
-  PreguntaDeleteOrganismo: '¿Está seguro de eliminar el organismo: ',
-  PreguntaDeleteBanco: '¿Está seguro de eliminar el banco: ',
-  PreguntaDeleteMoneda: '¿Está seguro de eliminar la moneda: ',
-  PreguntaDeleteVehículo: '¿Está seguro de eliminar el vehículo: ',
-  PreguntaDeleteExento: '¿Está seguro de eliminar el exento: ',
-
   PreguntaDeleteMasculino: '¿Está seguro de eliminar el ',
-
   PreguntaDeleteFemenino: '¿Está seguro de eliminar la ',
 
   category: 'Categoría',
@@ -93,55 +83,20 @@ export const STRINGS = {
   codigo: 'Código',
   recepcion: 'Recepción',
   nombre_abreviado: 'Sigla',
-  siglasBD: 'siglas',
   codigoBD: 'codigo',
 
   //*********** Campos Nomenclador **************
 
-  //Campos Provincia
-  nombre_prov: 'Nombre provincia',
-  codigo_prov: 'Código provincia',
-
-  //Campos Municipio
-  nombre_mun: 'Nombre municipio',
-  codigo_mun: 'Código municipio',
-
-  //Campos Organismo
-  nombre_org: 'Nombre organismo',
-  codigo_org: 'Código organismo',
-
-  //Campos Banco
-  nombre_banco: 'Nombre banco',
-  codigo_banco: 'Código banco',
-  detalles_banco: 'Detalles',
-
   //Campos Moneda
-  nombre_moneda: 'Nombre moneda',
-  siglas_moneda: 'Siglas',
-  nomenclador_moneda: 'Nomenclador',
-  tasaCambio_moneda: 'Tasa de cambio',
-  idCondor_moneda: 'ID Condor',
-  mBase_moneda: 'Moneda base',
-  detalle_moneda: 'Detalles moneda',
+  tasa_de_Cambio: 'Tasa de cambio',
+  id_condor: 'ID Condor',
+  moneda_base: 'Moneda base',
 
   //Campos Vehiculo
-  nombre_vehiculo: 'Nombre del vehículo',
-  codigo_vehiculo: 'Código',
-  tasa_de_peajes_vehiculo: 'Tasa de peajes',
-  nomenclador_vehiculo: 'Nomenclador',
+  tasa_de_peajes: 'Tasa de peajes',
 
-  //Campos Exento
-  nombre_exento: 'Nombre del exento',
-  codigo_exento: 'Código',
-  nomenclador_exento: 'Nomenclador',
-  detalles_exento: 'Detalles',
-
-  //Campos Exento
-  nombre_comprobante: 'Nombre del comprobante',
-  codigo_comprobante: 'Código',
-  nomenclador_comprobante: 'Nomenclador',
-  valor_comprobante: 'Valor',
-  moneda_comprobante: 'Moneda',
+  //Campos Comprobante
+  valor: 'Valor',
 
   //Campos Formas de Pago
   descripcion_formas_pago: 'Descripción',
@@ -163,16 +118,17 @@ export const STRINGS = {
   direccion_estacion: 'Dirección',
   telefonos_estacion: 'Teléfonos',
   NIT_estacion: 'NIT',
+  nit: 'Nit',
   banco_cuenta: 'Banco',
   titular_de_la_cuenta: 'Titular cuenta',
   cuenta: 'Número de cuenta',
   registro_comercial: 'Registro Comercial',
   registro_mercantil: 'Registro mercantil',
   detalles_estacion: 'Detalles',
-  bancoCUC: 'Banco CUC:',
-  bancoCUP: 'Banco CUP:',
-  CUC: 'CUC:',
-  CUP: 'CUP:',
+  cuentaCUC: 'Cuenta CUC',
+  cuentaCUP: 'Cuenta CUP',
+  CUC: 'CUC',
+  CUP: 'CUP',
   bancoCuenta: 'Banco',
   parametros: 'Parámetros:',
   abonados_locales_estacion: 'Abonados Locales',
@@ -359,7 +315,7 @@ export const STRINGS = {
   no_data_available: 'No hay datos disponibles',
   number_of_page: 'Número de páginas',
   fila_no_selected: 'No hay fila seleccionada',
-  errorUpdate: 'Operación fallida',
+  errorUpdate: 'Error: No se ha podido actualizar la tabla',
   errorSelected: 'Problemas en la selección',
 
   //URL APIS NOMENCLADOR
@@ -395,7 +351,7 @@ export const STRINGS = {
   nickName:
     'Este campo solo asepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
   ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
-  email: 'Ingrese un correo válido: Ejemplo: ruky_99@@gmail.com',
+  email_alert: 'Ingrese un correo válido: Ejemplo: ruky_99@@gmail.com',
 
   //Alertas Success Provincias
   provinciaAddSuccess: 'Provincia añadida correctamente.',
@@ -522,6 +478,7 @@ export const STRINGS = {
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
+  cardBankrepeat: 'El número de tarjeta ya existe en la base de datos para otro usuario.',
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
   loadingTablesError: 'Problemas al intentar cargar las tablas. Por favor, intenta nuevamente.',
   updateTable: 'Tabla actualizada correctemente!',
@@ -537,6 +494,9 @@ export const STRINGS = {
   TableAlign: 'left',
   // Agrega más textos según sea necesario
 
+  //Tiempo de refresco de paginas para load Tables
+  timeLoadTables: 20000,
+
   //Opciones Lógicas
   yes: 'SI',
   no: 'NO',
@@ -544,4 +504,7 @@ export const STRINGS = {
   OpacityDialog: 'blur(4px) saturate(150%)',
   /* OpacityDialog: 'grayscale(100%)', */
   /* OpacityDialog: 'saturate(80%)', */
+
+  year_project: '2026 - ',
+  iconSm: '20px',
 }

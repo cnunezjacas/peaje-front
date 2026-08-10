@@ -1,48 +1,87 @@
+// utils/validators/searchIdAccount.js
 import { STRINGS } from 'utils/string.js'
-import api from 'src/axios.js'
+import { useApi } from 'src/composables/useApi'
 
-/* Función para verificar si el código ya existe */
-const searchIdAccount = async (numero, Tipo) => {
-  var aux = false,
-    id = '',
-    idTipoCuenta = ''
-
-  try {
-    const responseCuenta = await api.get(`${STRINGS.urlApiCuenta}?/numero=${numero}`)
-
-    const responseTipoCuenta = await api.get(STRINGS.urlApiTipoCuenta)
-    // Asumiendo que tu API devuelve un array de resultados
-    responseCuenta.data.forEach((element) => {
-      if (element.numero === numero) {
-        id = element._id
-        idTipoCuenta = element.tipo
-      }
-    })
-    if (idTipoCuenta !== '') {
-      responseTipoCuenta.data.forEach((element) => {
-        if (element._id === idTipoCuenta && element.codigo === Tipo) {
-          aux = true
-        }
-      })
-    } else {
-      //id == ''
-      return { id: id, tipo: aux, msj: 'La cuenta no está registrada en el sistema.' }
-    }
-
-    return aux
-      ? { id: id, tipo: aux, msj: '' } // id === '21asd'
-      : {
-          id: id, //id === '21asd'
-          tipo: aux,
-          msj: 'El número de cuenta no está registrado en el sistema a una cuenta ' + Tipo + '.',
-        }
-  } catch (error) {
-    console.error('No existe tal cuenta de banco:', error)
-    // Si hay un error en la consulta, asumimos que no hay duplicado para no bloquear
+/**
+ * Verifica si un número de cuenta existe y si está asociado a un tipo específico
+ * @param {string} accountNumber - Número de cuenta a validar
+ * @param {string} accountTypeCode - Código del tipo de cuenta (ej: 'CORRIENTE')
+ * @returns {Promise<{id: string|null, isValidType: boolean, message: string}>}
+ */
+export const searchIdAccount = async (accountNumber, accountTypeCode) => {
+  // Validación temprana
+  if (!accountNumber || !accountTypeCode) {
     return {
       id: null,
-      tipo: aux,
-      msj: 'No existe tal cuenta de banco',
+      isValidType: false,
+      message: 'Parámetros incompletos para validar la cuenta.',
+    }
+  }
+
+  try {
+    // 🔥 1. Construir URL con query params CORRECTAMENTE (sin barra extra)
+    const urlCuentas = `${STRINGS.urlApiCuenta}?numero=${encodeURIComponent(accountNumber)}`
+
+    const { fetchData } = useApi()
+    const { data: cuentas, error: errorCuentas } = await fetchData(urlCuentas)
+
+    // Si hay error o no hay resultados
+    if (errorCuentas || !cuentas?.length) {
+      return {
+        id: null,
+        isValidType: false,
+        message: 'La cuenta no está registrada en el sistema.',
+      }
+    }
+
+    // 🔥 2. Buscar EXACTAMENTE la cuenta con ese número (no asumir [0])
+    const cuentaEncontrada = cuentas.find(
+      (c) => String(c.numero).trim() === String(accountNumber).trim(),
+    )
+
+    if (!cuentaEncontrada) {
+      return {
+        id: null,
+        isValidType: false,
+        message: 'La cuenta no está registrada en el sistema.',
+      }
+    }
+
+    const { _id: cuentaId, tipo: tipoCuentaId } = cuentaEncontrada
+
+    // 🔥 3. Consultar el tipo de cuenta específico
+    const { data: tipoCuenta, error: errorTipo } = await fetchData(
+      `${STRINGS.urlApiTipoCuenta}/${tipoCuentaId}`,
+    )
+
+    if (errorTipo || !tipoCuenta) {
+      return {
+        id: cuentaId,
+        isValidType: false,
+        message: 'No se pudo validar el tipo de cuenta.',
+      }
+    }
+
+    // 🔥 4. Validar coincidencia exacta de código
+    const isValidType = String(tipoCuenta.codigo).trim() === String(accountTypeCode).trim()
+
+    return {
+      id: cuentaId,
+      isValidType,
+      message: isValidType ? '' : `El número de cuenta no está registrado como ${accountTypeCode}.`,
+    }
+  } catch (error) {
+    console.error('❌ Error en searchIdAccount:', {
+      accountNumber,
+      accountTypeCode,
+      error: error.message,
+      status: error.response?.status,
+    })
+
+    return {
+      id: null,
+      isValidType: false,
+      message: 'Error al validar la cuenta. Intente nuevamente.',
     }
   }
 }

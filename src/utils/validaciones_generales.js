@@ -56,7 +56,7 @@ const rulesAddress = [
 
 const rulesEmail = [
   (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.email.test(val) || STRINGS.email,
+  (val) => expRegulares.email.test(val) || STRINGS.email_alert,
 ]
 
 const rulesNumberAndHyphen = [

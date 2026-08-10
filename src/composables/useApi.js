@@ -31,6 +31,16 @@ export function useApi() {
     }
   }
 
+  const patchData = async (endpoint, payload) => {
+    try {
+      const response = await api.patch(endpoint, payload)
+      return { data: response.data, error: null }
+    } catch (error) {
+      console.error('Error updating data:', error)
+      return { data: null, error }
+    }
+  }
+
   const deleteData = async (endpoint) => {
     try {
       const response = await api.delete(endpoint)
@@ -41,5 +51,5 @@ export function useApi() {
     }
   }
 
-  return { fetchData, postData, putData, deleteData }
+  return { fetchData, postData, putData, patchData, deleteData }
 }

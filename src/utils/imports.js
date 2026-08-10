@@ -1,7 +1,6 @@
 //Función para realizar el Capitalize del nombre del organismo
 
 import { STRINGS } from 'utils/string'
-//import { notify_error } from 'utils/notify/notify_error.js'
 import api from 'src/axios'
 
 function capitalizeWords(str, capitalizeFirstWord = false) {
@@ -27,86 +26,19 @@ function capitalizeWords(str, capitalizeFirstWord = false) {
   return words.join(' ')
 }
 //Permite saber la URL donde te encuentras
+
+// ✅ DESPUÉS:
 const searchWebPath = (path) => {
-  var newPath = path.split('_')
-  return newPath
+  // 1. Eliminar barra inicial si existe
+  // 2. Eliminar prefijo 'gest_' si existe
+  // 3. Split por '_' para obtener partes
+  const cleanPath = path.replace(/^\/(gest_)?/, '')
+  return cleanPath.split('_').filter(Boolean) // filter(Boolean) elimina strings vacíos
 }
 
 const getNumberForPage = () => {
   let aux = [10, 15, 20, 50, 0]
   return aux
-}
-
-const DataSelection = (row, ruta, arraySelected) => {
-  var nuevaRuta = searchWebPath(ruta)
-  if (nuevaRuta.includes(STRINGS.provinciaLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.municipioLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['provincia'] = row['Texto_provincia']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.organismoLowercase) && row) {
-    arraySelected.value['nombre'] = row['siglas']
-    arraySelected.value['name'] = row['nombre']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.bancoLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['detalle'] = row['detalles']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.monedasLowercase) && row) {
-    arraySelected.value['siglas'] = row['siglas']
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['tasa'] = row['tasa']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['moneda'] = row['moneda']
-    arraySelected.value['condor'] = row['condor']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.vehiculosLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['tasa'] = row['tasa']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.exentoLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['detalles'] = row['detalles']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.comprobanteLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['valor'] = row['valor']
-    arraySelected.value['moneda'] = row['moneda']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.formaDePagoLowercaseURL) && row) {
-    arraySelected.value['nombre'] = row['descripcion']
-    arraySelected.value['nomenclador'] = row['nomenclador']
-    arraySelected.value['detalles'] = row['detalles']
-    arraySelected.value['_id'] = row['_id']
-  } else if (nuevaRuta.includes(STRINGS.tipoCuentaLowercaseURL) && row) {
-    arraySelected.value['nombre'] = row['codigo']
-    arraySelected.value['codigo'] = row['nombre']
-    arraySelected.value['_id'] = row['_id']
-  }
-  //ENTIDAD
-  else if (nuevaRuta.includes(STRINGS.estacionesLowercase) && row) {
-    arraySelected.value['nombre'] = row['nombre']
-    arraySelected.value['codigo'] = row['codigo']
-    arraySelected.value['direccion'] = row['direccion']
-    arraySelected.value['provincia'] = row['provincia']
-    arraySelected.value['municipio'] = row['municipio']
-    arraySelected.value['_id'] = row['_id']
-  } else {
-    //notify_error(STRINGS.fila_no_selected)
-    return null
-  }
-
-  return arraySelected.value
 }
 
 //Función para traer id de tabla monedas
@@ -142,10 +74,12 @@ const getGestFemale = () => {
     STRINGS.provinciaLowercase.toUpperCase(),
     STRINGS.monedasLowercase.toUpperCase(),
     STRINGS.formaDePagoLowercase.toUpperCase(),
+    STRINGS.estacionesLowercase.toUpperCase(),
   ]
   return gestFemale
 }
 
+/* Carga los datos de la tabla moneda */
 const loadCoins = async () => {
   const response = await api.get(STRINGS.urlApiMoneda)
   var optionsMoneda = response.data.map((element) => element['siglas'])
@@ -154,6 +88,34 @@ const loadCoins = async () => {
     console.error('Problemas de carga de datos..')
   }
   return optionsMoneda !== null ? optionsMoneda : (optionsMoneda = ['Empty'])
+}
+
+/* Carga los datos de la tabla banco */
+const loadbank = async () => {
+  const response = await api.get(STRINGS.urlApiBanco)
+  var result = response.data.map((element) => ({
+    id: element['_id'],
+    codigo: element['codigo'],
+  }))
+
+  if (result.value === null) {
+    console.error('Problemas de carga de datos..')
+  }
+  return result !== null ? result : null
+}
+
+/* Carga los datos de la tabla tipo cuenta */
+const loadAccountType = async () => {
+  const response = await api.get(STRINGS.urlApiTipoCuenta)
+  var result = response.data.map((element) => ({
+    id: element['_id'],
+    codigo: element['codigo'],
+  }))
+
+  if (result.value === null) {
+    console.error('Problemas de carga de datos..')
+  }
+  return result !== null ? result : null
 }
 
 const isCamelCase = (str) => {
@@ -195,9 +157,10 @@ const cardOfBankToNumber = (card) => {
 
 export default {
   capitalizeWords,
-  DataSelection,
   getIdCoin,
   getCoin,
+  loadbank,
+  loadAccountType,
   searchWebPath,
   getGestFemale,
   loadCoins,

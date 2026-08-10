@@ -1,5 +1,3 @@
-import { STRINGS } from 'utils/string.js'
-
 //Dialogs Add
 import DialogoAddEstacion from 'EntityAdd/dialog_add_estacion.vue'
 import DialogoAddAreaTrabajo from 'EntityAdd/dialog_add_area_trabajo.vue'
@@ -12,18 +10,18 @@ import DialogoAddTramitador from 'EntityAdd/dialog_add_tramitador.vue'
 
 //Dialogs Edit
 import DialogoEditEstacion from 'EntityEdit/dialog_edit_estacion.vue'
+import DialogoEditCuenta from 'EntityEdit/dialog_edit_cuenta.vue'
+
+import DialogoDetailsEstacion from 'EntityDetails/details_estaciones.vue'
 //Dialogs Delete
-//import DialogDeleteGeneric from 'NomenclatorDelete/dialog_delete_generic.vue'
+//import DialogDeleteGeneric from 'GenericDelete/dialog_delete_generic.vue'
 
 //Tables
-import TableEstacion from 'EntityTables/table_estacion.vue'
+import Table_Estacion from 'EntityTables/table_estacion.vue'
 import TableADT from 'EntityTables/table_ADT.vue'
-import TableCuenta from 'EntityTables/table_cuenta.vue'
-
-import notify_error from 'utils/notify/notify_error.js'
+import Table_Cuenta from 'EntityTables/table_cuenta.vue'
 
 export {
-  STRINGS,
   DialogoAddEstacion,
   DialogoAddAreaTrabajo,
   DialogoAddCuenta,
@@ -33,8 +31,9 @@ export {
   DialogoAddCliente,
   DialogoAddTramitador,
   DialogoEditEstacion,
-  TableEstacion,
+  DialogoEditCuenta,
+  DialogoDetailsEstacion,
+  Table_Estacion,
   TableADT,
-  TableCuenta,
-  notify_error,
+  Table_Cuenta,
 }
