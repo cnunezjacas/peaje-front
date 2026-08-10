@@ -20,204 +20,204 @@ const routes = [
       },
       //nomenclator
       {
-        path: '/gest_' + STRINGS.provinciaLowercase,
+        path: STRINGS.provinciaLowercase,
         meta: {
           breadcrumb: STRINGS.name_provincia,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.municipioLowercase,
+        path: STRINGS.municipioLowercase,
         meta: {
           breadcrumb: STRINGS.name_municipio,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.organismoLowercase,
+        path: STRINGS.organismoLowercase,
         meta: {
           breadcrumb: STRINGS.organismoLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.bancoLowercase,
+        path: STRINGS.bancoLowercase,
         meta: {
           breadcrumb: STRINGS.bancoLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.monedasLowercase,
+        path: STRINGS.monedasLowercase,
         meta: {
           breadcrumb: STRINGS.monedasLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.vehiculosLowercase,
+        path: STRINGS.vehiculosLowercase,
         meta: {
           breadcrumb: STRINGS.vehiculosLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.exentoLowercase,
+        path: STRINGS.exentoLowercase,
         meta: {
           breadcrumb: STRINGS.exentoLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.comprobanteLowercase,
+        path: STRINGS.comprobanteLowercase,
         meta: {
           breadcrumb: STRINGS.comprobanteLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.formaDePagoLowercaseURL,
+        path: STRINGS.formaDePagoLowercaseURL,
         meta: {
           breadcrumb: imports.JoinCamelCase(STRINGS.formaDePagoLowercaseURL),
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.tipoCuentaLowercaseURL,
+        path: STRINGS.tipoCuentaLowercaseURL,
         meta: {
           breadcrumb: imports.JoinCamelCase(STRINGS.tipoCuentaLowercaseURL),
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsNomenclator/view/content_page.vue'),
       },
       //Entity
       {
-        path: '/gest_' + STRINGS.cuentaLowercase,
+        path: STRINGS.cuentaLowercase,
         meta: {
           breadcrumb: STRINGS.cuentaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.estacionesLowercase,
+        path: STRINGS.estacionesLowercase,
         meta: {
           breadcrumb: STRINGS.estacionesLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.areasDeTrabajoLowercase,
+        path: STRINGS.areasDeTrabajoLowercase,
         meta: {
           breadcrumb: imports.JoinCamelCase(STRINGS.areasDeTrabajoLowercase),
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.puntosDeVentasLowercase,
+        path: STRINGS.puntosDeVentasLowercase,
         meta: {
           breadcrumb: imports.JoinCamelCase(STRINGS.puntosDeVentasLowercase),
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.terminalLowercase,
+        path: STRINGS.terminalLowercase,
         meta: {
           breadcrumb: STRINGS.terminalLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.operadoresLowercase,
+        path: STRINGS.operadoresLowercase,
         meta: {
           breadcrumb: STRINGS.operadoresLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.clientesLowercase,
+        path: STRINGS.clientesLowercase,
         meta: {
           breadcrumb: STRINGS.clientesLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.tramitadorLowercase,
+        path: STRINGS.tramitadorLowercase,
         meta: {
           breadcrumb: STRINGS.tramitadorLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsEntity/view/content_page.vue'),
       }, //Store
       {
-        path: '/gest_' + STRINGS.tarjeta_blancaLowercase,
+        path: STRINGS.tarjeta_blancaLowercase,
         meta: {
           breadcrumb: STRINGS.tarjeta_blancaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.proveedorLowercase,
+        path: STRINGS.proveedorLowercase,
         meta: {
           breadcrumb: STRINGS.proveedorLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.tarjeta_producidaLowercase,
+        path: STRINGS.tarjeta_producidaLowercase,
         meta: {
           breadcrumb: STRINGS.tarjeta_producidaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.recepcion_de_tarjeta_blancaLowercase,
+        path: STRINGS.recepcion_de_tarjeta_blancaLowercase,
         meta: {
           breadcrumb: STRINGS.recepcion_de_tarjeta_blancaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.recepcion_de_tarjeta_producidaLowercase,
+        path: STRINGS.recepcion_de_tarjeta_producidaLowercase,
         meta: {
           breadcrumb: STRINGS.recepcion_de_tarjeta_producidaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/gest_' + STRINGS.salida_de_tarjeta_producidaLowercase,
+        path: STRINGS.salida_de_tarjeta_producidaLowercase,
         meta: {
           breadcrumb: STRINGS.salida_de_tarjeta_producidaLowercase,
           icon: 'post_add',
         },
-        component: () => import('viewsManage/gest_global.vue'),
+        component: () => import('viewsStore/view/content_page.vue'),
       },
       {
-        path: '/pageAyuda',
+        path: '/help',
         component: () => import('pages/pageAyuda.vue'),
       },
       {
-        path: '/pageConfiguracion',
+        path: '/config',
         component: () => import('pages/pageConfiguracion.vue'),
       },
     ],
