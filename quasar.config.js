@@ -27,7 +27,8 @@ export default defineConfig((/* ctx */) => {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v7',
-      // 'fontawesome-v6',
+      //'fontawesome-v6',
+      'bootstrap-icons',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -39,58 +40,48 @@ export default defineConfig((/* ctx */) => {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
+      sourceMap: true,
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
       },
       alias: {
         layouts: fileURLToPath(new URL('./src/layouts', import.meta.url)),
+        composables: fileURLToPath(new URL('./src/composables', import.meta.url)),
         utils: fileURLToPath(new URL('./src/utils', import.meta.url)),
         views: fileURLToPath(new URL('./src/pages', import.meta.url)),
         viewsManage: fileURLToPath(new URL('./src/pages/manage/', import.meta.url)),
         TableManage: fileURLToPath(new URL('./src/pages/manage/table_generic', import.meta.url)),
-        viewsUtilsNomenclator: fileURLToPath(
-          new URL('./src/pages/manage/manage_nomenclator', import.meta.url),
-        ),
-        viewsUtilsEntity: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity', import.meta.url),
-        ),
+        viewsNomenclator: fileURLToPath(new URL('./src/pages/manage/nomenclator', import.meta.url)),
+        viewsEntity: fileURLToPath(new URL('./src/pages/manage/entity', import.meta.url)),
+        viewsStore: fileURLToPath(new URL('./src/pages/manage/store', import.meta.url)),
         NomenclatorTables: fileURLToPath(
-          new URL('./src/pages/manage/manage_nomenclator/tables', import.meta.url),
+          new URL('./src/pages/manage/nomenclator/tables', import.meta.url),
         ),
         NomenclatorAdd: fileURLToPath(
-          new URL('./src/pages/manage/manage_nomenclator/dialogs_insert', import.meta.url),
+          new URL('./src/pages/manage/nomenclator/dialogs_insert', import.meta.url),
         ),
         NomenclatorEdit: fileURLToPath(
-          new URL('./src/pages/manage/manage_nomenclator/dialogs_edit', import.meta.url),
+          new URL('./src/pages/manage/nomenclator/dialogs_edit', import.meta.url),
         ),
-        NomenclatorDelete: fileURLToPath(
-          new URL('./src/pages/manage/manage_nomenclator/dialogs_delete', import.meta.url),
+        GenericDelete: fileURLToPath(
+          new URL('./src/components/shared/dialogs_delete', import.meta.url),
         ),
         EntityAdd: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity/dialogs_insert', import.meta.url),
+          new URL('./src/pages/manage/entity/dialogs_insert', import.meta.url),
         ),
         EntityEdit: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity/dialogs_edit', import.meta.url),
+          new URL('./src/pages/manage/entity/dialogs_edit', import.meta.url),
         ),
-        EntityDelete: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity/dialogs_delete', import.meta.url),
+        EntityDetails: fileURLToPath(
+          new URL('./src/pages/manage/entity/dialogs_details', import.meta.url),
         ),
-        EntityTables: fileURLToPath(
-          new URL('./src/pages/manage/manage_entity/tables', import.meta.url),
-        ),
+        EntityTables: fileURLToPath(new URL('./src/pages/manage/entity/tables', import.meta.url)),
         StoreAdd: fileURLToPath(
-          new URL('./src/pages/manage/manage_store/dialogs_insert', import.meta.url),
+          new URL('./src/pages/manage/store/dialogs_insert', import.meta.url),
         ),
-        StoreEdit: fileURLToPath(
-          new URL('./src/pages/manage/manage_store/dialogs_edit', import.meta.url),
-        ),
-        StoreDelete: fileURLToPath(
-          new URL('./src/pages/manage/manage_store/dialogs_delete', import.meta.url),
-        ),
-        StoreTables: fileURLToPath(
-          new URL('./src/pages/manage/manage_store/tables', import.meta.url),
-        ),
+        StoreEdit: fileURLToPath(new URL('./src/pages/manage/store/dialogs_edit', import.meta.url)),
+        StoreTables: fileURLToPath(new URL('./src/pages/manage/store/tables', import.meta.url)),
       },
 
       vite: {
