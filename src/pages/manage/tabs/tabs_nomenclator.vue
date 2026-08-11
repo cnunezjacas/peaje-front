@@ -2,34 +2,71 @@
   <div class="q-pb-sm">
     <q-toolbar class="bg-green-10 text-white shadow-2">
       <q-tabs v-model="tab" shrink bordered>
-        <q-tab name="tab1" icon="note_add" class="text-xs text-bold" @click="onItemClick(STRINGS.add)">{{ STRINGS.add
-          }}</q-tab>
+        <q-tab
+          name="tab1"
+          icon="note_add"
+          class="text-xs text-bold"
+          @click="onItemClick(STRINGS.add)"
+          >{{ STRINGS.add }}</q-tab
+        >
         <q-tab name="tab2" icon="edit" :class="disabledEdit" @click="onItemClick(STRINGS.edit)">{{
           STRINGS.edit
-          }}</q-tab>
-        <q-tab name="tab3" icon="delete" :class="disabledDelete" @click="onItemClick(STRINGS.delete)">{{ STRINGS.delete
-          }}</q-tab>
-        <q-tab name="tab6" icon="picture_as_pdf" class="text-xs text-bold" @click="onItemClick(STRINGS.export)">{{
-          STRINGS.export }}</q-tab>
-        <q-tab name="tab7" icon="receipt_long" :class="disabledDetails" @click="onItemClick(STRINGS.details)">{{
-          STRINGS.details }}</q-tab>
+        }}</q-tab>
+        <q-tab
+          name="tab3"
+          icon="delete"
+          :class="disabledDelete"
+          @click="onItemClick(STRINGS.delete)"
+          >{{ STRINGS.delete }}</q-tab
+        >
+        <q-tab
+          name="tab6"
+          icon="picture_as_pdf"
+          class="text-xs text-bold"
+          @click="onItemClick(STRINGS.export)"
+          >{{ STRINGS.export }}</q-tab
+        >
+        <q-tab
+          name="tab7"
+          icon="receipt_long"
+          :class="disabledDetails"
+          @click="onItemClick(STRINGS.details)"
+          >{{ STRINGS.details }}</q-tab
+        >
 
-        <q-tab name="tab8" icon="update" :class="disabledUpdate" @click="onItemClick(STRINGS.update)">{{ STRINGS.update
-          }}</q-tab>
+        <q-tab
+          name="tab8"
+          icon="update"
+          :class="disabledUpdate"
+          @click="onItemClick(STRINGS.update)"
+          >{{ STRINGS.update }}</q-tab
+        >
       </q-tabs>
 
       <q-space></q-space>
 
       <!-- Input de busqueda -->
       <div class="q-mx-auto">
-        <q-input color="white" input-class="text-white" class="search-input-custom" v-model="TextSearch"
-          label-color="white" :label="STRINGS.search" style="max-width: 200px">
+        <q-input
+          color="white"
+          input-class="text-white"
+          class="search-input-custom"
+          v-model="TextSearch"
+          label-color="white"
+          :label="STRINGS.search"
+          style="max-width: 200px"
+        >
           <template v-slot:prepend>
             <q-icon name="search" color="white" />
           </template>
           <template v-slot:append>
-            <q-icon v-if="TextSearch" name="cleaning_services" class="cursor-pointer" @click="resetSearch"
-              color="white" />
+            <q-icon
+              v-if="TextSearch"
+              name="cleaning_services"
+              class="cursor-pointer"
+              @click="resetSearch"
+              color="white"
+            />
           </template>
         </q-input>
       </div>
@@ -41,27 +78,30 @@
   <!-- ** Conetenido TABS Nomenclator ** -->
   <!-- =================================================== -->
 
-
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Provincia ** -->
   <!-- =================================================== -->
 
   <div>
     <!-- Dialogo Add Provincia-->
-    <DialogoAddProvincia ref="dialogoAddProvincia" @ActualizarTabla="tableUpdater" />
+    <AddProvincia ref="dialogoAddProvincia" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Provincia -->
-    <DialogEditProvincia ref="dialogoEditProvincia" @ActualizarTabla="tableUpdater" />
+    <UpdateProvincia ref="dialogoEditProvincia" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Delete Generico-->
     <DialogDeleteGeneric ref="dialogoDelete" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Provincias -->
-    <Table_Provincia :style="focusProvincia" ref="tableProvincia" @onSelected="RowSelection" @onBlockTabs="BlockTabs"
-      :TextSearch="TextSearch">
-    </Table_Provincia>
+    <TableProvincia
+      :style="focusProvincia"
+      ref="tableProvincia"
+      @onSelected="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :TextSearch="TextSearch"
+    >
+    </TableProvincia>
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Municipio ** -->
@@ -75,11 +115,14 @@
     <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Municipio -->
-    <Table_Municipio ref="tableMunicipio" @onSelected="RowSelection" @onBlockTabs="BlockTabs" :style="focusMunicipio"
-      :TextSearch="TextSearch" />
-
+    <Table_Municipio
+      ref="tableMunicipio"
+      @onSelected="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusMunicipio"
+      :TextSearch="TextSearch"
+    />
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Organismo ** -->
@@ -93,9 +136,13 @@
     <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Organismo -->
-    <Table_Organismo ref="tableOrganismo" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusOrganismo"
-      :TextSearch="TextSearch" />
-
+    <Table_Organismo
+      ref="tableOrganismo"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusOrganismo"
+      :TextSearch="TextSearch"
+    />
   </div>
 
   <!-- =================================================== -->
@@ -110,9 +157,13 @@
     <DialogEditBanco ref="dialogEditBanco" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Banco -->
-    <Table_Banco ref="tableBanco" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusBanco"
-      :TextSearch="TextSearch" />
-
+    <Table_Banco
+      ref="tableBanco"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusBanco"
+      :TextSearch="TextSearch"
+    />
   </div>
 
   <!-- =================================================== -->
@@ -127,11 +178,14 @@
     <DialogEditTipoCuenta ref="dialogoEditTipoCuenta" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Tipo cuenta  -->
-    <Table_Tipo_Cuenta ref="tableTipoCuenta" @seleccionado="RowSelection" @onBlockTabs="BlockTabs"
-      :style="focusTipoCuenta" :TextSearch="TextSearch" />
-
+    <Table_Tipo_Cuenta
+      ref="tableTipoCuenta"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusTipoCuenta"
+      :TextSearch="TextSearch"
+    />
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Moneda ** -->
@@ -145,11 +199,14 @@
     <DialogEditMoneda ref="dialogoEditMoneda" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Moneda  -->
-    <Table_Moneda ref="tableMoneda" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusMoneda"
-      :TextSearch="TextSearch" />
-
+    <Table_Moneda
+      ref="tableMoneda"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusMoneda"
+      :TextSearch="TextSearch"
+    />
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Vehiculo ** -->
@@ -163,11 +220,14 @@
     <DialogEditVehiculo ref="dialogoEditVehiculo" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Vehiculo  -->
-    <Table_Vehiculo ref="tableVehiculo" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusVehiculo"
-      :TextSearch="TextSearch" />
-
+    <Table_Vehiculo
+      ref="tableVehiculo"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusVehiculo"
+      :TextSearch="TextSearch"
+    />
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Exento ** -->
@@ -181,9 +241,13 @@
     <DialogEditExento ref="dialogoEditExento" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Exento  -->
-    <Table_Exento ref="tableExento" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusExento"
-      :TextSearch="TextSearch" />
-
+    <Table_Exento
+      ref="tableExento"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusExento"
+      :TextSearch="TextSearch"
+    />
   </div>
 
   <!-- =================================================== -->
@@ -198,11 +262,14 @@
     <DialogEditComprobante ref="dialogoEditComprobante" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Comprobante  -->
-    <Table_Comprobante ref="tableComprobante" @seleccionado="RowSelection" @onBlockTabs="BlockTabs"
-      :style="focusComprobante" :TextSearch="TextSearch" />
-
+    <Table_Comprobante
+      ref="tableComprobante"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusComprobante"
+      :TextSearch="TextSearch"
+    />
   </div>
-
 
   <!-- =================================================== -->
   <!-- ** Conetenido Nomenclator - Forma de Pago ** -->
@@ -216,9 +283,13 @@
     <DialogEditFdp ref="dialogoEditFdp" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Forma de Pago  -->
-    <Table_Fdp ref="tableFdp" @seleccionado="RowSelection" @onBlockTabs="BlockTabs" :style="focusFdp"
-      :TextSearch="TextSearch" />
-
+    <Table_Fdp
+      ref="tableFdp"
+      @seleccionado="RowSelection"
+      @onBlockTabs="BlockTabs"
+      :style="focusFdp"
+      :TextSearch="TextSearch"
+    />
   </div>
 
   <!-- ============================================================ -->
@@ -228,12 +299,10 @@
   <!-- En el template, agregar el componente una sola vez -->
   <DialogDetails ref="detailsDialog" v-model="detailsDialogOpen" @close="onDetailsClose" />
 
-
   <!-- =================================================== -->
   <!-- ** Conetenido TABS Nomenclator ** -->
   <!-- =================================================== -->
 </template>
-
 
 <script setup>
 /* =================================================== */
@@ -245,10 +314,37 @@ const route = useRoute()
 import {
   STRINGS,
   /* IMPORTACIONES Nomencladores */
-  DialogoAddProvincia, DialogoAddMunicipio, DialogoAddOrganismo, DialogoAddBanco, DialogoAddTipoCuenta, DialogoAddMoneda, DialogoAddComprobante, DialogoAddVehiculo, DialogoAddExento, DialogoAddFdp,
-  DialogEditProvincia, DialogEditMunicipio, DialogEditOrganismo, DialogEditBanco, DialogEditTipoCuenta, DialogEditMoneda, DialogEditVehiculo, DialogEditExento, DialogEditComprobante, DialogEditFdp,
+  AddProvincia,
+  DialogoAddMunicipio,
+  DialogoAddOrganismo,
+  DialogoAddBanco,
+  DialogoAddTipoCuenta,
+  DialogoAddMoneda,
+  DialogoAddComprobante,
+  DialogoAddVehiculo,
+  DialogoAddExento,
+  DialogoAddFdp,
+  UpdateProvincia,
+  DialogEditMunicipio,
+  DialogEditOrganismo,
+  DialogEditBanco,
+  DialogEditTipoCuenta,
+  DialogEditMoneda,
+  DialogEditVehiculo,
+  DialogEditExento,
+  DialogEditComprobante,
+  DialogEditFdp,
   DialogDeleteGeneric,
-  Table_Provincia, Table_Municipio, Table_Organismo, Table_Banco, Table_Tipo_Cuenta, Table_Moneda, Table_Vehiculo, Table_Exento, Table_Comprobante, Table_Fdp
+  TableProvincia,
+  Table_Municipio,
+  Table_Organismo,
+  Table_Banco,
+  Table_Tipo_Cuenta,
+  Table_Moneda,
+  Table_Vehiculo,
+  Table_Exento,
+  Table_Comprobante,
+  Table_Fdp,
 } from 'src/utils/import_files_nomenclador.js'
 //Importar componente y config
 import DialogDetails from 'src/components/shared/DialogDetails.vue'
@@ -258,17 +354,15 @@ import { useNotify } from 'src/utils/notify/notify.js'
 import { getPath } from 'utils/utils_routs/utils_routs'
 import { useTableExport } from 'src/composables/useTableExport.js'
 
-
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success,/* notify_warning,*/ notify_error } = useNotify()
+const { notify_success, /* notify_warning,*/ notify_error } = useNotify()
 
 const { exportToExcel } = useTableExport()
 
 const tab = ref('')
 const TextSearch = ref('')
-
 
 /* =================================================== */
 /*  ===== FOCUS OF ALL TABLES ===== */
@@ -283,7 +377,6 @@ const focusVehiculo = ref('display: none')
 const focusExento = ref('display: none')
 const focusComprobante = ref('display: none')
 const focusFdp = ref('display: none')
-
 
 /* =================================================== */
 /*  ===== Constantes referencias de los dialogos Provincia ===== */
@@ -375,7 +468,6 @@ const objectSelected = ref({})
 const detailsDialog = ref(null)
 const detailsDialogOpen = ref(false)
 const config = ref({})
-
 
 /* =================================================== */
 /*  ===== OBJETO CONFIG- PARA HACER SHOW SOLO A UNA TABLA SEGUN URL ===== */
@@ -503,7 +595,6 @@ const routeStylesMap = {
   },
 }
 
-
 // Referencias a tus tablas (ajusta según tus refs)
 const tableRefs = {
   [STRINGS.province.toLowerCase()]: tableProvincia,
@@ -511,13 +602,11 @@ const tableRefs = {
   // ... agrega las demás
 }
 
-
 /* =================================================== */
 /*  ===== FUNCION QUE PERMITE SABER SI LA RUTA FUE CAMBIADA
  Y MOSTRAR O OCULAR MEDIENTE EL OBJETO CONFIG LA TABLA EN CUESTION  ===== */
 /* =================================================== */
 const changeRoute = () => {
-
   const path = getPath(route)
 
   const keyEncontrada = Object.keys(routeStylesMap).find((k) => path.includes(k))
@@ -525,17 +614,17 @@ const changeRoute = () => {
   const config = keyEncontrada
     ? routeStylesMap[keyEncontrada]
     : {
-      provincia: false,
-      municipio: false,
-      organismo: false,
-      banco: false,
-      comprobante: false,
-      monedas: false,
-      vehiculos: false,
-      exento: false,
-      fdp: false,
-      tipoCuenta: false,
-    }
+        provincia: false,
+        municipio: false,
+        organismo: false,
+        banco: false,
+        comprobante: false,
+        monedas: false,
+        vehiculos: false,
+        exento: false,
+        fdp: false,
+        tipoCuenta: false,
+      }
 
   focusProvincia.value = config.provincia ? '' : 'display: none'
   focusMunicipio.value = config.municipio ? '' : 'display: none'
@@ -596,15 +685,13 @@ const tableUpdater = (isConfirm) => {
     return result
   }
 
-
-  return false;
+  return false
 }
 
 /* =================================================== */
 /*  ===== Función ENCARGADA DE MOSTRAR UN ERROR REFERENTE A LA TABLA  ===== */
 /* =================================================== */
 const ErrorUpdateTable = () => notify_error(STRINGS.errorUpdate)
-
 
 /* =================================================== */
 /*  ===== Función ENCARGADA DE BLOQUEAR O DESBLOQUEAR
@@ -621,7 +708,6 @@ const BlockTabs = (value) => {
 
 //Función que Captura los datos del elemento seleccionado en las tablas
 const RowSelection = (row) => {
-
   if (!row) {
     objectSelected.value = {}
     BlockTabs(true)
@@ -640,9 +726,7 @@ const RowSelection = (row) => {
     BlockTabs(true)
     notify_error(STRINGS.errorSelected)
   }
-
 }
-
 
 const onItemClick = async (value) => {
   const current_rout = getPath(route)
@@ -677,11 +761,10 @@ const onItemClick = async (value) => {
     /*  EDIT */
     /* ********************************************** */
     case STRINGS.edit: //Caso de Tabs "Edit"
-      if (disabledEdit.value.includes(STRINGS.desabilitar))
-        return
+      if (disabledEdit.value.includes(STRINGS.desabilitar)) return
 
       if (!objectSelected.value) {
-        notify_error("Los datos seleccionados no han sido cargados");
+        notify_error('Los datos seleccionados no han sido cargados')
         return
       }
       if (current_rout.includes(STRINGS.province.toLowerCase())) {
@@ -691,8 +774,7 @@ const onItemClick = async (value) => {
           objectSelected.value.codigo,
           objectSelected.value._id,
         )
-      }
-      else if (current_rout.includes(STRINGS.municipality.toLowerCase())) {
+      } else if (current_rout.includes(STRINGS.municipality.toLowerCase())) {
         /*Se levanta el modal de editar*/
         dialogoEditMunicipio.value.getUpDialogEdit(
           objectSelected.value.nombre,
@@ -702,7 +784,7 @@ const onItemClick = async (value) => {
         )
       } else if (current_rout.includes(STRINGS.organismoLowercase)) {
         /*Se levanta el modal de editar*/
-        console.log(objectSelected.value);
+        console.log(objectSelected.value)
         dialogEditOrganismo.value.getUpDialogEdit(
           objectSelected.value.siglas,
           objectSelected.value.nombre,
@@ -710,7 +792,7 @@ const onItemClick = async (value) => {
         )
       } else if (current_rout.includes(STRINGS.bancoLowercase)) {
         /*Se levanta el modal de editar*/
-        console.log(objectSelected.value);
+        console.log(objectSelected.value)
         dialogEditBanco.value.getUpDialogEdit(
           objectSelected.value.nombre,
           objectSelected.value.siglas,
@@ -784,7 +866,7 @@ const onItemClick = async (value) => {
           getPath(route),
         )
       }
-      break;
+      break
     /* ********************************************** */
     /*  EXPORT */
     /* ********************************************** */
@@ -795,10 +877,7 @@ const onItemClick = async (value) => {
     /*  DETAILS */
     /* =================================== */
     case STRINGS.details:
-
-      if (disabledDetails.value.includes(STRINGS.desabilitar))
-        return
-
+      if (disabledDetails.value.includes(STRINGS.desabilitar)) return
 
       config.value = getDetailsConfig(route.fullPath)
       if (!config.value || !objectSelected.value?.row) {
@@ -807,16 +886,14 @@ const onItemClick = async (value) => {
       }
       // Abrir diálogo genérico con configuración dinámica
       detailsDialog.value?.show(objectSelected.value.row, config.value)
-      break;
+      break
 
     /* =================================== */
     /*  UPDATE */
     /* =================================== */
     case STRINGS.update:
-      if (tableUpdater(true))
-        notify_success(STRINGS.updateTable)
-      else
-        ErrorUpdateTable()
+      if (tableUpdater(true)) notify_success(STRINGS.updateTable)
+      else ErrorUpdateTable()
       break
 
     default:
@@ -828,7 +905,6 @@ const resetSearch = () => {
   TextSearch.value = ''
 }
 
-
 // Función genérica de exportación - VERSIÓN FINAL
 const handleExport = async () => {
   console.log('🔍 [1] handleExport iniciado')
@@ -838,7 +914,7 @@ const handleExport = async () => {
   console.log('🔍 [2] currentRoute:', currentRoute)
 
   // 2. Encontrar key del módulo en tableRefs
-  const moduleKey = Object.keys(tableRefs).find(key => currentRoute.includes(key))
+  const moduleKey = Object.keys(tableRefs).find((key) => currentRoute.includes(key))
   console.log('🔍 [3] moduleKey:', moduleKey)
 
   if (!moduleKey) {
@@ -858,15 +934,17 @@ const handleExport = async () => {
 
   // 4. 🔥 Obtener datos y columnas (con fallback seguro)
   // Prioridad: filteredRows > rows > getRows() > []
-  const data = tableRef.filteredRows
-    || tableRef.rows
-    || (typeof tableRef.getRows === 'function' ? tableRef.getRows() : [])
-    || []
+  const data =
+    tableRef.filteredRows ||
+    tableRef.rows ||
+    (typeof tableRef.getRows === 'function' ? tableRef.getRows() : []) ||
+    []
 
   // Prioridad: columns > getColumns() > []
-  const columns = tableRef.columns
-    || (typeof tableRef.getColumns === 'function' ? tableRef.getColumns() : [])
-    || []
+  const columns =
+    tableRef.columns ||
+    (typeof tableRef.getColumns === 'function' ? tableRef.getColumns() : []) ||
+    []
 
   console.log('🔍 [5] Datos:', {
     count: data.length,
@@ -880,8 +958,8 @@ const handleExport = async () => {
     return
   }
 
-  let time = new Date();
-  let key = time.getTime();
+  let time = new Date()
+  let key = time.getTime()
 
   // 5. Configurar nombre del archivo
   const moduleName = STRINGS[moduleKey] || moduleKey
@@ -891,7 +969,6 @@ const handleExport = async () => {
   const result = await exportToExcel(data, columns, filename)
 
   if (result.success) {
-
     console.log(`Listo para descargar con éxito: ${filename}.xlsx`)
     notify_success(`Fichero listo para descargar`)
     /* notify_success(STRINGS.exportSuccess || 'Exportación exitosa') */
@@ -899,7 +976,6 @@ const handleExport = async () => {
     notify_error(result.error || 'Error al generar el archivo')
   }
 }
-
 
 const EmptySelected = () => {
   BlockTabs(true)
