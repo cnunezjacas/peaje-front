@@ -214,11 +214,11 @@ const routes = [
       },
       {
         path: '/help',
-        component: () => import('pages/pageAyuda.vue'),
+        component: () => import('src/pages/PageAyuda.vue'),
       },
       {
         path: '/config',
-        component: () => import('pages/pageConfiguracion.vue'),
+        component: () => import('src/pages/PageConfiguracion.vue'),
       },
     ],
   },
