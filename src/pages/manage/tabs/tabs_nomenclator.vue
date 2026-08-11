@@ -193,13 +193,13 @@
 
   <div>
     <!-- Dialogo Add Moneda -->
-    <DialogoAddMoneda ref="dialogoAddMoneda" @ActualizarTabla="tableUpdater" />
+    <AddMoneda ref="dialogoAddMoneda" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Moneda  -->
-    <DialogEditMoneda ref="dialogoEditMoneda" @ActualizarTabla="tableUpdater" />
+    <UpdateMoneda ref="dialogoEditMoneda" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Moneda  -->
-    <Table_Moneda
+    <TableMoneda
       ref="tableMoneda"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -319,7 +319,7 @@ import {
   AddOrganismo,
   AddBanco,
   DialogoAddTipoCuenta,
-  DialogoAddMoneda,
+  AddMoneda,
   DialogoAddComprobante,
   DialogoAddVehiculo,
   DialogoAddExento,
@@ -329,7 +329,7 @@ import {
   UpdateOrganismo,
   UpdateBanco,
   DialogEditTipoCuenta,
-  DialogEditMoneda,
+  UpdateMoneda,
   DialogEditVehiculo,
   DialogEditExento,
   DialogEditComprobante,
@@ -340,7 +340,7 @@ import {
   Table_Organismo,
   TableBanco,
   Table_Tipo_Cuenta,
-  Table_Moneda,
+  TableMoneda,
   Table_Vehiculo,
   Table_Exento,
   Table_Comprobante,
