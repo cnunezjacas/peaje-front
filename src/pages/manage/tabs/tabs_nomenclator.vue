@@ -214,13 +214,13 @@
 
   <div>
     <!-- Dialogo Add Vehiculo-->
-    <DialogoAddVehiculo ref="dialogoAddVehiculo" @ActualizarTabla="tableUpdater" />
+    <AddVehiculo ref="dialogoAddVehiculo" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Vehiculo  -->
-    <DialogEditVehiculo ref="dialogoEditVehiculo" @ActualizarTabla="tableUpdater" />
+    <UpdateVehiculo ref="dialogoEditVehiculo" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Vehiculo  -->
-    <Table_Vehiculo
+    <TableVehiculo
       ref="tableVehiculo"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -321,7 +321,7 @@ import {
   DialogoAddTipoCuenta,
   AddMoneda,
   DialogoAddComprobante,
-  DialogoAddVehiculo,
+  AddVehiculo,
   DialogoAddExento,
   DialogoAddFdp,
   UpdateProvincia,
@@ -330,7 +330,7 @@ import {
   UpdateBanco,
   DialogEditTipoCuenta,
   UpdateMoneda,
-  DialogEditVehiculo,
+  UpdateVehiculo,
   DialogEditExento,
   DialogEditComprobante,
   DialogEditFdp,
@@ -341,7 +341,7 @@ import {
   TableBanco,
   Table_Tipo_Cuenta,
   TableMoneda,
-  Table_Vehiculo,
+  TableVehiculo,
   Table_Exento,
   Table_Comprobante,
   Table_Fdp,
