@@ -130,10 +130,10 @@
 
   <div>
     <!-- Dialogo Add Organismo-->
-    <DialogoAddOrganismo ref="dialogoAddOrganismo" @ActualizarTabla="tableUpdater" />
+    <AddOrganismo ref="dialogoAddOrganismo" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Organismo -->
-    <DialogEditOrganismo ref="dialogEditOrganismo" @ActualizarTabla="tableUpdater" />
+    <UpdateOrganismo ref="dialogUpdateOrganismo" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Organismo -->
     <Table_Organismo
@@ -316,7 +316,7 @@ import {
   /* IMPORTACIONES Nomencladores */
   AddProvincia,
   AddMunicipio,
-  DialogoAddOrganismo,
+  AddOrganismo,
   AddBanco,
   DialogoAddTipoCuenta,
   DialogoAddMoneda,
@@ -326,7 +326,7 @@ import {
   DialogoAddFdp,
   UpdateProvincia,
   UpdateMunicipio,
-  DialogEditOrganismo,
+  UpdateOrganismo,
   UpdateBanco,
   DialogEditTipoCuenta,
   DialogEditMoneda,
@@ -394,7 +394,7 @@ const dialogoEditMunicipio = ref(null)
 /*  ===== Constantes referencias de los dialogos Organismo ===== */
 /* =================================================== */
 const dialogoAddOrganismo = ref(null)
-const dialogEditOrganismo = ref(null)
+const dialogUpdateOrganismo = ref(null)
 
 /* =================================================== */
 /*  ===== Constantes referencias de los dialogos Banco ===== */
@@ -785,7 +785,7 @@ const onItemClick = async (value) => {
       } else if (current_rout.includes(STRINGS.organismoLowercase)) {
         /*Se levanta el modal de editar*/
         console.log(objectSelected.value)
-        dialogEditOrganismo.value.getUpDialogEdit(
+        dialogUpdateOrganismo.value.getUpDialogEdit(
           objectSelected.value.siglas,
           objectSelected.value.nombre,
           objectSelected.value._id,
