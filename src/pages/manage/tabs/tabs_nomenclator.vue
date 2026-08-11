@@ -109,10 +109,10 @@
 
   <div>
     <!-- Dialogo Add Municipio-->
-    <DialogoAddMunicipio ref="dialogoAddMunicipio" @ActualizarTabla="tableUpdater" />
+    <AddMunicipio ref="dialogoAddMunicipio" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Municipio -->
-    <DialogEditMunicipio ref="dialogoEditMunicipio" @ActualizarTabla="tableUpdater" />
+    <UpdateMunicipio ref="dialogoEditMunicipio" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Municipio -->
     <Table_Municipio
@@ -151,13 +151,13 @@
 
   <div>
     <!-- Dialogo Add Banco-->
-    <DialogoAddBanco ref="dialogoAddBanco" @ActualizarTabla="tableUpdater" />
+    <AddBanco ref="dialogoAddBanco" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Banco -->
-    <DialogEditBanco ref="dialogEditBanco" @ActualizarTabla="tableUpdater" />
+    <UpdateBanco ref="dialogEditBanco" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Banco -->
-    <Table_Banco
+    <TableBanco
       ref="tableBanco"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -315,9 +315,9 @@ import {
   STRINGS,
   /* IMPORTACIONES Nomencladores */
   AddProvincia,
-  DialogoAddMunicipio,
+  AddMunicipio,
   DialogoAddOrganismo,
-  DialogoAddBanco,
+  AddBanco,
   DialogoAddTipoCuenta,
   DialogoAddMoneda,
   DialogoAddComprobante,
@@ -325,9 +325,9 @@ import {
   DialogoAddExento,
   DialogoAddFdp,
   UpdateProvincia,
-  DialogEditMunicipio,
+  UpdateMunicipio,
   DialogEditOrganismo,
-  DialogEditBanco,
+  UpdateBanco,
   DialogEditTipoCuenta,
   DialogEditMoneda,
   DialogEditVehiculo,
@@ -338,7 +338,7 @@ import {
   TableProvincia,
   Table_Municipio,
   Table_Organismo,
-  Table_Banco,
+  TableBanco,
   Table_Tipo_Cuenta,
   Table_Moneda,
   Table_Vehiculo,
