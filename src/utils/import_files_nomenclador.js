@@ -8,8 +8,8 @@ import AddBanco from 'src/pages/manage/nomenclator/banco/add/AddBanco.vue'
 import AddMoneda from 'src/pages/manage/nomenclator/moneda/add/AddMoneda.vue'
 import AddVehiculo from 'src/pages/manage/nomenclator/vehiculo/add/AddVehiculo.vue'
 import AddTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/add/AddTipoCuenta.vue'
+import AddComprobante from 'src/pages/manage/nomenclator/comprobante/add/AddComprobante.vue'
 import DialogoAddExento from 'NomenclatorAdd/dialogAddExento.vue'
-import DialogoAddComprobante from 'NomenclatorAdd/dialogAddComprobante.vue'
 import DialogoAddFdp from 'NomenclatorAdd/dialogAddFormaDePago.vue'
 
 //Dialogs Edit
@@ -20,8 +20,8 @@ import UpdateBanco from 'src/pages/manage/nomenclator/banco/update/UpdateBanco.v
 import UpdateMoneda from 'src/pages/manage/nomenclator/moneda/update/UpdateMoneda.vue'
 import UpdateVehiculo from 'src/pages/manage/nomenclator/vehiculo/update/UpdateVehiculo.vue'
 import UpdateTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/update/UpdateTipoCuenta.vue'
+import UpdateComprobante from 'src/pages/manage/nomenclator/comprobante/update/UpdateComprobante.vue'
 import DialogEditExento from 'NomenclatorEdit/dialog_edit_exento.vue'
-import DialogEditComprobante from 'NomenclatorEdit/dialog_edit_comprobante.vue'
 import DialogEditFdp from 'NomenclatorEdit/dialog_edit_fdp.vue'
 
 //Dialogs Delete
@@ -35,7 +35,7 @@ import TableBanco from 'src/pages/manage/nomenclator/banco/table/TableBanco.vue'
 import TableMoneda from 'src/pages/manage/nomenclator/moneda/table/TableMoneda.vue'
 import TableVehiculo from 'src/pages/manage/nomenclator/vehiculo/table/TableVehiculo.vue'
 import TableTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/table/TableTipoCuenta.vue'
-import Table_Comprobante from 'NomenclatorTables/table_Gest_comprobantes.vue'
+import TableComprobante from 'src/pages/manage/nomenclator/comprobante/table/TableComprobante.vue'
 import Table_Exento from 'NomenclatorTables/table_Gest_exento.vue'
 import Table_Fdp from 'NomenclatorTables/table_Gest_fdp.vue'
 
@@ -48,10 +48,10 @@ export {
   AddMoneda,
   AddVehiculo,
   DialogoAddExento,
-  DialogoAddComprobante,
+  AddComprobante,
   DialogoAddFdp,
   AddTipoCuenta,
-  DialogEditComprobante,
+  UpdateComprobante,
   UpdateProvincia,
   UpdateMunicipio,
   UpdateOrganismo,
@@ -66,7 +66,7 @@ export {
   Table_Municipio,
   Table_Organismo,
   TableBanco,
-  Table_Comprobante,
+  TableComprobante,
   TableMoneda,
   TableVehiculo,
   Table_Exento,

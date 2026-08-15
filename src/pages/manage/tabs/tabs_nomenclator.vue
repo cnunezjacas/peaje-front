@@ -256,13 +256,13 @@
 
   <div>
     <!-- Dialogo Add Comprobante-->
-    <DialogoAddComprobante ref="dialogoAddComprobante" @ActualizarTabla="tableUpdater" />
+    <AddComprobante ref="dialogoAddComprobante" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Comprobante  -->
-    <DialogEditComprobante ref="dialogoEditComprobante" @ActualizarTabla="tableUpdater" />
+    <UpdateComprobante ref="dialogoEditComprobante" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Comprobante  -->
-    <Table_Comprobante
+    <TableComprobante
       ref="tableComprobante"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -320,7 +320,7 @@ import {
   AddBanco,
   AddTipoCuenta,
   AddMoneda,
-  DialogoAddComprobante,
+  AddComprobante,
   AddVehiculo,
   DialogoAddExento,
   DialogoAddFdp,
@@ -332,7 +332,7 @@ import {
   UpdateMoneda,
   UpdateVehiculo,
   DialogEditExento,
-  DialogEditComprobante,
+  UpdateComprobante,
   DialogEditFdp,
   DialogDeleteGeneric,
   TableProvincia,
@@ -343,7 +343,7 @@ import {
   TableMoneda,
   TableVehiculo,
   Table_Exento,
-  Table_Comprobante,
+  TableComprobante,
   Table_Fdp,
 } from 'src/utils/import_files_nomenclador.js'
 //Importar componente y config
