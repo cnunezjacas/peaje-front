@@ -25,7 +25,7 @@
                 v-model="TextNombre_exento"
                 ref="textNombre_exento"
                 color="green"
-                :rules="rulesNombre_exento"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
                 type="text"
                 :label="STRINGS.name"
                 @keyup="checkStatusInputs"
@@ -37,7 +37,7 @@
                 v-model="TextCodigo_exento"
                 color="green"
                 type="text"
-                :rules="rulesCodigo_exento"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.code"
                 @keyup="checkStatusInputs"
               />
@@ -50,7 +50,7 @@
                 v-model="TextNomenclador_exento"
                 ref="textNomenclador_exento"
                 :options="options"
-                :rules="rulesNomenclador_exento"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclator"
                 @onchange="checkStatusInputs"
@@ -69,7 +69,7 @@
                 <q-input
                   ref="textDetalles_exento"
                   v-model="TextDetalles_exento"
-                  :rules="rulesDetalles_exento"
+                  :rules="validaciones_generales.rulesNoEmpty"
                   class="q-pa-md"
                   color="green"
                   autogrow
@@ -112,46 +112,39 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteExento.js'
+import { useApi } from 'src/composables/useApi'
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
+import validaciones_generales from 'src/utils/validaciones_generales.js'
 
 /* =================================================== */
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesNombre_exento = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
-]
-
-const rulesCodigo_exento = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-
-const rulesNomenclador_exento = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesDetalles_exento = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
+const { postData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
+/**
+ * Verifica si el código del exento ya existe en la base de datos
+ * @returns {Promise<boolean>} true si el código existe, false si está disponible
+ */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiExento
+  const result = await verificarExistente(url, STRINGS.codigoBD, TextCodigo_exento.value)
+  return result
+}
+
+/**
+ * Valida y envía los datos del formulario al backend para crear un nuevo exento
+ * Realiza verificación de código duplicado antes de enviar
+ * Emite evento 'ActualizarTabla' para refrescar la lista de exentos
+ */
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
     // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_exento.value)
-    if (existeCodigo) {
+    if (await CheckCode()) {
       // Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.codigoRepetido)
       textCodigo_exento.value.focus()
@@ -165,39 +158,46 @@ const SendData = async () => {
       }
 
       try {
-        await api.post(STRINGS.urlApiExento, newItem) // POST /items
+        const { /*data,*/ error } = await postData(STRINGS.urlApiExento, newItem) // POST /items
+
+        // Mostrar posible alerta de error
+        if (error) return notify_error(STRINGS.errorAdd)
 
         // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.exentoAddSuccess)
-
         emit('ActualizarTabla', true)
+        notify_success(STRINGS.successAdd)
+        dialog.value = false
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.exentoAddError)
-
-        emit('ActualizarTabla', false)
+        notify_error(STRINGS.errorAdd)
       }
-      refDialogoAdd.value.hide()
-      Reset()
     }
   }
 }
 
-/*Función que levanta el dialogo*/
+/**
+ * Abre el diálogo de agregar exento y configura el filtro de fondo
+ */
 const getUpDialogAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Limpia todos los campos del formulario y restablece el estado del botón guardar
+ * Se ejecuta después de un submit exitoso o al cerrar el diálogo
+ */
 const Reset = () => {
   TextNombre_exento.value = ''
   TextCodigo_exento.value = ''
-
   TextNomenclador_exento.value = ''
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
+/**
+ * Valida que todos los campos obligatorios del formulario no estén vacíos
+ * @returns {boolean} true si todos los campos tienen contenido, false si alguno está vacío
+ */
 const InputEmpty = () => {
   if (
     TextCodigo_exento.value.trim() !== '' &&
@@ -209,6 +209,12 @@ const InputEmpty = () => {
   else return false
 }
 
+/**
+ * Valida que los campos cumplan con las expresiones regulares definidas
+ * - Código: solo letras mayúsculas
+ * - Nombre: texto y números permitidos
+ * @returns {boolean} true si todos los campos cumplen las regex, false en caso contrario
+ */
 const InputRegularExpressions = () => {
   if (
     expRegulares.onlyUppercase.test(TextCodigo_exento.value.trim()) &&
@@ -218,14 +224,22 @@ const InputRegularExpressions = () => {
   else return false
 }
 
+/**
+ * Verifica el estado completo de los inputs y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando todos los campos son válidos
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
 const checkStatusInputs = () => {
   const isValid = InputEmpty() && InputRegularExpressions()
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
+/* Dialog */
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
+const refDialogoAdd = ref(null)
 
 //V-model
 const TextCodigo_exento = ref('')
