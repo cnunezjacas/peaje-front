@@ -7,10 +7,10 @@ import AddOrganismo from 'src/pages/manage/nomenclator/organismo/add/AddOrganism
 import AddBanco from 'src/pages/manage/nomenclator/banco/add/AddBanco.vue'
 import AddMoneda from 'src/pages/manage/nomenclator/moneda/add/AddMoneda.vue'
 import AddVehiculo from 'src/pages/manage/nomenclator/vehiculo/add/AddVehiculo.vue'
+import AddTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/add/AddTipoCuenta.vue'
 import DialogoAddExento from 'NomenclatorAdd/dialogAddExento.vue'
 import DialogoAddComprobante from 'NomenclatorAdd/dialogAddComprobante.vue'
 import DialogoAddFdp from 'NomenclatorAdd/dialogAddFormaDePago.vue'
-import DialogoAddTipoCuenta from 'NomenclatorAdd/dialogAddTipoCuenta.vue'
 
 //Dialogs Edit
 import UpdateProvincia from 'src/pages/manage/nomenclator/provincia/update/UpdateProvincia.vue'
@@ -19,10 +19,10 @@ import UpdateOrganismo from 'src/pages/manage/nomenclator/organismo/update/Updat
 import UpdateBanco from 'src/pages/manage/nomenclator/banco/update/UpdateBanco.vue'
 import UpdateMoneda from 'src/pages/manage/nomenclator/moneda/update/UpdateMoneda.vue'
 import UpdateVehiculo from 'src/pages/manage/nomenclator/vehiculo/update/UpdateVehiculo.vue'
+import UpdateTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/update/UpdateTipoCuenta.vue'
 import DialogEditExento from 'NomenclatorEdit/dialog_edit_exento.vue'
 import DialogEditComprobante from 'NomenclatorEdit/dialog_edit_comprobante.vue'
 import DialogEditFdp from 'NomenclatorEdit/dialog_edit_fdp.vue'
-import DialogEditTipoCuenta from 'NomenclatorEdit/dialog_edit_tipo_cuenta.vue'
 
 //Dialogs Delete
 import DialogDeleteGeneric from 'GenericDelete/dialog_delete_generic.vue'
@@ -34,10 +34,10 @@ import Table_Organismo from 'src/pages/manage/nomenclator/organismo/table/TableO
 import TableBanco from 'src/pages/manage/nomenclator/banco/table/TableBanco.vue'
 import TableMoneda from 'src/pages/manage/nomenclator/moneda/table/TableMoneda.vue'
 import TableVehiculo from 'src/pages/manage/nomenclator/vehiculo/table/TableVehiculo.vue'
+import TableTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/table/TableTipoCuenta.vue'
 import Table_Comprobante from 'NomenclatorTables/table_Gest_comprobantes.vue'
 import Table_Exento from 'NomenclatorTables/table_Gest_exento.vue'
 import Table_Fdp from 'NomenclatorTables/table_Gest_fdp.vue'
-import Table_Tipo_Cuenta from 'NomenclatorTables/table_Gest_tipo_cuenta.vue'
 
 export {
   STRINGS,
@@ -50,7 +50,7 @@ export {
   DialogoAddExento,
   DialogoAddComprobante,
   DialogoAddFdp,
-  DialogoAddTipoCuenta,
+  AddTipoCuenta,
   DialogEditComprobante,
   UpdateProvincia,
   UpdateMunicipio,
@@ -60,7 +60,7 @@ export {
   UpdateVehiculo,
   DialogEditExento,
   DialogEditFdp,
-  DialogEditTipoCuenta,
+  UpdateTipoCuenta,
   DialogDeleteGeneric,
   TableProvincia,
   Table_Municipio,
@@ -71,5 +71,5 @@ export {
   TableVehiculo,
   Table_Exento,
   Table_Fdp,
-  Table_Tipo_Cuenta,
+  TableTipoCuenta,
 }

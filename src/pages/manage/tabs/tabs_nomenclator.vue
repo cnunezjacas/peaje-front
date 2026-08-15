@@ -172,13 +172,13 @@
 
   <div>
     <!-- Dialogo Add Tipo cuenta -->
-    <DialogoAddTipoCuenta ref="dialogoAddTipoCuenta" @ActualizarTabla="tableUpdater" />
+    <AddTipoCuenta ref="dialogoAddTipoCuenta" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Tipo cuenta  -->
-    <DialogEditTipoCuenta ref="dialogoEditTipoCuenta" @ActualizarTabla="tableUpdater" />
+    <UpdateTipoCuenta ref="dialogoEditTipoCuenta" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Tipo cuenta  -->
-    <Table_Tipo_Cuenta
+    <TableTipoCuenta
       ref="tableTipoCuenta"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -318,7 +318,7 @@ import {
   AddMunicipio,
   AddOrganismo,
   AddBanco,
-  DialogoAddTipoCuenta,
+  AddTipoCuenta,
   AddMoneda,
   DialogoAddComprobante,
   AddVehiculo,
@@ -328,7 +328,7 @@ import {
   UpdateMunicipio,
   UpdateOrganismo,
   UpdateBanco,
-  DialogEditTipoCuenta,
+  UpdateTipoCuenta,
   UpdateMoneda,
   UpdateVehiculo,
   DialogEditExento,
@@ -339,7 +339,7 @@ import {
   Table_Municipio,
   Table_Organismo,
   TableBanco,
-  Table_Tipo_Cuenta,
+  TableTipoCuenta,
   TableMoneda,
   TableVehiculo,
   Table_Exento,
