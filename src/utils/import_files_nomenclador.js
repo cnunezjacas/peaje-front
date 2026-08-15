@@ -9,8 +9,8 @@ import AddMoneda from 'src/pages/manage/nomenclator/moneda/add/AddMoneda.vue'
 import AddVehiculo from 'src/pages/manage/nomenclator/vehiculo/add/AddVehiculo.vue'
 import AddTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/add/AddTipoCuenta.vue'
 import AddComprobante from 'src/pages/manage/nomenclator/comprobante/add/AddComprobante.vue'
+import AddFormaDePago from 'src/pages/manage/nomenclator/fdp/add/AddFormaDePago.vue'
 import DialogoAddExento from 'NomenclatorAdd/dialogAddExento.vue'
-import DialogoAddFdp from 'NomenclatorAdd/dialogAddFormaDePago.vue'
 
 //Dialogs Edit
 import UpdateProvincia from 'src/pages/manage/nomenclator/provincia/update/UpdateProvincia.vue'
@@ -21,8 +21,8 @@ import UpdateMoneda from 'src/pages/manage/nomenclator/moneda/update/UpdateMoned
 import UpdateVehiculo from 'src/pages/manage/nomenclator/vehiculo/update/UpdateVehiculo.vue'
 import UpdateTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/update/UpdateTipoCuenta.vue'
 import UpdateComprobante from 'src/pages/manage/nomenclator/comprobante/update/UpdateComprobante.vue'
+import UpdateFormaDePago from 'src/pages/manage/nomenclator/fdp/update/UpdateFormaDePago.vue'
 import DialogEditExento from 'NomenclatorEdit/dialog_edit_exento.vue'
-import DialogEditFdp from 'NomenclatorEdit/dialog_edit_fdp.vue'
 
 //Dialogs Delete
 import DialogDeleteGeneric from 'GenericDelete/dialog_delete_generic.vue'
@@ -36,8 +36,8 @@ import TableMoneda from 'src/pages/manage/nomenclator/moneda/table/TableMoneda.v
 import TableVehiculo from 'src/pages/manage/nomenclator/vehiculo/table/TableVehiculo.vue'
 import TableTipoCuenta from 'src/pages/manage/nomenclator/tipo_cuenta/table/TableTipoCuenta.vue'
 import TableComprobante from 'src/pages/manage/nomenclator/comprobante/table/TableComprobante.vue'
+import TableFormaDePago from 'src/pages/manage/nomenclator/fdp/table/TableFormaDePago.vue'
 import Table_Exento from 'NomenclatorTables/table_Gest_exento.vue'
-import Table_Fdp from 'NomenclatorTables/table_Gest_fdp.vue'
 
 export {
   STRINGS,
@@ -49,7 +49,7 @@ export {
   AddVehiculo,
   DialogoAddExento,
   AddComprobante,
-  DialogoAddFdp,
+  AddFormaDePago,
   AddTipoCuenta,
   UpdateComprobante,
   UpdateProvincia,
@@ -59,7 +59,7 @@ export {
   UpdateMoneda,
   UpdateVehiculo,
   DialogEditExento,
-  DialogEditFdp,
+  UpdateFormaDePago,
   UpdateTipoCuenta,
   DialogDeleteGeneric,
   TableProvincia,
@@ -70,6 +70,6 @@ export {
   TableMoneda,
   TableVehiculo,
   Table_Exento,
-  Table_Fdp,
+  TableFormaDePago,
   TableTipoCuenta,
 }

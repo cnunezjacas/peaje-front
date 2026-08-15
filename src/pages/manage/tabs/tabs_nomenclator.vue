@@ -277,13 +277,13 @@
 
   <div>
     <!-- Dialogo Add Forma de Pago-->
-    <DialogoAddFdp ref="dialogoAddFdp" @ActualizarTabla="tableUpdater" />
+    <AddFormaDePago ref="dialogoAddFdp" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Forma de Pago  -->
-    <DialogEditFdp ref="dialogoEditFdp" @ActualizarTabla="tableUpdater" />
+    <UpdateFormaDePago ref="dialogoEditFdp" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Forma de Pago  -->
-    <Table_Fdp
+    <TableFormaDePago
       ref="tableFdp"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -323,7 +323,7 @@ import {
   AddComprobante,
   AddVehiculo,
   DialogoAddExento,
-  DialogoAddFdp,
+  AddFormaDePago,
   UpdateProvincia,
   UpdateMunicipio,
   UpdateOrganismo,
@@ -333,7 +333,7 @@ import {
   UpdateVehiculo,
   DialogEditExento,
   UpdateComprobante,
-  DialogEditFdp,
+  UpdateFormaDePago,
   DialogDeleteGeneric,
   TableProvincia,
   Table_Municipio,
@@ -344,7 +344,7 @@ import {
   TableVehiculo,
   Table_Exento,
   TableComprobante,
-  Table_Fdp,
+  TableFormaDePago,
 } from 'src/utils/import_files_nomenclador.js'
 //Importar componente y config
 import DialogDetails from 'src/components/shared/DialogDetails.vue'
