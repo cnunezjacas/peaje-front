@@ -18,7 +18,7 @@
                 v-model="TextNombre_exento"
                 ref="textNombre_exento"
                 color="green"
-                :rules="rulesNombre_exento"
+                :rules="validaciones_generales.rulesFullTextAndNumber"
                 type="text"
                 :label="STRINGS.name"
                 @keyup="checkStatusInputs"
@@ -30,7 +30,7 @@
                 v-model="TextCodigo_exento"
                 color="green"
                 type="text"
-                :rules="rulesCodigo_exento"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.code"
                 @keyup="checkStatusInputs"
               />
@@ -43,7 +43,7 @@
                 v-model="TextNomenclador_exento"
                 ref="textNomenclador_exento"
                 :options="options"
-                :rules="rulesNomenclador_exento"
+                :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclator"
                 @onchange="checkStatusInputs"
@@ -62,7 +62,7 @@
                 <q-input
                   ref="textDetalles_exento"
                   v-model="TextDetalles_exento"
-                  :rules="rulesDetalles_exento"
+                  :rules="validaciones_generales.rulesNoEmpty"
                   class="q-pa-md"
                   color="green"
                   autogrow
@@ -78,8 +78,8 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
-                @click="Procesar_Edit()"
+                :class="disabledBtnSave"
+                @click="CheckData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -105,79 +105,89 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
-import verificarCodigoExistente from '../../../../utils/utils_axios/nomencladores/verificarCodigoExistenteExento.js'
+import { useApi } from 'src/composables/useApi'
+import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 /* =================================================== */
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-
-const list = STRINGS.OpacityDialog
-
-const refDialogoEdit = ref(null)
-
-/*Validaciones*/
-const rulesNombre_exento = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.TextAndNumber.test(val) || STRINGS.TextAndNumber,
-]
-
-const rulesCodigo_exento = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-
-const rulesNomenclador_exento = [(val) => val != '' || STRINGS.inputEmpty]
-
-const rulesDetalles_exento = [(val) => val != '' || STRINGS.inputEmpty]
-/*Validaciones*/
+const { patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
-const Procesar_Edit = async () => {
+/**
+ * Verifica si el código del exento ya existe en la base de datos
+ * @returns {Promise<boolean>} true si el código existe, false si está disponible
+ */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiExento
+  const result = await verificarExistente(url, STRINGS.codigoBD, TextCodigo_exento.value)
+  return result
+}
+
+/**
+ * Valida los datos antes de enviarlos al backend
+ * Verifica si hay cambios y si el código modificado no está duplicado
+ * Si el código cambió, valida que no exista en BD antes de enviar
+ */
+const CheckData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    var existeCodigo = false
-
-    // Verificar si el código ya existe
-    if (TextCodigo_exento.value !== TextCodigo_exento_copy.value)
-      existeCodigo = await verificarCodigoExistente(TextCodigo_exento.value)
-
-    if (existeCodigo ? true : false) {
-      // Mostrar mensaje de error o alertar al usuario
-      notify_error(STRINGS.codigoRepetido)
-      textCodigo_exento.value.focus()
-      return
+    // Solo verificar código duplicado si el código cambió
+    if (InputDifferent() && TextCodigo_exento.value !== TextCodigo_exento_copy.value) {
+      if (await CheckCode()) {
+        notify_error(STRINGS.codigoRepetido)
+        return textCodigo_exento.value.focus()
+      } else {
+        SendData()
+      }
     } else {
-      const newItem = {
-        nombre: TextNombre_exento.value,
-        codigo: TextCodigo_exento.value.toUpperCase(),
-        nomenclador: Number(TextNomenclador_exento.value),
-        detalles: TextDetalles_exento.value,
-      }
-
-      console.log(newItem.val)
-
-      try {
-        await api.patch(STRINGS.urlApiExento + '/' + IdExento.value, newItem) // POST /items
-        notify_success(STRINGS.exentoEditSuccess)
-
-        emit('ActualizarTabla', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.exentoEditError)
-        emit('ActualizarTabla', false)
-      }
-      refDialogoEdit.value.hide()
-      Reset()
+      SendData()
     }
   }
 }
 
-/*Función que levanta el dialogo*/
+/**
+ * Envía los datos actualizados del exento al backend mediante PATCH
+ * Emite evento 'ActualizarTabla' para refrescar la lista
+ * Cierra el diálogo y resetea el formulario si la operación es exitosa
+ */
+const SendData = async () => {
+  const newItem = {
+    nombre: TextNombre_exento.value,
+    codigo: TextCodigo_exento.value.toUpperCase(),
+    nomenclador: Number(TextNomenclador_exento.value),
+    detalles: TextDetalles_exento.value,
+  }
+
+  try {
+    const { data, error } = await patchData(STRINGS.urlApiExento + '/' + Text_Id.value, newItem)
+
+    if (data != null && !error) {
+      emit('ActualizarTabla', true)
+      notify_success(STRINGS.successEdit)
+      dialog.value = false
+      Reset()
+    } else notify_error(STRINGS.errorEdit)
+  } catch (error) {
+    console.error(STRINGS.errorEdit, error)
+    notify_error(STRINGS.errorAdd)
+    emit('ActualizarTabla', false)
+  }
+}
+
+/**
+ * Abre el diálogo de edición y carga los datos del exento seleccionado
+ * Guarda copias de los valores originales para detectar cambios
+ * @param {string} nombre - Nombre del exento
+ * @param {string} codigo - Código del exento
+ * @param {number} nomenclador - ID del nomenclador asociado
+ * @param {string} detalles - Detalles adicionales del exento
+ * @param {string} id - ID único del exento en la base de datos
+ */
 const getUpDialogEdit = (nombre, codigo, nomenclador, detalles, id) => {
   backdropFilter.value = list
   dialog.value = true
@@ -186,85 +196,109 @@ const getUpDialogEdit = (nombre, codigo, nomenclador, detalles, id) => {
   TextNombre_exento.value = nombre
   TextNomenclador_exento.value = nomenclador
   TextDetalles_exento.value = detalles
-  IdExento.value = id
+  Text_Id.value = id
 
+  // Guardar copias para comparar cambios
   TextCodigo_exento_copy.value = codigo
   TextNombre_exento_copy.value = nombre
   TextNomenclador_exento_copy.value = nomenclador
   TextDetalles_exento_copy.value = detalles
 }
 
-const equalFields = () => {
-  let camposIguales =
-    TextCodigo_exento.value.trim() === TextCodigo_exento_copy.value.trim() &&
-    TextNombre_exento.value.trim() === TextNombre_exento_copy.value.trim() &&
+/**
+ * Valida que todos los campos obligatorios no estén vacíos
+ * @returns {boolean} true si todos los campos tienen contenido
+ */
+const InputEmpty = () => {
+  if (
+    TextCodigo_exento.value !== '' &&
+    TextNombre_exento.value !== '' &&
+    String(TextNomenclador_exento.value).trim() !== '' &&
+    TextDetalles_exento.value.trim() !== ''
+  )
+    return true
+  else return false
+}
+
+/**
+ * Compara los valores actuales con las copias originales para detectar cambios
+ * @returns {boolean} true si al menos un campo fue modificado
+ */
+const InputDifferent = () => {
+  return !(
+    TextCodigo_exento.value === TextCodigo_exento_copy.value &&
+    TextNombre_exento.value === TextNombre_exento_copy.value &&
     String(TextNomenclador_exento.value).trim() ===
       String(TextNomenclador_exento_copy.value).trim() &&
     TextDetalles_exento.value.trim() === TextDetalles_exento_copy.value.trim()
-
-  return camposIguales
-}
-
-const isFormValidInput = () => {
-  return (
-    // Verifica si al menos un campo ha cambiado
-    (TextCodigo_exento.value.trim() !== '' ||
-      TextNombre_exento.value.trim() !== '' ||
-      String(TextNomenclador_exento.value).trim() !== '' ||
-      TextDetalles_exento.value.trim() !== '' ||
-      // O si hay cambios en los campos respecto a las copias
-      TextCodigo_exento.value !== TextCodigo_exento_copy.value ||
-      TextNombre_exento.value !== TextNombre_exento_copy.value ||
-      String(TextNomenclador_exento.value) !== String(TextNomenclador_exento_copy.value) ||
-      TextDetalles_exento.value !== TextDetalles_exento_copy.value) &&
-    // Y además, que los campos no sean iguales a sus copias (para deshabilitar si no hay cambios)
-    !equalFields() &&
-    // Además, verifica las reglas de validación
-    (expRegulares.TextAndNumber.test(TextNombre_exento.value) || false) &&
-    (expRegulares.onlyUppercase.test(TextCodigo_exento.value) || false)
   )
 }
 
-const checkStatusInputs = () => {
-  disabledBtnSaveEdit.value = isFormValidInput() ? '' : STRINGS.desabilitar
+/**
+ * Valida que los campos cumplan con las expresiones regulares
+ * Código: solo mayúsculas | Nombre: texto y números
+ * @returns {boolean} true si código y nombre cumplen las regex
+ */
+const InputRegularExpressions = () => {
+  if (
+    expRegulares.onlyUppercase.test(TextCodigo_exento.value) &&
+    expRegulares.TextAndNumber.test(TextNombre_exento.value)
+  )
+    return true
+  else return false
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Verifica el estado completo del formulario y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando: campos no vacíos + regex válidas + hay cambios
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
+const checkStatusInputs = () => {
+  const isValid = InputEmpty() && InputRegularExpressions() && InputDifferent()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
+}
+
+/**
+ * Limpia todos los campos del formulario y restablece el estado del botón
+ * Cierra el diálogo después de un submit exitoso
+ */
 const Reset = () => {
   refDialogoEdit.value.hide()
   TextCodigo_exento.value = ''
   TextNombre_exento.value = ''
   TextNomenclador_exento.value = ''
   TextDetalles_exento.value = ''
-  disabledBtnSaveEdit.value = ref(STRINGS.desabilitar)
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
+/* Dialog */
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
+const refDialogoEdit = ref(null)
 
-//V-model
+// V-model
 const TextCodigo_exento = ref('')
 const TextNombre_exento = ref('')
 const TextNomenclador_exento = ref(null)
 const TextDetalles_exento = ref('')
+const Text_Id = ref('') // TODO: Considerar renombrar a IdExento para mayor claridad
 
-//V-copias
+// Copias de valores originales para detectar cambios
 const TextCodigo_exento_copy = ref('')
 const TextNombre_exento_copy = ref('')
 const TextNomenclador_exento_copy = ref(null)
 const TextDetalles_exento_copy = ref('')
 
-//ref
+// refs para acceso directo a los inputs
 const textNombre_exento = ref(null)
 const textCodigo_exento = ref(null)
 const textDetalles_exento = ref(null)
-
 const textNomenclador_exento = ref(null)
+
 const options = [1, 2, 3, 4]
-
-const IdExento = ref('')
-
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
 defineExpose({
   getUpDialogEdit,
