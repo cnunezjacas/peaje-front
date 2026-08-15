@@ -235,13 +235,13 @@
 
   <div>
     <!-- Dialogo Add Exento-->
-    <DialogoAddExento ref="dialogoAddExento" @ActualizarTabla="tableUpdater" />
+    <AddExento ref="dialogoAddExento" @ActualizarTabla="tableUpdater" />
 
     <!-- Dialogo Edit Exento  -->
-    <DialogEditExento ref="dialogoEditExento" @ActualizarTabla="tableUpdater" />
+    <UpdateExento ref="dialogoEditExento" @ActualizarTabla="tableUpdater" />
 
     <!-- Tabla de Exento  -->
-    <Table_Exento
+    <TableExento
       ref="tableExento"
       @seleccionado="RowSelection"
       @onBlockTabs="BlockTabs"
@@ -322,7 +322,7 @@ import {
   AddMoneda,
   AddComprobante,
   AddVehiculo,
-  DialogoAddExento,
+  AddExento,
   AddFormaDePago,
   UpdateProvincia,
   UpdateMunicipio,
@@ -331,7 +331,7 @@ import {
   UpdateTipoCuenta,
   UpdateMoneda,
   UpdateVehiculo,
-  DialogEditExento,
+  UpdateExento,
   UpdateComprobante,
   UpdateFormaDePago,
   DialogDeleteGeneric,
@@ -342,7 +342,7 @@ import {
   TableTipoCuenta,
   TableMoneda,
   TableVehiculo,
-  Table_Exento,
+  TableExento,
   TableComprobante,
   TableFormaDePago,
 } from 'src/utils/import_files_nomenclador.js'
