@@ -40,11 +40,11 @@ export const STRINGS = {
 
   errorFetch: 'Error cargando datos:',
 
-  successDelete: 'Item eliminado con éxito',
+  successDelete: 'eliminado con éxito',
   errorDelete: 'Error al eliminar item',
 
-  successAdd: 'Item añadido con éxito',
-  errorAdd: 'Error al añadir item',
+  successAdd: 'añadido con éxito',
+  errorAdd: 'Error al añadir',
 
   successEdit: 'Item actualizado con éxito',
   errorEdit: 'Error al actualizar item',

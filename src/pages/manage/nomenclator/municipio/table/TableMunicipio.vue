@@ -1,8 +1,19 @@
 <template>
-  <BaseTable :title="title" :Loading="isLoading" :filteredRows="filteredRows" :columns="columns" row-key="_id"
-    :no-data-label="STRINGS.no_data_available" :separator="separator" :rows-per-page-options="numberForPage"
-    :rows-per-page-label="STRINGS.number_of_page" searchTerm="props.TextSearch" @onBlockTabs="BlockTabs"
-    @seleccionado="DataSelected" ref="tableGeneric">
+  <BaseTable
+    :title="title"
+    :Loading="isLoading"
+    :filteredRows="filteredRows"
+    :columns="columns"
+    row-key="_id"
+    :no-data-label="STRINGS.no_data_available"
+    :separator="separator"
+    :rows-per-page-options="numberForPage"
+    :rows-per-page-label="STRINGS.number_of_page"
+    searchTerm="props.TextSearch"
+    @onBlockTabs="BlockTabs"
+    @seleccionado="DataSelected"
+    ref="tableGeneric"
+  >
   </BaseTable>
 </template>
 
@@ -10,27 +21,24 @@
 //******* Importaciones *******
 import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
-//import api from 'src/axios.js'
 import imports from 'src/utils/imports.js'
 import BaseTable from 'TableManage/tableGeneric.vue'
 import { useApi } from 'composables/useApi.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
-
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { /*notify_success, notify_warning,*/ notify_error } = useNotify()
-
+const { notify_error } = useNotify()
+const { fetchData } = useApi()
 
 // ******* Variables *******
-const title = ref(STRINGS.gestion + ' ' + STRINGS.name_municipio.toLowerCase())
+const title = ref(STRINGS.name_municipio.toLowerCase())
 const rows = ref([])
 const separator = ref('vertical')
 const numberForPage = imports.getNumberForPage()
 const tableGeneric = ref([])
 const isLoading = ref(true)
-const { fetchData/*, postdata_mun, putdata_mun, deletedata_mun */ } = useApi()
 // Props
 const props = defineProps({
   TextSearch: String,
@@ -48,10 +56,10 @@ const columns = [
   },
 
   {
-    name: 'label_provincia',
+    name: 'provincia',
     align: STRINGS.TableAlign,
     label: STRINGS.name_provincia,
-    field: 'label_provincia',
+    field: (row) => row.provincia?.nombre || '',
     sortable: true,
   },
   {
@@ -72,34 +80,26 @@ const columns = [
 const InitDataTable = async () => {
   isLoading.value = true
 
-  const { data: municipio, error: error_mun } = await fetchData(STRINGS.urlApiMunicipio);
-  const { data: provincia, error: error_prov } = await fetchData(STRINGS.urlApiProvincia);
+  const { data: municipio, error: error } = await fetchData(STRINGS.urlApiMunicipio)
 
-
-  if (error_mun || error_prov) {
-    console.error(STRINGS.errorFetch, { error_mun, error_prov })
+  if (error) {
+    console.error(STRINGS.errorFetch, { error })
     notify_error(STRINGS.loadingTablesError)
-    setTimeout(async () => {
-      await InitDataTable()
-    }, STRINGS.timeLoadTables);
+    return false
   } else {
-
-
-    municipio.forEach((element) => {
-      provincia.forEach((item) => {
-        if (item['_id'] === element['provincia']) {
-          element['id_provincia'] = item['id']
-          element['label_provincia'] = item['nombre']
-        }
-      })
-    })
-
     rows.value = municipio || []
   }
 
   isLoading.value = false
   return true
 }
+
+/**
+ * Metodo encargado de lanzar operaciones previo de que el componente sea montado en el DOM
+ */
+onBeforeMount(async () => {
+  InitDataTable()
+})
 
 // Reacción a cambios en TextSearch
 const filteredRows = computed(() => {
@@ -111,7 +111,7 @@ const filteredRows = computed(() => {
     return (
       row.nombre.toLowerCase().includes(searchTerm) ||
       String(row.codigo).toLowerCase().includes(searchTerm) ||
-      row.label_provincia?.toLowerCase().includes(searchTerm)
+      row.provincia?.nombre?.toLowerCase().includes(searchTerm)
     )
   })
 })
@@ -131,7 +131,7 @@ const BlockTabs = (value) => {
 const DataSelected = (row) => {
   // Puede ser null si se deseleccionó
   if (row && row._id) {
-    // ✅ Emitir el objeto completo hacia el padre
+    // Emitir el objeto completo hacia el padre
     emit('onSelected', row)
   } else {
     // Opcional: emitir null para que el padre sepa que no hay selección
@@ -156,19 +156,22 @@ const EmptySelected = () => {
 
 //******* Métodos *******
 /**
- * Método encargado de realizar operaciones, previo de que el componente sea montado en el DOM
+ * Inicializa la carga de datos de la tabla
+ * Debe ser llamado explícitamente por el componente padre
+ * @returns {Promise<boolean>} true si la carga fue exitosa
  */
-onBeforeMount(() => {
-  InitDataTable()
-})
+const init = async () => {
+  return await InitDataTable()
+}
 
 //Exponer Funciones y Métodos a Template Padre
 defineExpose({
   UpdateTable,
   EmptySelected,
   // DATOS PARA EXPORTACIÓN:
-  rows,           // Datos completos (sin filtrar)
-  filteredRows,   // Datos filtrados por búsqueda(computed)
-  columns,        // Configuración de columnas
+  rows, // Datos completos (sin filtrar)
+  filteredRows, // Datos filtrados por búsqueda(computed)
+  columns, // Configuración de columnas
+  init, //Función para Inicializar la carga de datos de la tabla
 })
 </script>

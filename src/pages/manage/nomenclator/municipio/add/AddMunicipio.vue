@@ -79,34 +79,29 @@
 
 <script setup>
 /* Importaciones */
-import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
 import { useNotify } from 'src/utils/notify/notify.js'
+import { useApi } from 'src/composables/useApi'
 
 /* =================================================== */
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
+const { postData } = useApi()
 
 /* Función encargada de realizar la petición y retornar el listado de provincias */
 const loadProvincias = async () => {
   options.value = await getNomenclator.loadProvincias()
-  console.log('Provincias')
-  console.log(options.value)
 }
 
 /* onBeforeMount: se ejecuta justo antes de que el componente se monte en el DOM. */
-onBeforeMount(() => {
-  loadProvincias()
-})
-
-onMounted(() => {
-  loadProvincias()
+onBeforeMount(async () => {
+  await loadProvincias()
 })
 
 /* Inicialización del Emit */
@@ -136,12 +131,12 @@ const SendData = async () => {
       }
 
       try {
-        await api.post(STRINGS.urlApiMunicipio, newItem) // POST /items
-        notify_success(STRINGS.municipioAddSuccess)
+        await postData(STRINGS.urlApiMunicipio, newItem) // POST /items
+        notify_success(title.value + ' ' + STRINGS.successAdd)
         emit('ActualizarTabla', true)
       } catch (error) {
         console.error('Error al crear item:', error)
-        notify_error(STRINGS.municipioAddError)
+        notify_error(STRINGS.errorAdd + ' ' + title.value)
         emit('ActualizarTabla', false)
       }
       Reset()
@@ -178,9 +173,10 @@ const checkStatusInputs = () => {
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogAdd = () => {
+const getUpDialogAdd = async () => {
   backdropFilter.value = list
   dialog.value = true
+  await loadProvincias()
 }
 
 /*Función para limpiar los campos del dialogo luego del submit*/
@@ -204,6 +200,7 @@ const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
 const selectProv = ref(null)
 const options = ref([])
+const title = ref('Municipio')
 
 //Ref key
 const textCodigo_Mun = ref(null)

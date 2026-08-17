@@ -164,22 +164,22 @@ const SendData = async () => {
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = async (name, codigo, provincia, id) => {
+const getUpDialogEdit = async (row) => {
   /* Se levanta el dialogo */
   backdropFilter.value = list
   dialog.value = true
 
   //Contenido de modelos de los capos en pantalla
-  TextCodigo_mun.value = String(codigo)
-  TextNombre_mun.value = name
-  _id.value = id
+  TextCodigo_mun.value = String(row.codigo)
+  TextNombre_mun.value = row.nombre
+  _id.value = row._id
 
   //Copias de Seguridad
-  TextCodigo_mun_copy.value = String(codigo)
-  TextNombre_mun_copy.value = name
-  SelectNombre_prov_copy.value = provincia
+  //TextCodigo_mun_copy.value = String(codigo)
+  // TextNombre_mun_copy.value = name
+  // SelectNombre_prov_copy.value = provincia
 
-  await loadProvinciaSelected(provincia)
+  await loadProvinciaSelected(row.provincia.nombre)
 }
 
 //Función para comprobar que los campos no estén vacíos

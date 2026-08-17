@@ -9,11 +9,6 @@ const DataSelection = (row, ruta, objectSelected) => {
     objectSelected.value._id = row['_id']
     objectSelected.value.row = row
   } else if (current_route.includes(STRINGS.municipioLowercase) && row) {
-    objectSelected.value.nombre = row['nombre']
-    objectSelected.value.codigo = row['codigo']
-    objectSelected.value.id_provincia = row['id_provincia']
-    objectSelected.value.label_provincia = row['label_provincia']
-    objectSelected.value._id = row['_id']
     objectSelected.value.row = row
   } else if (current_route.includes(STRINGS.organismoLowercase) && row) {
     objectSelected.value.siglas = row['siglas']

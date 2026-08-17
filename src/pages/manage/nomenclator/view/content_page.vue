@@ -1,27 +1,25 @@
 <template>
   <q-page>
-    <!-- Contenido principal (siempre renderizado, pero oculto visualmente si se prefiere) -->
     <div>
-      <tabs_nomenclator ref="tabs_nomenclator_ref" />
+      <tabs_nomenclator class="content-page" ref="tabs_nomenclator_ref" />
     </div>
 
-
-    <!-- 🔥 SPINNER DE CARGA CENTRALIZADO -->
-    <div v-if="showSpinner" class="loading-overlay absolute-full flex flex-center"
-      :class="{ 'fade-out': !showSpinner }">
-      <div class="text-center">
-        <q-spinner-dots color="green-8" size="50px" />
-        <p class="text-green-8 text-weight-medium">Cargando módulo...</p>
+    <!-- Usar transition para animación controlada -->
+    <transition name="fade">
+      <div v-if="showSpinner" class="loading-overlay absolute-full flex flex-center">
+        <div class="text-center">
+          <q-spinner-dots color="green-8" size="50px" />
+          <p class="text-green-8 text-weight-medium">Cargando módulo...</p>
+        </div>
       </div>
-    </div>
-
+    </transition>
   </q-page>
 </template>
 
 <script setup>
 import { ref, onBeforeUpdate, onMounted, nextTick } from 'vue'
 
-import tabs_nomenclator from 'src/pages/manage/tabs/tabs_nomenclator.vue'
+import tabs_nomenclator from 'src/pages/manage/tabs/TabsNomenclator.vue'
 
 //Const REF
 const showSpinner = ref(true)
@@ -37,8 +35,6 @@ const domLoad = ref(false)
 const checkAndHideSpinner = async () => {
   // Si ya se ocultó, no hacer nada
   if (!showSpinner.value) return
-
-
 
   setTimeout(async () => {
     // Verificar si el componente hijo está disponible
@@ -57,8 +53,7 @@ const checkAndHideSpinner = async () => {
       domLoad.value = true
       return false
     }
-
-  }, 1500);
+  }, 1500)
 
   // 🔄 Reintentar en el próximo ciclo
   return false
@@ -122,7 +117,6 @@ const CheckItemChildren = async (item = null) => {
 defineExpose({
   CheckItemChildren,
 })
-
 </script>
 
 <style lang="sass" scoped>

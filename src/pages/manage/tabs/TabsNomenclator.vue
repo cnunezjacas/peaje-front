@@ -349,7 +349,7 @@ import {
 //Importar componente y config
 import DialogDetails from 'src/components/shared/DialogDetails.vue'
 import { getDetailsConfig } from 'src/config/detailsConfig.js'
-import nomenclator from 'src/utils/data_selected/nomenclator/data_selection.js'
+import nomenclator from 'src/utils/data_selected/nomenclator/DataSelection.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 import { getPath } from 'utils/utils_routs/utils_routs'
 import { useTableExport } from 'src/composables/useTableExport.js'
@@ -657,7 +657,7 @@ const tableUpdater = (isConfirm) => {
     const result = tableProvincia.value.UpdateTable()
     return result
   } else if (current_rout.includes(STRINGS.municipioLowercase) && isConfirm) {
-    const result = tableMunicipio.value.UpdateTable()
+    const result = tableMunicipio.value.init()
     return result
   } else if (current_rout.includes(STRINGS.organismoLowercase) && isConfirm) {
     const result = tableOrganismo.value.UpdateTable()
@@ -776,12 +776,7 @@ const onItemClick = async (value) => {
         )
       } else if (current_rout.includes(STRINGS.municipality.toLowerCase())) {
         /*Se levanta el modal de editar*/
-        dialogoEditMunicipio.value.getUpDialogEdit(
-          objectSelected.value.nombre,
-          objectSelected.value.codigo,
-          objectSelected.value.label_provincia,
-          objectSelected.value._id,
-        )
+        dialogoEditMunicipio.value.getUpDialogEdit(objectSelected.value.row)
       } else if (current_rout.includes(STRINGS.organismoLowercase)) {
         /*Se levanta el modal de editar*/
         console.log(objectSelected.value)
