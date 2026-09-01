@@ -30,13 +30,22 @@ export const STRINGS = {
   municipality: 'Municipio',
   body: 'Organismo',
   bank: 'Banco',
-  account: 'Cuenta',
   currency: 'Moneda',
   vehicle: 'Vehículo',
   exempt: 'Exento',
   voucher: 'Comprobante',
   method_of_payment: 'Forma de pago',
   type_of_account: 'Tipo de cuenta',
+
+  /* ENTITY NAME */
+  account: 'Cuenta',
+  station: 'Estación',
+  pointOfSale: 'Punto de venta',
+  workspace: 'Área de Trabajo',
+  operator: 'Operador',
+  processor: 'Tramitador',
+  client: 'Cliente',
+  terminal: 'Terminal',
 
   errorFetch: 'Error cargando datos:',
 
@@ -352,129 +361,6 @@ export const STRINGS = {
     'Este campo solo acepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
   ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
   email_alert: 'Ingrese un correo válido: Ejemplo: ruky_99@@gmail.com',
-
-  //Alertas Success Provincias
-  provinciaAddSuccess: 'Provincia añadida correctamente.',
-  provinciaEditSuccess: 'Provincia editada correctamente.',
-  provinciaDeleteSuccess: 'Provincia eliminada correctamente.',
-
-  //Alertas Success Muncipios
-  municipioAddSuccess: 'Municipio añadido correctamente.',
-  municipioEditSuccess: 'Municipio editado correctamente.',
-  municipioDeleteSuccess: 'Municipio eliminado correctamente.',
-
-  //Alertas Success Organismos
-  organismoAddSuccess: 'Organismo añadido correctamente.',
-  organismoEditSuccess: 'Organismo editado correctamente.',
-  organismoDeleteSuccess: 'Organismo eliminado correctamente.',
-
-  //Alertas Success Bancos
-  bancoAddSuccess: 'Banco añadido correctamente.',
-  bancoEditSuccess: 'Banco editado correctamente.',
-  bancoDeleteSuccess: 'Banco eliminado correctamente.',
-
-  //Alertas Success Moneda
-  monedaAddSuccess: 'Moneda añadida correctamente.',
-  monedaEditSuccess: 'Moneda editada correctamente.',
-  monedaDeleteSuccess: 'Moneda eliminada correctamente.',
-
-  //Alertas Success Vehiculo
-  vehiculoAddSuccess: 'Vehículo añadido correctamente.',
-  vehiculoEditSuccess: 'Vehículo editado correctamente.',
-  vehiculoDeleteSuccess: 'Vehículo eliminado correctamente.',
-
-  //Alertas Success Exento
-  exentoAddSuccess: 'Exento añadido correctamente.',
-  exentoEditSuccess: 'Exento editado correctamente.',
-  exentoDeleteSuccess: 'Exento eliminado correctamente.',
-
-  //Alertas Success Exento
-  comprobanteAddSuccess: 'Comprobante añadido correctamente.',
-  comprobanteEditSuccess: 'Comprobante editado correctamente.',
-  comprobanteDeleteSuccess: 'Comprobante eliminado correctamente.',
-
-  //Alertas Success Exento
-  fdp_AddSuccess: 'Forma de pago añadida correctamente.',
-  fdp_EditSuccess: 'Forma de pago editada correctamente.',
-  fdp_DeleteSuccess: 'Forma de pago eliminada correctamente.',
-
-  //Alertas Success Tipo de cuenta
-  tipoCuenta_AddSuccess: 'Tipo de cuenta añadida correctamente.',
-  tipoCuenta_EditSuccess: 'Tipo de cuenta editada correctamente.',
-  tipoCuenta_DeleteSuccess: 'Tipo de cuenta eliminada correctamente.',
-
-  //Alertas Errores Provincias
-  provinciaAddError: 'Error al guardar la provincia. Por favor, intenta nuevamente.',
-  provinciaEditError: 'Error al editar la provincia. Por favor, intenta nuevamente.',
-  provinciaDeleteError: 'Error al eliminar la provincia. Por favor, intenta nuevamente.',
-
-  //Alertas Errores municipios
-  municipioAddError: 'Error al guardar el municipio. Por favor, intenta nuevamente.',
-  municipioEditError: 'Error al editar el municipio. Por favor, intenta nuevamente.',
-  municipioDeleteError: 'Error al eliminar el municipio. Por favor, intenta nuevamente.',
-
-  //Alertas Errores organismo
-  organismoAddError: 'Error al guardar el organismo. Por favor, intenta nuevamente.',
-  organismoEditError: 'Error al editar el organismo. Por favor, intenta nuevamente.',
-  organismoDeleteError: 'Error al eliminar el organismo. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Banco
-  bancoAddError: 'Error al guardar el banco. Por favor, intenta nuevamente.',
-  bancoEditError: 'Error al editar el banco. Por favor, intenta nuevamente.',
-  bancoDeleteError: 'Error al eliminar el banco. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Moneda
-  monedaAddError: 'Error al guardar la moneda. Por favor, intenta nuevamente.',
-  monedaEditError: 'Error al editar la moneda. Por favor, intenta nuevamente.',
-  monedaDeleteError: 'Error al eliminar la moneda. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Vehiculo
-  vehiculoAddError: 'Error al guardar el vehículo. Por favor, intenta nuevamente.',
-  vehiculoEditError: 'Error al editar el vehículo. Por favor, intenta nuevamente.',
-  vehiculoDeleteError: 'Error al eliminar el vehículo. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Exento
-  exentoAddError: 'Error al guardar el exento. Por favor, intenta nuevamente.',
-  exentoEditError: 'Error al editar el exento. Por favor, intenta nuevamente.',
-  exentoDeleteError: 'Error al eliminar el exento. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Comprobante
-  comprobanteAddError: 'Error al guardar el comprobante. Por favor, intenta nuevamente.',
-  comprobanteEditError: 'Error al editar el comprobante. Por favor, intenta nuevamente.',
-  comprobanteDeleteError: 'Error al eliminar el comprobante. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Formas de Pago
-  fdp_AddError: 'Error al guardar la forma de pago. Por favor, intenta nuevamente.',
-  fdp_EditError: 'Error al editar la forma de pago. Por favor, intenta nuevamente.',
-  fdp_DeleteError: 'Error al eliminar la forma de pago. Por favor, intenta nuevamente.',
-
-  //Alertas Errores Tipo de cuenta
-  tipoCuenta_AddError: 'Error al guardar el tipo de cuenta. Por favor, intenta nuevamente.',
-  tipoCuenta_EditError: 'Error al editar el tipo de cuenta. Por favor, intenta nuevamente.',
-  tipoCuenta_DeleteError: 'Error al eliminar el tipo de cuenta. Por favor, intenta nuevamente.',
-
-  /**
-   * Alertas ENTIDAD
-   */
-
-  //Alertas Success Cuenta
-  cuenta_AddSuccess: 'Cuenta añadida correctamente.',
-  cuenta_EditSuccess: 'Cuenta editada correctamente.',
-  cuenta_DeleteSuccess: 'Cuenta eliminada correctamente.',
-
-  estacion_AddSuccess: 'Estación añadida correctamente.',
-  estacion_EditSuccess: 'Estación editada correctamente.',
-  estacion_DeleteSuccess: 'Estación eliminada correctamente.',
-
-  //Alertas Success Cuenta
-  cuenta_AddError: 'Error al guardar la cuenta. Por favor, intenta nuevamente.',
-  cuenta_EditError: 'Error al editar la cuenta. Por favor, intenta nuevamente.',
-  cuenta_DeleteError: 'Error al eliminar la cuenta. Por favor, intenta nuevamente.',
-
-  //Alertas Success Estacion
-  estacion_AddError: 'Error al guardar la estación. Por favor, intenta nuevamente.',
-  estacion_EditError: 'Error al editar la estación. Por favor, intenta nuevamente.',
-  estacion_DeleteError: 'Error al eliminar la estación. Por favor, intenta nuevamente.',
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
