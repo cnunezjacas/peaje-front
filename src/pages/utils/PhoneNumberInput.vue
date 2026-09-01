@@ -2,21 +2,48 @@
   <div class="border-box-bank">
     <div class="row">
       <!-- Inputs de teléfonos -->
-      <div v-for="(phone, index) in phones" :key="phone.id" class="col-10 col-sm-10 col-md-10 q-pr-sm">
-        <q-input v-model="phone.number" :ref="el => phoneInputs[index] = el" color="green" label="Teléfono"
-          :disable="disabledInput" type="tel" :rules="validaciones_generales.rulesPhone" @keyup="emitUpdate" />
+      <div
+        v-for="(phone, index) in phones"
+        :key="phone.id"
+        class="col-10 col-sm-10 col-md-10 q-pr-sm"
+      >
+        <q-input
+          v-model="phone.number"
+          :ref="(el) => (phoneInputs[index] = el)"
+          color="green"
+          label="Teléfono"
+          :disable="disabledInput"
+          type="tel"
+          :rules="validaciones_generales.rulesPhone"
+          @keyup="emitUpdate"
+        />
       </div>
 
       <!-- Botones -->
       <div class="col-2 row items-center justify-end">
         <!-- Botón Añadir / Guardar -->
-        <q-btn :color="btnAddShow ? 'green-5' : 'primary'" :title="btnAddShow ? 'Añadir' : 'Guardar'"
-          :icon="btnAddShow ? 'add' : 'save'" size="sm" flat round @click="btnAddShow ? addPhone() : SavePhone()"
-          :disable="!btnAddShow && checkStatusInputs()" />
+        <q-btn
+          :color="btnAddShow ? 'green-5' : 'primary'"
+          :title="btnAddShow ? 'Añadir' : 'Guardar'"
+          :icon="btnAddShow ? 'add' : 'save'"
+          size="sm"
+          flat
+          round
+          @click="btnAddShow ? addPhone() : SavePhone()"
+          :disable="!btnAddShow && checkStatusInputs()"
+        />
 
         <!-- Botón Eliminar -->
-        <q-btn v-if="phones.length > 1" icon="delete" color="negative" title="Eliminar" size="sm" flat round
-          @click="removePhone(phones.length - 1)" />
+        <q-btn
+          v-if="phones.length > 1"
+          icon="delete"
+          color="negative"
+          title="Eliminar"
+          size="sm"
+          flat
+          round
+          @click="removePhone(phones.length - 1)"
+        />
       </div>
     </div>
   </div>
@@ -26,68 +53,76 @@
 import { ref, watch, onMounted } from 'vue'
 import validaciones_generales from 'src/utils/validaciones_generales'
 
-// Prop para recibir teléfonos iniciales (modo edición)
 const props = defineProps({
   initialPhones: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 const phones = ref([{ id: Date.now(), number: '' }])
 const phoneInputs = ref([])
 const btnAddShow = ref(false)
 const disabledInput = ref(false)
-const lastLoadedPhones = ref([])  // 🔥 Track de últimos teléfonos cargados
 
 const emit = defineEmits(['UpdatePhone'])
 
-// 🔥 Función centralizada para cargar teléfonos (reutilizable)
+/**
+ * Carga teléfonos iniciales desde un array (útil para modo edición)
+ * Filtra valores vacíos y mapea a objetos {id, number}
+ * @param {string[]} phonesArray - Array de números telefónicos
+ */
 const loadPhones = (phonesArray) => {
   if (!phonesArray || !Array.isArray(phonesArray) || phonesArray.length === 0) {
     return
   }
 
-  // Filtrar y mapear a objetos {id, number}
   const phonesData = phonesArray
-    .filter(p => p && typeof p === 'string' && p.trim() !== '')
+    .filter((p) => p && typeof p === 'string' && p.trim() !== '')
     .map((number, index) => ({
       id: Date.now() + index + Math.random(),
-      number: number.trim()
+      number: number.trim(),
     }))
 
-  // 🔥 Actualizar phones.value directamente (sin comparar con JSON.stringify)
   phones.value = phonesData
-  lastLoadedPhones.value = phonesArray.map(p => p?.trim()).filter(p => p)  // Track para debug
-
-  btnAddShow.value = true      // Modo "Añadir" después de cargar
-  disabledInput.value = true   // Inputs en modo lectura inicialmente
+  btnAddShow.value = true
+  disabledInput.value = true
 
   emitUpdate()
-
-  // 🔍 Debug
-  console.log('📱 Phone cargado con:', phones.value)
-  console.log('📱 lastLoadedPhones:', lastLoadedPhones.value)
 }
 
-// 🔥 Watch simplificado: solo reacciona a cambios con datos
-watch(() => props.initialPhones, (newVal) => {
-  if (newVal && Array.isArray(newVal) && newVal.length > 0) {
-    loadPhones(newVal)
-  }
-})
+// Watch para cargar teléfonos cuando cambian las props
+watch(
+  () => props.initialPhones,
+  (newVal) => {
+    if (newVal && Array.isArray(newVal) && newVal.length > 0) {
+      loadPhones(newVal)
+    }
+  },
+)
 
-// 🔥 Método expuesto para cargar teléfonos manualmente (útil para edición)
+/**
+ * Método expuesto para cargar teléfonos manualmente (útil para edición)
+ * @param {string[]} phonesArray - Array de números telefónicos
+ */
 const loadPhonesManual = (phonesArray) => {
   loadPhones(phonesArray)
 }
 
-// Emitir actualización en cada cambio
+/**
+ * Emite el array actualizado de números de teléfono al componente padre
+ * Filtra los números vacíos para no enviar campos sin contenido
+ */
 const emitUpdate = () => {
-  emit('UpdatePhone', phones.value.map(p => p.number))
+  const validNumbers = phones.value
+    .map((p) => p.number)
+    .filter((number) => number && number.trim() !== '')
+  emit('UpdatePhone', validNumbers)
 }
 
-// Función para agregar un nuevo teléfono
+/**
+ * Agrega un nuevo campo de teléfono vacío y enfoca el nuevo input
+ */
 function addPhone() {
   const newPhone = { id: Date.now() + Math.random(), number: '' }
   phones.value.push(newPhone)
@@ -101,13 +136,19 @@ function addPhone() {
   }, 50)
 }
 
+/**
+ * Guarda los teléfonos actuales y bloquea los inputs (modo lectura)
+ */
 function SavePhone() {
   btnAddShow.value = true
   disabledInput.value = true
   emitUpdate()
 }
 
-// Función para eliminar un teléfono por índice
+/**
+ * Elimina el último teléfono del array
+ * @param {number} index - Índice del teléfono a eliminar
+ */
 function removePhone(index) {
   if (phones.value.length > 1) {
     phones.value.splice(index, 1)
@@ -118,7 +159,10 @@ function removePhone(index) {
   }
 }
 
-// Focus en el último input
+/**
+ * Enfoca el último input de teléfono del array
+ * Método expuesto para que el componente padre pueda hacer focus programático
+ */
 function Focus() {
   const lastInput = phoneInputs.value[phoneInputs.value.length - 1]
   if (lastInput?.focus) {
@@ -126,51 +170,40 @@ function Focus() {
   }
 }
 
-// 🔥 Resetear componente (llamar desde el padre al cerrar diálogo)
+/**
+ * Resetea el componente a su estado inicial
+ * Debe llamarse desde el padre al cerrar el diálogo
+ */
 function ResetPhones() {
   phones.value = [{ id: Date.now(), number: '' }]
   phoneInputs.value = []
   btnAddShow.value = false
   disabledInput.value = false
-  lastLoadedPhones.value = []
   emitUpdate()
 }
 
+/**
+ * Verifica si el último teléfono está vacío (para habilitar/deshabilitar botón añadir)
+ * @returns {boolean} true si el último teléfono está vacío
+ */
 function checkStatusInputs() {
   const lastPhone = phones.value[phones.value.length - 1]?.number?.trim()
   return !lastPhone
 }
 
-
-
-// 🔥 DEBUG EXTREMO: Loguear cada cambio relevante
-watch(() => props.initialPhones, (newVal, oldVal) => {
-  console.log('🔍 WATCH initialPhones:', {
-    old: oldVal,
-    new: newVal,
-    phonesBefore: phones.value,
-  })
-}, { deep: true })
-
-watch(() => phones.value, (newVal) => {
-  console.log('🔍 WATCH phones.value:', newVal)
-}, { deep: true })
-
 onMounted(() => {
-  console.log('🔍 Phone ONMOUNTED:', {
-    initialPhones: props.initialPhones,
-    phones: phones.value,
-  })
+  // Inicialización del componente
 })
 
-
 defineExpose({
-  getPhone: () => phones.value.filter(p => p.number?.trim()).map(p => p.number).join('/'),
+  getPhone: () =>
+    phones.value
+      .filter((p) => p.number?.trim())
+      .map((p) => p.number)
+      .join('/'),
   Focus,
   ResetPhones,
-  loadPhonesManual,  // 👈 Exponer método para carga manual
-  // 🔥 Exponer para debug
+  loadPhonesManual,
   getPhones: () => phones.value,
-  getLastLoaded: () => lastLoadedPhones.value,
 })
 </script>
