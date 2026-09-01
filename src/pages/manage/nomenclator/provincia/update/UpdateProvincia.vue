@@ -73,9 +73,9 @@
 /* Importaciones */
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
@@ -83,14 +83,15 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
+const { fetchData, patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiProvincia
-  const existeCodigo = await verificarExistente(url, 'codigo', Number(TextCodigo_prov.value))
-  return existeCodigo
+  const result = await CheckField(url, 'codigo', Number(TextCodigo_prov.value), fetchData)
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -116,31 +117,33 @@ const SendData = async () => {
   const newItem = { nombre: TextNombre_prov.value, codigo: Number(TextCodigo_prov.value) }
 
   try {
-    await api.patch(STRINGS.urlApiProvincia + '/' + _id.value, newItem) // POST /items
-    notify_success(STRINGS.provinciaEditSuccess)
+    const { data, error } = await patchData(STRINGS.urlApiProvincia + '/' + _id.value, newItem) // POST /items
+
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.province}`)
+
+    notify_success(`${STRINGS.province} ${STRINGS.successEdit}`)
     emit('ActualizarTabla', true)
+    Reset()
   } catch (error) {
-    console.error('Error al crear item:', error)
-    notify_error(STRINGS.provinciaAddError)
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.province}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.province}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (name, codigo, id) => {
+const getUpDialogEdit = (row) => {
   /* Se levanta el dialogo */
   backdropFilter.value = list
   dialog.value = true
 
   //Contenido de modelos de los capos en pantalla
-  TextCodigo_prov.value = String(codigo)
-  TextNombre_prov.value = name
-  _id.value = id
+  TextCodigo_prov.value = String(row.codigo)
+  TextNombre_prov.value = row.nombre
+  _id.value = row._id
 
   //Copias de Seguridad
-  TextCodigo_prov_copy.value = String(codigo)
-  TextNombre_prov__copy.value = name
+  TextCodigo_prov_copy.value = String(row.codigo)
+  TextNombre_prov__copy.value = row.nombre
 }
 
 //Función para comprobar que los campos no estén vacíos

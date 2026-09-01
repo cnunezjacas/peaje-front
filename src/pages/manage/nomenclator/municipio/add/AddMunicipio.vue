@@ -84,7 +84,7 @@ import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import getNomenclator from 'utils/utils_axios/nomencladores/getNomenclator.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 import { useApi } from 'src/composables/useApi'
 
@@ -92,7 +92,7 @@ import { useApi } from 'src/composables/useApi'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-const { postData } = useApi()
+const { postData, fetchData } = useApi()
 
 /* Función encargada de realizar la petición y retornar el listado de provincias */
 const loadProvincias = async () => {
@@ -110,8 +110,8 @@ const emit = defineEmits(['ActualizarTabla'])
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiMunicipio
-  const existeCodigo = await verificarExistente(url, 'codigo', Number(TextCodigo_mun.value))
-  return existeCodigo
+  const result = await CheckField(url, STRINGS.codigoBD, Number(TextCodigo_mun.value), fetchData)
+  return result
 }
 
 /*Funcion de procesado de Datos*/
@@ -131,15 +131,17 @@ const SendData = async () => {
       }
 
       try {
-        await postData(STRINGS.urlApiMunicipio, newItem) // POST /items
-        notify_success(title.value + ' ' + STRINGS.successAdd)
+        const { data, error } = await postData(STRINGS.urlApiMunicipio, newItem) // POST /items
+
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.municipality}`)
+
+        notify_success(`${STRINGS.municipality} ${STRINGS.successAdd}`)
         emit('ActualizarTabla', true)
+        Reset()
       } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.errorAdd + ' ' + title.value)
-        emit('ActualizarTabla', false)
+        console.error(`Error al crear item ${STRINGS.municipality}:`, error)
+        notify_error(`${STRINGS.errorAdd} ${STRINGS.municipality}`)
       }
-      Reset()
     }
   }
 }
@@ -200,7 +202,6 @@ const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
 const selectProv = ref(null)
 const options = ref([])
-const title = ref('Municipio')
 
 //Ref key
 const textCodigo_Mun = ref(null)

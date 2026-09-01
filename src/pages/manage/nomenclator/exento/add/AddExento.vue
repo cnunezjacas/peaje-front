@@ -113,7 +113,7 @@
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { useApi } from 'src/composables/useApi'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
@@ -122,7 +122,7 @@ import validaciones_generales from 'src/utils/validaciones_generales.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-const { postData } = useApi()
+const { postData, fetchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
@@ -132,7 +132,7 @@ const emit = defineEmits(['ActualizarTabla'])
  */
 const CheckCode = async () => {
   const url = STRINGS.urlApiExento
-  const result = await verificarExistente(url, STRINGS.codigoBD, TextCodigo_exento.value)
+  const result = await CheckField(url, STRINGS.codigoBD, String(TextCodigo_exento.value), fetchData)
   return result
 }
 
@@ -158,18 +158,18 @@ const SendData = async () => {
       }
 
       try {
-        const { /*data,*/ error } = await postData(STRINGS.urlApiExento, newItem) // POST /items
+        const { data, error } = await postData(STRINGS.urlApiExento, newItem) // POST /items
 
         // Mostrar posible alerta de error
-        if (error) return notify_error(STRINGS.errorAdd)
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.exempt}`)
 
         // Mostrar alerta positiva de éxito
         emit('ActualizarTabla', true)
-        notify_success(STRINGS.successAdd)
-        dialog.value = false
+        notify_success(`${STRINGS.exempt} ${STRINGS.successAdd}`)
+        Reset()
       } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.errorAdd)
+        console.error(`Error al crear item ${STRINGS.exempt}:`, error)
+        notify_error(`${STRINGS.errorAdd} ${STRINGS.exempt}`)
       }
     }
   }
@@ -188,9 +188,11 @@ const getUpDialogAdd = () => {
  * Se ejecuta después de un submit exitoso o al cerrar el diálogo
  */
 const Reset = () => {
+  dialog.value = false
   TextNombre_exento.value = ''
   TextCodigo_exento.value = ''
   TextNomenclador_exento.value = ''
+  TextDetalles_exento.value = ''
   disabledBtnSave.value = STRINGS.desabilitar
 }
 

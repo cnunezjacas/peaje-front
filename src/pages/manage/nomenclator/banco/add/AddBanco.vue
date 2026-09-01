@@ -6,24 +6,44 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.bank.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.bank.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="TextNombre_banco" ref="textNombre_banco" color="green"
-                :rules="validaciones_generales.rulesOnlyText" type="text" :label="STRINGS.name" />
+              <q-input
+                v-model="TextNombre_banco"
+                ref="textNombre_banco"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyText"
+                type="text"
+                :label="STRINGS.name"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_banco" v-model="TextCodigo_banco" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyUppercase" :label="STRINGS.code" />
+              <q-input
+                ref="textCodigo_banco"
+                v-model="TextCodigo_banco"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyUppercase"
+                :label="STRINGS.code"
+              />
             </div>
 
             <div class="col-12 q-mt-md">
               <p>{{ STRINGS.details }}:</p>
               <div class="bg-grey-4">
-                <q-input ref="textDetalles_banco" v-model="TextDetalles_banco" class="q-pa-md" color="green" autogrow />
+                <q-input
+                  ref="textDetalles_banco"
+                  v-model="TextDetalles_banco"
+                  class="q-pa-md"
+                  color="green"
+                  autogrow
+                />
               </div>
             </div>
           </div>
@@ -32,11 +52,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="SendData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset()" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset()"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -52,7 +85,7 @@ import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useApi } from 'composables/useApi.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */
@@ -60,19 +93,14 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
 
-// 🔥 Inicializar el composable
-const { postData } = useApi()
-
+// Inicializar el composable
+const { postData, fetchData } = useApi()
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiBanco
-  const existeCodigo = await verificarExistente(
-    url,
-    STRINGS.codigoBD,
-    String(TextCodigo_banco.value),
-  )
-  return existeCodigo
+  const result = await CheckField(url, STRINGS.codigoBD, String(TextCodigo_banco.value), fetchData)
+  return result
 }
 
 /* Emisor */
@@ -93,20 +121,18 @@ const SendData = async () => {
       }
 
       try {
-        await postData(STRINGS.urlApiBanco, newItem) // POST /items
+        const { data, error } = await postData(STRINGS.urlApiBanco, newItem) // POST /items
+
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.bank}`)
 
         // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.bancoAddSuccess)
-
+        notify_success(`${STRINGS.bank} ${STRINGS.successAdd}`)
         emit('ActualizarTabla', true)
+        Reset()
       } catch (error) {
-        console.error('Error al crear item:', error)
-
-        notify_error(STRINGS.bancoAddError)
-
-        emit('ActualizarTabla', false)
+        console.error(`Error al crear item ${STRINGS.bank}:`, error)
+        notify_error(` ${STRINGS.errorAdd} ${STRINGS.bank}`)
       }
-      Reset()
     }
   }
 }

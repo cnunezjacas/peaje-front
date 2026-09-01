@@ -1,7 +1,7 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
-      <q-card style="width: 500px; max-width: 80vw">
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter" class="dialog-lg">
+      <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="edit" />
@@ -69,9 +69,9 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'composables/useApi.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
@@ -79,22 +79,22 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-/**
- * Values for backdrop-filter are the same as in the CSS specs.
- * The following list is not an exhaustive one.
- */
+
+//  Inicializar el composable
+const { patchData, fetchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiOrganismo
-  const existeCodigo = await verificarExistente(
+  const result = await CheckField(
     url,
     STRINGS.acronym.toLocaleLowerCase(),
     String(TextNombreAbrOrg.value),
+    fetchData,
   )
-  return existeCodigo
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -123,27 +123,30 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiOrganismo + '/' + _id.value, newItem) // POST /items
-    notify_success(STRINGS.organismoEditSuccess)
+    const { data, error } = await patchData(STRINGS.urlApiOrganismo + '/' + _id.value, newItem) // POST /items
+
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.body}`)
+
     emit('ActualizarTabla', true)
+    notify_success(`${STRINGS.body} ${STRINGS.successEdit}`)
+    Reset()
   } catch (error) {
-    console.error('Error al editar el item:', error)
-    notify_error(STRINGS.organismoEditError)
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.body}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.body}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (nameAbrOrg, nombreOrg, id) => {
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
   dialog.value = true
-  TextNombreAbrOrg.value = nameAbrOrg
-  TextNombreOrg.value = nombreOrg
-  _id.value = id
 
-  TextNombreOrg_copy.value = nombreOrg
-  TextNombreAbrOrg_copy.value = nameAbrOrg
+  TextNombreAbrOrg.value = row.siglas
+  TextNombreOrg.value = row.nombre
+  _id.value = row._id
+
+  TextNombreOrg_copy.value = row.siglas
+  TextNombreAbrOrg_copy.value = row.nombre
 }
 
 //Función para comprobar que los campos no estén vacíos

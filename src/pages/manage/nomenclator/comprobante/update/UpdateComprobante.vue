@@ -117,17 +117,18 @@
 /* Importaciones */
 import { ref, onBeforeMount, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success /*, notify_warning*/, notify_error } = useNotify()
+const { notify_success, notify_error } = useNotify()
+const { fetchData, patchData } = useApi()
 
 /* Carga todas las monedas de la BD */
 const loadCoins = async () => {
@@ -153,12 +154,13 @@ onBeforeMount(() => {
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiComprobante
-  const existeCodigo = await verificarExistente(
+  const result = await CheckField(
     url,
     STRINGS.codigoBD,
     String(TextCodigo_comprobante.value),
+    fetchData,
   )
-  return existeCodigo
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -193,39 +195,39 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiComprobante + '/' + _id.value, newItem) // POST /items
+    const { data, error } = await patchData(STRINGS.urlApiComprobante + '/' + _id.value, newItem) // POST /items
     // Mostrar alerta positiva de éxito
-    notify_success(STRINGS.comprobanteEditSuccess)
+
+    if (!data && error) notify_error(`${STRINGS.errorEdit} ${STRINGS.voucher}`)
 
     emit('ActualizarTabla', true)
+    notify_success(`${STRINGS.voucher} ${STRINGS.successEdit}`)
+    Reset()
   } catch (error) {
-    console.error('Error al crear item:', error)
-    notify_error(STRINGS.comprobanteEditError)
-
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.voucher}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.voucher}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = async (nombre, codigo, moneda, valor, id) => {
+const getUpDialogEdit = async (row) => {
   backdropFilter.value = list
   dialog.value = true
 
-  TextNombre_Comprobante.value = nombre
-  TextCodigo_comprobante.value = codigo
+  TextNombre_Comprobante.value = row.nombre
+  TextCodigo_comprobante.value = row.codigo
 
-  await loadCoinsSelected(moneda)
+  await loadCoinsSelected(row.moneda)
   /* TextMoneda_comprobante.value = moneda */
-  TextValor_comprobante.value = String(valor)
+  TextValor_comprobante.value = String(row.valor)
   // TextNomenclador_comprobante.value = nomenclador
-  _id.value = id
+  _id.value = row._id
 
   //Copias de Seguridad
-  TextNombre_Comprobante_copy.value = nombre
-  TextCodigo_comprobante_copy.value = codigo
-  TextMoneda_comprobante_copy.value = moneda
-  TextValor_comprobante_copy.value = String(valor)
+  TextNombre_Comprobante_copy.value = row.nombre
+  TextCodigo_comprobante_copy.value = row.codigo
+  TextMoneda_comprobante_copy.value = row.moneda
+  TextValor_comprobante_copy.value = String(row.valor)
   // TextNomenclador_comprobante_copy.value = nomenclador
 }
 

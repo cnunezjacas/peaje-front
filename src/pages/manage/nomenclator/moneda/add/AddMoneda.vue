@@ -175,9 +175,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
@@ -185,18 +185,20 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
+const { fetchData, postData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiMoneda
-  const existeCodigo = await verificarExistente(
+  const result = await CheckField(
     url,
     STRINGS.acronym.toLocaleLowerCase(),
     String(TextSiglas_moneda.value),
+    fetchData,
   )
-  return existeCodigo
+  return result
 }
 
 /*Funcion de procesado de Datos*/
@@ -217,19 +219,18 @@ const SendData = async () => {
       }
 
       try {
-        await api.post(STRINGS.urlApiMoneda, newItem) // POST /items
+        const { data, error } = await postData(STRINGS.urlApiMoneda, newItem) // POST /items
+
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.currency}`)
 
         // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.monedaAddSuccess)
-
+        notify_success(`${STRINGS.currency} ${STRINGS.successAdd}`)
         emit('ActualizarTabla', true)
+        Reset()
       } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.monedaAddError)
-
-        emit('ActualizarTabla', false)
+        console.error(`Error al crear item ${STRINGS.currency}:`, error)
+        notify_error(`${STRINGS.errorAdd} ${STRINGS.currency}`)
       }
-      Reset()
     }
   }
 }

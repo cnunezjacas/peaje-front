@@ -6,18 +6,33 @@
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.province.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.province.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-5">
-              <q-input v-model="Text_Nombre" color="green" :rules="validaciones_generales.rulesOnlyText" type="text"
-                :label="STRINGS.name" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="Text_Nombre"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyText"
+                type="text"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-5">
-              <q-input ref="textCodigo_prov" v-model="Text_codigo" color="green" type="text"
-                :rules="validaciones_generales.rulesOnlyNumbers" :label="STRINGS.code" @keyup="checkStatusInputs" />
+              <q-input
+                ref="textCodigo_prov"
+                v-model="Text_codigo"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyNumbers"
+                :label="STRINGS.code"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
         </q-card-section>
@@ -25,11 +40,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" :class="disabledBtnSave" @click="SendData()" :label="STRINGS.save" color="green" />
+              <q-btn
+                icon="check"
+                :class="disabledBtnSave"
+                @click="SendData()"
+                :label="STRINGS.save"
+                color="green"
+              />
             </div>
 
             <div class="">
-              <q-btn flat icon="close" :label="STRINGS.close" v-on:click="Reset" color="dark" v-close-popup />
+              <q-btn
+                flat
+                icon="close"
+                :label="STRINGS.close"
+                v-on:click="Reset"
+                color="dark"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -43,24 +71,26 @@ import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 import { useApi } from 'src/composables/useApi'
-
 
 /* =================================================== */
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-const { postData } = useApi()
-
+const { postData, fetchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiProvincia
-  const result = await verificarExistente(url, STRINGS.codigoBD, Number(Text_codigo.value))
+  const result = await CheckField(url, STRINGS.codigoBD, Number(Text_codigo.value), fetchData)
+
+  console.log('CheckCode - result')
+  console.log(result)
+
   return result
 }
 
@@ -76,22 +106,18 @@ const SendData = async () => {
       const newItem = { nombre: Text_Nombre.value, codigo: Number(Text_codigo.value) }
 
       try {
-        const { /*data,*/ error } = await postData(STRINGS.urlApiProvincia, newItem) // POST /items
+        const { data, error } = await postData(STRINGS.urlApiProvincia, newItem) // POST /items
 
         // Mostrar alerta positiva de éxito
-        if (error)
-          return notify_error(STRINGS.errorAdd)
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.province}`)
 
         emit('ActualizarTabla', true)
-        notify_success(STRINGS.successAdd)
-        dialog.value = false
+        notify_success(`${STRINGS.province} ${STRINGS.successAdd}`)
         Reset()
-
       } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.errorAdd)
+        console.error(`Error al crear item ${STRINGS.province}:`, error)
+        notify_error(`${STRINGS.errorAdd} ${STRINGS.province}`)
       }
-
     }
   }
 }

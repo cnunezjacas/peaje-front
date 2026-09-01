@@ -74,26 +74,28 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
-const { notify_success /*, notify_warning,*/, notify_error } = useNotify()
+const { notify_success, notify_error } = useNotify()
+const { fetchData, patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiBanco
-  const existeCodigo = await verificarExistente(
+  const existeCodigo = await CheckField(
     url,
     STRINGS.codigoBD,
     String(TextCodigo_banco.value),
+    fetchData,
   )
   return existeCodigo
 }
@@ -125,36 +127,36 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiBanco + '/' + _id.value, newItem) // POST /items
+    const { data, error } = await patchData(STRINGS.urlApiBanco + '/' + _id.value, newItem) // POST /items
+
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.bank}`)
+
     // Mostrar alerta positiva de éxito
-    notify_success(STRINGS.bancoEditSuccess)
-
+    notify_success(`${STRINGS.bank} ${STRINGS.successEdit}`)
     emit('ActualizarTabla', true)
+    Reset()
   } catch (error) {
-    console.error('Error al crear item:', error)
-    notify_error(STRINGS.bancoEditError)
-
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.bank}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.bank}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (nombre, codigo, detalle, id) => {
+const getUpDialogEdit = (row) => {
   /* Se levanta el dialogo */
   backdropFilter.value = list
   dialog.value = true
 
   //Contenido de modelos de los capos en pantalla
-  TextCodigo_banco.value = codigo
-  TextNombre_banco.value = nombre
-  TextDetalles_banco.value = detalle
-  _id.value = id
+  TextNombre_banco.value = row.nombre
+  TextCodigo_banco.value = row.codigo
+  TextDetalles_banco.value = row.detalles
+  _id.value = row._id
 
   //Copias de Seguridad
-  TextCodigo_banco_copy.value = codigo
-  TextNombre_banco_copy.value = nombre
-  TextDetalles_banco_copy.value = detalle
+  TextNombre_banco_copy.value = row.nombre
+  TextCodigo_banco_copy.value = row.codigo
+  TextDetalles_banco_copy.value = row.detalles
 }
 
 //Función para comprobar que los campos no estén vacíos

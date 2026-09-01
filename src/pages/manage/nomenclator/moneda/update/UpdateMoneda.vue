@@ -113,23 +113,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <div class="row flex justify-center q-mt-md">
-            <div class="col-12 q-mt-xs">
-              <div class="q-px-sm">
-                <p>{{ STRINGS.details }}:</p>
-                <div class="bg-grey-4">
-                  <q-input
-                    ref="textDetalles_moneda"
-                    v-model="TextDetalles_moneda"
-                    class="q-pa-md"
-                    color="green"
-                    autogrow
-                  />
-                </div>
-              </div>
-            </div>
-          </div> -->
         </q-card-section>
 
         <q-card-section>
@@ -164,9 +147,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
@@ -174,18 +157,20 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
+const { fetchData, patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiMoneda
-  const existeCodigo = await verificarExistente(
+  const result = await CheckField(
     url,
     STRINGS.acronym.toLocaleLowerCase(),
     String(TextSiglas_moneda.value),
+    fetchData,
   )
-  return existeCodigo
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -195,7 +180,7 @@ const CheckData = async () => {
     if (InputDifferent() && TextSiglas_moneda.value !== TextSiglas_moneda_copy.value) {
       if (await CheckCode()) {
         // Mostrar mensaje de error o alertar al usuario
-        notify_error(STRINGS.codigoRepetido)
+        notify_error(STRINGS.siglasRepetidas)
         return textSiglas_monedas.value.focus()
       } else {
         SendData()
@@ -218,37 +203,38 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiMoneda + '/' + _id.value, newItem) // POST /items
-    notify_success(STRINGS.monedaEditSuccess)
+    const { data, error } = await patchData(STRINGS.urlApiMoneda + '/' + _id.value, newItem) // POST /items
 
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.currency}`)
+
+    notify_success(`${STRINGS.currency} ${STRINGS.successEdit}`)
     emit('ActualizarTabla', true)
+    Reset()
   } catch (error) {
-    console.error('Error al crear item:', error)
-    notify_error(STRINGS.municipioEditError)
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.currency}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.currency}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (siglas, nombre, tasaCambio, nomenclador, mBase, idCondor, id) => {
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
   dialog.value = true
 
-  TextSiglas_moneda.value = siglas
-  TextNombre_moneda.value = nombre
-  TextTasaCambio_moneda.value = String(tasaCambio)
-  Textnomenclador_moneda.value = nomenclador
-  TextmBase_moneda.value = mBase
-  TextIdCondor_moneda.value = idCondor
+  TextSiglas_moneda.value = row.siglas
+  TextNombre_moneda.value = row.nombre
+  TextTasaCambio_moneda.value = String(row.tasa)
+  Textnomenclador_moneda.value = row.nomenclador
+  TextmBase_moneda.value = row.moneda
+  TextIdCondor_moneda.value = row.condor
 
-  TextSiglas_moneda_copy.value = siglas
-  TextNombre_moneda_copy.value = nombre
-  TextTasaCambio_moneda_copy.value = String(tasaCambio)
-  Textnomenclador_moneda_copy.value = nomenclador
-  TextmBase_moneda_copy.value = mBase
-  TextIdCondor_moneda_copy.value = idCondor
-  _id.value = id
+  TextSiglas_moneda_copy.value = row.siglas
+  TextNombre_moneda_copy.value = row.nombre
+  TextTasaCambio_moneda_copy.value = String(row.tasa)
+  Textnomenclador_moneda_copy.value = row.nomenclador
+  TextmBase_moneda_copy.value = row.moneda
+  TextIdCondor_moneda_copy.value = row.condor
+  _id.value = row._id
 }
 
 //Función para comprobar que los campos no estén vacíos

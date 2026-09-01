@@ -1,24 +1,38 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
-      <q-card>
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter" class="dialog-lg">
+      <q-card class="my-dialog-card">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
             <q-icon name="note_add" />
           </span>
-          <span class="icon-text">{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.body.toUpperCase() }}</span>
+          <span class="icon-text"
+            >{{ STRINGS.add.toUpperCase() }} - {{ STRINGS.body.toUpperCase() }}</span
+          >
         </q-card-section>
 
         <q-card-section>
           <div class="row flex justify-between">
             <div class="col-4">
-              <q-input v-model="TextNombreAbrOrg" ref="textNombre_AbrOrg" color="green"
-                :rules="validaciones_generales.rulesOnlyUppercase" type="text" :label="STRINGS.nombre_abreviado"
-                @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombreAbrOrg"
+                ref="textNombre_AbrOrg"
+                color="green"
+                :rules="validaciones_generales.rulesOnlyUppercase"
+                type="text"
+                :label="STRINGS.nombre_abreviado"
+                @keyup="checkStatusInputs"
+              />
             </div>
             <div class="col-7">
-              <q-input v-model="TextNombreOrg" color="green" type="text" :rules="validaciones_generales.rulesOnlyText"
-                :label="STRINGS.name" @keyup="checkStatusInputs" />
+              <q-input
+                v-model="TextNombreOrg"
+                color="green"
+                type="text"
+                :rules="validaciones_generales.rulesOnlyText"
+                :label="STRINGS.name"
+                @keyup="checkStatusInputs"
+              />
             </div>
           </div>
         </q-card-section>
@@ -26,11 +40,24 @@
         <q-card-section>
           <div class="flex justify-start">
             <div class="">
-              <q-btn icon="check" @click="SendData" :label="STRINGS.save" color="green" :class="disabledBtnSave" />
+              <q-btn
+                icon="check"
+                @click="SendData"
+                :label="STRINGS.save"
+                color="green"
+                :class="disabledBtnSave"
+              />
             </div>
 
             <div class="">
-              <q-btn icon="close" flat :label="STRINGS.close" @click="Reset" class="btn btn-white" v-close-popup />
+              <q-btn
+                icon="close"
+                flat
+                :label="STRINGS.close"
+                @click="Reset"
+                class="btn btn-white"
+                v-close-popup
+              />
             </div>
           </div>
         </q-card-section>
@@ -43,7 +70,7 @@
 /* Importaciones */
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import verificarSiglaExistente from 'src/utils/utils_axios/nomencladores/verificarSiglaExistenteOrganismo.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useApi } from 'composables/useApi.js'
@@ -53,18 +80,28 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-// 🔥 Inicializar el composable
-const { postData/*, postData, putData, deleteData */ } = useApi()
+//  Inicializar el composable
+const { postData, fetchData } = useApi()
 
 /* Inicialización del Emit */
 const emit = defineEmits(['ActualizarTabla'])
 
+/* función para verificar si un valor existe en la API */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiOrganismo
+  const result = await CheckField(
+    url,
+    STRINGS.acronym.toLocaleLowerCase(),
+    String(TextNombreAbrOrg.value),
+    fetchData,
+  )
+  return result
+}
+
 /*Funcion de procesado de Datos*/
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Verificar si el código ya existe
-    const existeSigla = await verificarSiglaExistente(TextNombreAbrOrg.value)
-    if (existeSigla) {
+    if (await CheckCode()) {
       // Key  repetida Mostrar mensaje de error o alertar al usuario
       notify_error(STRINGS.siglasRepetidas)
       return textNombre_AbrOrg.value.focus()
@@ -74,15 +111,17 @@ const SendData = async () => {
         siglas: TextNombreAbrOrg.value,
       }
       try {
-        await postData(STRINGS.urlApiOrganismo, newItem)
-        notify_success(STRINGS.organismoAddSuccess)
+        const { data, error } = await postData(STRINGS.urlApiOrganismo, newItem)
+
+        if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.body}`)
+
         emit('ActualizarTabla', true)
+        notify_success(`${STRINGS.body} ${STRINGS.successAdd}`)
+        Reset()
       } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.organismoAddError)
-        emit('ActualizarTabla', false)
+        console.error(`Error al crear item ${STRINGS.body}:`, error)
+        notify_error(`${STRINGS.errorAdd} ${STRINGS.body}`)
       }
-      Reset()
     }
   }
 }

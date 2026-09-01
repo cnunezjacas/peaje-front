@@ -103,10 +103,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { useApi } from 'src/composables/useApi'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
@@ -115,7 +115,7 @@ import validaciones_generales from 'src/utils/validaciones_generales'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-const { patchData } = useApi()
+const { fetchData, patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
@@ -125,7 +125,7 @@ const emit = defineEmits(['ActualizarTabla'])
  */
 const CheckCode = async () => {
   const url = STRINGS.urlApiExento
-  const result = await verificarExistente(url, STRINGS.codigoBD, TextCodigo_exento.value)
+  const result = await CheckField(url, STRINGS.codigoBD, String(TextCodigo_exento.value), fetchData)
   return result
 }
 
@@ -166,16 +166,14 @@ const SendData = async () => {
   try {
     const { data, error } = await patchData(STRINGS.urlApiExento + '/' + Text_Id.value, newItem)
 
-    if (data != null && !error) {
-      emit('ActualizarTabla', true)
-      notify_success(STRINGS.successEdit)
-      dialog.value = false
-      Reset()
-    } else notify_error(STRINGS.errorEdit)
+    if (!data && error) notify_error(`${STRINGS.errorEdit} ${STRINGS.exempt}`)
+
+    emit('ActualizarTabla', true)
+    notify_success(`${STRINGS.exempt} ${STRINGS.successEdit}`)
+    Reset()
   } catch (error) {
-    console.error(STRINGS.errorEdit, error)
-    notify_error(STRINGS.errorAdd)
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.exempt}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.exempt}`)
   }
 }
 
@@ -188,21 +186,21 @@ const SendData = async () => {
  * @param {string} detalles - Detalles adicionales del exento
  * @param {string} id - ID único del exento en la base de datos
  */
-const getUpDialogEdit = (nombre, codigo, nomenclador, detalles, id) => {
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
   dialog.value = true
 
-  TextCodigo_exento.value = codigo
-  TextNombre_exento.value = nombre
-  TextNomenclador_exento.value = nomenclador
-  TextDetalles_exento.value = detalles
-  Text_Id.value = id
+  TextNombre_exento.value = row.nombre
+  TextCodigo_exento.value = row.codigo
+  TextNomenclador_exento.value = row.nomenclador
+  TextDetalles_exento.value = row.detalles
+  Text_Id.value = row._id
 
   // Guardar copias para comparar cambios
-  TextCodigo_exento_copy.value = codigo
-  TextNombre_exento_copy.value = nombre
-  TextNomenclador_exento_copy.value = nomenclador
-  TextDetalles_exento_copy.value = detalles
+  TextNombre_exento_copy.value = row.nombre
+  TextCodigo_exento_copy.value = row.codigo
+  TextNomenclador_exento_copy.value = row.nomenclador
+  TextDetalles_exento_copy.value = row.detalles
 }
 
 /**
@@ -264,7 +262,7 @@ const checkStatusInputs = () => {
  * Cierra el diálogo después de un submit exitoso
  */
 const Reset = () => {
-  refDialogoEdit.value.hide()
+  dialog.value = false
   TextCodigo_exento.value = ''
   TextNombre_exento.value = ''
   TextNomenclador_exento.value = ''
@@ -299,6 +297,10 @@ const textNomenclador_exento = ref(null)
 
 const options = [1, 2, 3, 4]
 const disabledBtnSave = ref(STRINGS.desabilitar)
+
+watch(TextNomenclador_exento, () => {
+  checkStatusInputs()
+})
 
 defineExpose({
   getUpDialogEdit,

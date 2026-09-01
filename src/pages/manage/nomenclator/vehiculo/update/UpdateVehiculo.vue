@@ -101,9 +101,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
@@ -111,18 +111,20 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
+const { fetchData, patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiVehiculo
-  const existeCodigo = await verificarExistente(
+  const result = await CheckField(
     url,
     STRINGS.codigoBD,
     String(TextCodigo_vehiculo.value),
+    fetchData,
   )
-  return existeCodigo
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -153,36 +155,36 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiVehiculo + '/' + _id.value, newItem) // POST /items
+    const { data, error } = await patchData(STRINGS.urlApiVehiculo + '/' + _id.value, newItem) // POST /items
+
+    if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.vehicle}`)
+
     // Mostrar alerta positiva de éxito
-    notify_success(STRINGS.vehiculoEditSuccess)
-
+    notify_success(`${STRINGS.vehicle} ${STRINGS.successAdd}`)
     emit('ActualizarTabla', true)
+    Reset()
   } catch (error) {
-    console.error('Error al editar item:', error)
-    notify_error(STRINGS.vehiculoEditError)
-
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.vehicle}:`, error)
+    notify_error(`${STRINGS.errorAdd} ${STRINGS.vehicle}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
-const getUpDialogEdit = (nombre, codigo, tasa, nomenclador, id) => {
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
   dialog.value = true
 
-  TextNombre_vehiculo.value = nombre
-  TextCodigo_vehiculo.value = codigo
-  TextTasaDePeaje_vehiculo.value = String(tasa)
-  TextNomenclador_vehiculo.value = nomenclador
-  _id.value = id
+  TextNombre_vehiculo.value = row.nombre
+  TextCodigo_vehiculo.value = row.codigo
+  TextTasaDePeaje_vehiculo.value = String(row.tasa)
+  TextNomenclador_vehiculo.value = row.nomenclador
+  _id.value = row._id
 
   //Copias de Seguridad
-  TextNombre_vehiculo_copy.value = nombre
-  TextCodigo_vehiculo_copy.value = codigo
-  TextTasaDePeaje_vehiculo_copy.value = String(tasa)
-  TextNomenclador_vehiculo_copy.value = nomenclador
+  TextNombre_vehiculo_copy.value = row.nombre
+  TextCodigo_vehiculo_copy.value = row.codigo
+  TextTasaDePeaje_vehiculo_copy.value = String(row.tasa)
+  TextNomenclador_vehiculo_copy.value = row.nomenclador
 }
 
 //Función para comprobar que los campos no estén vacíos

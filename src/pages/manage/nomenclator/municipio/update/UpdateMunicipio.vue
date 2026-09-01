@@ -80,9 +80,9 @@
 /* Importaciones */
 import { ref, watch, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
-import verificarExistente from 'src/utils/utils_axios/nomencladores/checkCode.js'
+import CheckField from 'src/utils/utils_axios/nomencladores/CheckField.js'
 import getNomenclator from 'src/utils/utils_axios/nomencladores/getNomenclator'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
@@ -91,7 +91,7 @@ import { useNotify } from 'src/utils/notify/notify.js'
 /*  ===== DECLARACIONES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-const options = ref([])
+const { fetchData, patchData } = useApi()
 
 /* Función que realiza la carga de todas las provincias del sistema */
 const loadProvincias = async () => {
@@ -120,8 +120,8 @@ const emit = defineEmits(['ActualizarTabla'])
 /* función para verificar si un valor existe en la API */
 const CheckCode = async () => {
   const url = STRINGS.urlApiMunicipio
-  const existeCodigo = await verificarExistente(url, 'codigo', Number(TextCodigo_mun.value))
-  return existeCodigo
+  const result = await CheckField(url, STRINGS.codigoBD, Number(TextCodigo_mun.value), fetchData)
+  return result
 }
 
 /* Comprueba que existan cambios y que el código key no sea repetido */
@@ -151,16 +151,17 @@ const SendData = async () => {
   }
 
   try {
-    await api.patch(STRINGS.urlApiMunicipio + '/' + _id.value, newItem) // POST /items
-    notify_success(STRINGS.municipioEditSuccess)
+    const { data, error } = await patchData(STRINGS.urlApiMunicipio + '/' + _id.value, newItem) // POST /items
 
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.municipality}`)
+
+    notify_success(`${STRINGS.municipality} ${STRINGS.successEdit}`)
     emit('ActualizarTabla', true)
+    Reset()
   } catch (error) {
-    console.error('Error al crear item:', error)
-    notify_error(STRINGS.municipioEditError)
-    emit('ActualizarTabla', false)
+    console.error(`Error al actualizar item ${STRINGS.municipality}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.municipality}`)
   }
-  Reset()
 }
 
 /*Función que levanta el dialogo*/
@@ -175,9 +176,9 @@ const getUpDialogEdit = async (row) => {
   _id.value = row._id
 
   //Copias de Seguridad
-  //TextCodigo_mun_copy.value = String(codigo)
-  // TextNombre_mun_copy.value = name
-  // SelectNombre_prov_copy.value = provincia
+  TextCodigo_mun_copy.value = String(row.codigo)
+  TextNombre_mun_copy.value = row.nombre
+  SelectNombre_prov_copy.value = row.provincia.nombre
 
   await loadProvinciaSelected(row.provincia.nombre)
 }
@@ -241,6 +242,7 @@ const list = STRINGS.OpacityDialog
 const TextCodigo_mun = ref('')
 const TextNombre_mun = ref('')
 const SelectNombre_prov = ref('')
+const options = ref([])
 const _id = ref('')
 
 //Campos Copias
