@@ -32,7 +32,7 @@
                 :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclador_formas_pago"
-                @onchange="checkStatusInputs"
+                @update:model-value="checkStatusInputs"
               >
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -88,28 +88,41 @@
 </template>
 
 <script setup>
-/* Importaciones */
+/**
+ * @module AddFormaDePago
+ * @description Componente de diálogo para crear nuevas formas de pago
+ * Permite ingresar descripción, seleccionar nomenclador asociado y agregar detalles opcionales
+ */
+
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */
-/*  ===== DECLARACIONES ===== */
+/*  ===== DECLARACIONES Y COMPOSABLES ===== */
 /* =================================================== */
-const { notify_success, notify_error } = useNotify()
-
-const openModal = () => {
-  console.log('Hi')
-}
+const { notify_success, notify_warning, notify_error } = useNotify()
+const { postData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
+/**
+ * Abre un modal para agregar un nuevo nomenclador (funcionalidad pendiente)
+ * TODO: Implementar apertura de diálogo de creación de nomenclador inline
+ */
+const openModal = () => {
+  notify_warning('Implementar')
+}
+
+/**
+ * Procesa y envía los datos del formulario al backend para crear una nueva forma de pago
+ * Valida que los campos obligatorios estén completos antes de enviar
+ * Emite evento 'ActualizarTabla' para refrescar la lista tras operación exitosa
+ */
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
     const newItem = {
       descripcion: TextDescripcion_fdp.value,
       nomenclador: Number(TextNomenclador_fdp.value),
@@ -117,53 +130,52 @@ const SendData = async () => {
     }
 
     try {
-      await api.post(STRINGS.urlApiFormaDePago, newItem)
+      const { data, error } = await postData(STRINGS.urlApiFormaDePago, newItem)
 
-      // Mostrar alerta positiva de éxito
-      notify_success(STRINGS.fdp_AddSuccess)
+      if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.method_of_payment}`)
 
       emit('ActualizarTabla', true)
+      notify_success(`${STRINGS.method_of_payment} ${STRINGS.successAdd}`)
+      Reset()
     } catch (error) {
-      console.error('Error al crear item:', error)
-      notify_error(STRINGS.fdp_AddError)
-
-      emit('ActualizarTabla', false)
+      console.error(`Error al crear item ${STRINGS.method_of_payment}:`, error)
+      notify_error(`${STRINGS.errorAdd} ${STRINGS.method_of_payment}`)
     }
-    Reset()
   }
 }
 
-/*Función que levanta el dialogo*/
+/**
+ * Abre el diálogo de agregar forma de pago
+ * Configura el filtro de fondo y muestra el formulario
+ */
 const getUpDialogAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
 
-//Función para comprobar que los campos no estén vacíos
+/**
+ * Valida que los campos obligatorios no estén vacíos
+ * @returns {boolean} true si descripción y nomenclador tienen contenido
+ */
 const InputEmpty = () => {
-  if (
-    TextDescripcion_fdp.value.trim() !== '' &&
-    TextNomenclador_fdp.value !== '' /* &&
-    TextDetalles_fdp.value.trim() !== '' */
-  )
-    return true
-  else return false
+  return TextDescripcion_fdp.value.trim() !== '' && TextNomenclador_fdp.value !== ''
 }
 
-//Función para comprobar que los campos sean válidos
-/* const InputRegularExpressions = () => {
-  if (expRegulares.onlyText.test(TextDescripcion_fdp.value)) return true
-  else return false
-} */
-
-//Función para comprobar los campos y habilitar botón GUARDAR
+/**
+ * Verifica el estado completo del formulario y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando los campos obligatorios están completos
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
 const checkStatusInputs = () => {
-  const isValid = InputEmpty() /* && InputRegularExpressions() */
+  const isValid = InputEmpty()
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Limpia todos los campos del formulario y cierra el diálogo
+ * Restablece el estado del botón guardar a deshabilitado
+ */
 const Reset = () => {
   dialog.value = false
   TextDescripcion_fdp.value = ''
@@ -172,22 +184,37 @@ const Reset = () => {
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
-//Ref dialogo
+/* =================================================== */
+/*  ===== VARIABLES REACTIVAS (REFS) ===== */
+/* =================================================== */
+
+// Configuración del diálogo
 const dialog = ref(false)
 const backdropFilter = ref(null)
 const list = STRINGS.OpacityDialog
 
-//V-model
+// Campos del formulario (v-model)
 const TextDescripcion_fdp = ref('')
 const TextNomenclador_fdp = ref('')
 const TextDetalles_fdp = ref('')
+
+/**
+ * TODO: Cargar opciones reales desde API de nomencladores
+ */
 const options = [1, 2, 3, 4]
 
-/* Referencia del botón de enviar datos */
+// Referencias a los inputs (no utilizadas actualmente, reservadas para focus programático)
+const textDescripcion_fdp = ref(null)
+const textNomenclador_fdp = ref(null)
+const textDetalles_fdp = ref(null)
+
+// Estado del botón guardar
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
-/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
-
+/**
+ * Watch que reacciona a cambios en el select de nomenclador
+ * Re-evalúa el estado del botón guardar cuando cambia la selección
+ */
 watch(TextNomenclador_fdp, () => {
   checkStatusInputs()
 })
