@@ -40,14 +40,14 @@ export const STRINGS = {
 
   errorFetch: 'Error cargando datos:',
 
-  successDelete: 'eliminado con éxito',
+  successDelete: 'eliminado(a) con éxito',
   errorDelete: 'Error al eliminar item',
 
-  successAdd: 'añadido con éxito',
+  successAdd: 'añadido(a) con éxito',
   errorAdd: 'Error al añadir',
 
-  successEdit: 'Item actualizado con éxito',
-  errorEdit: 'Error al actualizar item',
+  successEdit: 'actualizado(a) con éxito',
+  errorEdit: 'Error al actualizar',
 
   exportSuccess: 'Exportación exitosa',
   exportError: 'Error de exportación',
@@ -270,7 +270,7 @@ export const STRINGS = {
   tipoCuentaLowercaseURL: 'tipoCuenta',
 
   //NOMBRES MODULO ENTIDAD MAYUSCULAS
-  name_estaciones: 'Estaciones',
+  name_estaciones: 'Estación',
   name_areas_trabajo: 'Áreas de trabajo',
   name_puntos_venta: 'Puntos de ventas',
   name_terminal: 'Terminal',
@@ -347,9 +347,9 @@ export const STRINGS = {
   condorTextID: 'El campo solo puede contener números y letras mayúsculas (S ó N)',
   cardOfBank: 'El campo solo puede contener 4 bloques de 4 números separados por guiones o juntos',
   decimalPositive: 'Ingrese un decimal positivo',
-  numberPhone: 'El campo solo puede contener números así cono operador (+) al inicio',
+  numberPhone: 'El campo solo puede contener números así como operador (+) al inicio',
   nickName:
-    'Este campo solo asepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
+    'Este campo solo acepta caracteres como [a-z,A-Z,0-9,_-] debe presentar de 3 a 15 caracteres.',
   ip: 'Ingrese una IP válida, ejemplo: 192.168.1.1',
   email_alert: 'Ingrese un correo válido: Ejemplo: ruky_99@@gmail.com',
 
@@ -478,7 +478,8 @@ export const STRINGS = {
 
   //Alertas Errores
   codigoRepetido: 'El código ya existe en la base de datos. Por favor, usa otro código.',
-  cardBankrepeat: 'El número de tarjeta ya existe en la base de datos para otro usuario.',
+  cardBankrepeat:
+    'El número de cuenta ingresado ya existe para este banco a nombre de otro cliente.',
   siglasRepetidas: 'Las siglas ya existen en la base de datos. Por favor, usa otras siglas.',
   loadingTablesError: 'Problemas al intentar cargar las tablas. Por favor, intenta nuevamente.',
   updateTable: 'Tabla actualizada correctemente!',
