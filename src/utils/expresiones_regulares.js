@@ -9,7 +9,7 @@ export const expRegulares = {
   camelCase: /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/,
   numberAndHyphen: /^(\d+-)*\d+$/,
   cardOfBank: /^(?:\d{4}-){3}\d{4}$|^\d{16}$/,
-  numberPhone: /^(\+?\d[\d\s-]*)(\s*,\s*(\+?\d[\d\s-]*))*$/,
+  numberPhone: /^(?=(?:.*\d){6})(\+?\d[\d\s-]*)(\s*\s*(\+?\d[\d\s-]*))*$/,
   numberPhoneSlash: /^(\+?\d[\d\s-]*)(\/\+?\d[\d\s-]*)*$/,
   nickName: /^[a-zA-Z0-9_-]{3,15}$/,
   ip: /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
