@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <q-dialog v-model="dialogEdit" persistent :backdrop-filter="backdropFilter">
+    <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
       <q-card style="width: 600px; max-width: 80vw">
         <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
           <span class="icon-text q-mx-sm">
@@ -32,7 +32,7 @@
                 :rules="validaciones_generales.rulesNoEmpty"
                 color="green"
                 :label="STRINGS.nomenclador_formas_pago"
-                @onchange="checkStatusInputs"
+                @update:model-value="checkStatusInputs"
               >
                 <template v-slot:append>
                   <q-btn flat dense icon="add" aria-label="Agregar ítem" @click="openModal" />
@@ -88,21 +88,39 @@
 </template>
 
 <script setup>
-/* Importaciones */
+/**
+ * @module UpdateFormaDePago
+ * @description Componente de diálogo para editar formas de pago existentes
+ * Permite modificar descripción, nomenclador asociado y detalles
+ */
+
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
 import validaciones_generales from 'src/utils/validaciones_generales'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */
-/*  ===== DECLARACIONES ===== */
+/*  ===== DECLARACIONES Y COMPOSABLES ===== */
 /* =================================================== */
-const { notify_success, notify_error } = useNotify()
+const { notify_success, notify_warning, notify_error } = useNotify()
+const { patchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
+/**
+ * Abre un modal para agregar un nuevo nomenclador (funcionalidad pendiente)
+ * TODO: Implementar apertura de diálogo de creación de nomenclador inline
+ */
+const openModal = () => {
+  notify_warning('Implementar')
+}
+
+/**
+ * Envía los datos actualizados de la forma de pago al backend mediante PATCH
+ * Emite evento 'ActualizarTabla' para refrescar la lista tras operación exitosa
+ * Cierra el diálogo y resetea el formulario si la operación es exitosa
+ */
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
     const newItem = {
@@ -112,49 +130,56 @@ const SendData = async () => {
     }
 
     try {
-      await api.patch(STRINGS.urlApiFormaDePago + '/' + _id.value, newItem) // POST /items
-      // Mostrar alerta positiva de éxito
-      notify_success(STRINGS.fdp_EditSuccess)
+      const { data, error } = await patchData(STRINGS.urlApiFormaDePago + '/' + _id.value, newItem)
+
+      if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.method_of_payment}`)
 
       emit('ActualizarTabla', true)
+      notify_success(`${STRINGS.method_of_payment} ${STRINGS.successEdit}`)
+      Reset()
     } catch (error) {
-      console.error('Error al crear item:', error)
-      notify_error(STRINGS.fdp_EditError)
-
-      emit('ActualizarTabla', false)
+      console.error(`Error al actualizar item ${STRINGS.method_of_payment}:`, error)
+      notify_error(`${STRINGS.errorEdit} ${STRINGS.method_of_payment}`)
     }
-    Reset()
   }
 }
 
-/*Función que levanta el dialogo*/
-const getUpDialogEdit = (nombre, nomenclador, detalles, id) => {
+/**
+ * Abre el diálogo de edición y carga los datos de la forma de pago seleccionada
+ * Guarda copias de los valores originales para detectar cambios
+ * @param {Object} row - Objeto con los datos de la forma de pago
+ * @param {string} row.descripcion - Descripción de la forma de pago
+ * @param {number} row.nomenclador - ID del nomenclador asociado
+ * @param {string} row.detalles - Detalles adicionales
+ * @param {string} row._id - ID único de la forma de pago en la base de datos
+ */
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
-  dialogEdit.value = true
+  dialog.value = true
 
-  TextDescripcion_fdp.value = nombre
-  TextNomenclador_fdp.value = nomenclador
-  TextDetalles_fdp.value = detalles
-  _id.value = id
+  TextDescripcion_fdp.value = row.descripcion
+  TextNomenclador_fdp.value = row.nomenclador
+  TextDetalles_fdp.value = row.detalles
+  _id.value = row._id
 
-  //Copias de Seguridad
-  TextDescripcion_fdp_copy.value = nombre
-  TextNomenclador_fdp_copy.value = nomenclador
-  TextDetalles_fdp_copy.value = detalles
+  // Guardar copias de seguridad para comparar cambios
+  TextDescripcion_fdp_copy.value = row.descripcion
+  TextNomenclador_fdp_copy.value = row.nomenclador
+  TextDetalles_fdp_copy.value = row.detalles
 }
 
-//Función para comprobar que los campos no estén vacíos
+/**
+ * Valida que los campos obligatorios no estén vacíos
+ * @returns {boolean} true si descripción y nomenclador tienen contenido
+ */
 const InputEmpty = () => {
-  if (
-    TextDescripcion_fdp.value.trim() !== '' &&
-    TextNomenclador_fdp.value !== '' /* &&
-    TextDetalles_fdp.value.trim() !== '' */
-  )
-    return true
-  else return false
+  return TextDescripcion_fdp.value.trim() !== '' && TextNomenclador_fdp.value !== ''
 }
 
-/* Función para evaluar que los campos hallan sido modificados */
+/**
+ * Compara los valores actuales con las copias originales para detectar cambios
+ * @returns {boolean} true si al menos un campo fue modificado
+ */
 const InputDifferent = () => {
   return !(
     TextDescripcion_fdp.value === TextDescripcion_fdp_copy.value &&
@@ -163,46 +188,69 @@ const InputDifferent = () => {
   )
 }
 
-//Función para comprobar los campos y habilitar botón GUARDAR
+/**
+ * Verifica el estado completo del formulario y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando: campos no vacíos + hay cambios
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
 const checkStatusInputs = () => {
-  const isValid = InputEmpty() && InputDifferent() /* && InputRegularExpressions() */
+  const isValid = InputEmpty() && InputDifferent()
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Limpia todos los campos del formulario y cierra el diálogo
+ * Restablece el estado del botón guardar a deshabilitado
+ */
 const Reset = () => {
-  dialogEdit.value = false
+  dialog.value = false
   TextDescripcion_fdp.value = ''
   TextNomenclador_fdp.value = ''
   TextDetalles_fdp.value = ''
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
-//Ref dialogo
-const dialogEdit = ref(false)
+/* =================================================== */
+/*  ===== VARIABLES REACTIVAS (REFS) ===== */
+/* =================================================== */
+
+// Configuración del diálogo
+const dialog = ref(false)
 const list = STRINGS.OpacityDialog
 const backdropFilter = ref(null)
 
-//V-model
+// Campos del formulario (v-model)
 const TextDescripcion_fdp = ref('')
 const TextNomenclador_fdp = ref('')
 const TextDetalles_fdp = ref('')
-const options = [1, 2, 3, 4]
 const _id = ref('')
 
-//V-model Copy
+/**
+ * TODO: Cargar opciones reales desde API de nomencladores
+ */
+const options = [1, 2, 3, 4]
+
+// Copias de seguridad de los valores originales (para detectar cambios)
 const TextDescripcion_fdp_copy = ref('')
 const TextNomenclador_fdp_copy = ref('')
 const TextDetalles_fdp_copy = ref('')
 
-/* ("observador") que permite reaccionar a cambios en datos específicos del/los componente/s */
+// Referencias a los inputs (no utilizadas actualmente, reservadas para focus programático)
+const textDescripcion_fdp = ref(null)
+const textNomenclador_fdp = ref(null)
+const textDetalles_fdp = ref(null)
+
+// Estado del botón guardar
+const disabledBtnSave = ref(STRINGS.desabilitar)
+
+/**
+ * Watch que reacciona a cambios en el select de nomenclador
+ * Re-evalúa el estado del botón guardar cuando cambia la selección
+ */
 watch(TextNomenclador_fdp, () => {
   checkStatusInputs()
 })
-
-/* Referencia del botón de enviar datos */
-const disabledBtnSave = ref(STRINGS.desabilitar)
 
 /* Método para exponer funciones al componente Padre */
 defineExpose({
