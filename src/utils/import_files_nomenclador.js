@@ -25,7 +25,7 @@ import UpdateFormaDePago from 'src/pages/manage/nomenclator/fdp/update/UpdateFor
 import UpdateExento from 'src/pages/manage/nomenclator/exento/update/UpdateExento.vue'
 
 //Dialogs Delete
-import DialogDeleteGeneric from 'GenericDelete/dialog_delete_generic.vue'
+import DialogDeleteGeneric from 'GenericDelete/DeleteGeneric.vue'
 
 //Tables
 import TableProvincia from 'src/pages/manage/nomenclator/provincia/table/TableProvincia.vue'
