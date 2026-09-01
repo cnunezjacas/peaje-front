@@ -87,10 +87,6 @@ const emit = defineEmits(['ActualizarTabla'])
 const CheckCode = async () => {
   const url = STRINGS.urlApiProvincia
   const result = await CheckField(url, STRINGS.codigoBD, Number(Text_codigo.value), fetchData)
-
-  console.log('CheckCode - result')
-  console.log(result)
-
   return result
 }
 
