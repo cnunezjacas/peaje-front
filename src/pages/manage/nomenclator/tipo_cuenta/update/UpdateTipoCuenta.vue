@@ -25,7 +25,7 @@
                 v-model="TextNombre_tipoCuenta"
                 ref="textNombre_tipoCuenta"
                 color="green"
-                :rules="rulesAddNombre_tipoCuenta"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_tipoCuenta"
                 @keyup="checkStatusInputs"
@@ -37,7 +37,7 @@
                 ref="textCodigo_tipoCuenta"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigo_tipoCuenta"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.codigo_tipoCuenta"
                 @keyup="checkStatusInputs"
               />
@@ -50,8 +50,8 @@
             <div class="">
               <q-btn
                 icon="check"
-                :class="disabledBtnSaveEdit"
-                @click="Procesar_Edit()"
+                :class="disabledBtnSave"
+                @click="CheckData()"
                 :label="STRINGS.save"
                 color="green"
               />
@@ -75,156 +75,183 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-
-import api from 'src/boot/api.js'
+import { useApi } from 'src/composables/useApi'
+import CheckField from 'utils/utils_axios/nomencladores/CheckField'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 /* =================================================== */
-/*  ===== DECLARACIONES ===== */
+/*  ===== DECLARACIONES Y COMPOSABLES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-
-const list = STRINGS.OpacityDialog
-const refDialogoEdit = ref(null)
-const optionsMoneda = ref([])
-
-const loadCoins = async () => {
-  const response = await api.get(STRINGS.urlApiMoneda)
-  optionsMoneda.value = response.data.map((element) => element['siglas'])
-
-  if (optionsMoneda.value === null) {
-    notify_error('Problemas de carga de datos..')
-  }
-  return optionsMoneda.value !== null ? optionsMoneda : (optionsMoneda.value = ['Empty'])
-}
-
-onBeforeMount(() => {
-  loadCoins()
-})
-
-/*Validaciones*/
-const rulesAddNombre_tipoCuenta = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyText,
-]
-
-const rulesAddCodigo_tipoCuenta = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-/*Validaciones*/
+const { patchData, fetchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
-const Procesar_Edit = async () => {
+/**
+ * Verifica si el código del tipo de cuenta ya existe en la base de datos
+ * @async
+ * @returns {Promise<boolean>} true si el código existe, false si está disponible
+ */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiTipoCuenta
+  const result = await CheckField(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_tipoCuenta.value),
+    fetchData,
+  )
+  return result
+}
+
+/**
+ * Valida los datos antes de enviarlos al backend
+ * Verifica si el código cambió y si es así, valida que no exista duplicado
+ * Si el código no cambió, envía directamente sin validación
+ */
+const CheckData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    const newItem = {
-      nombre: TextNombre_tipoCuenta.value,
-      codigo: TextCodigo_tipoCuenta.value,
+    // Solo verificar código duplicado si el código cambió
+    if (InputDifferent() && TextCodigo_tipoCuenta.value !== TextCodigo_tipoCuenta_copy.value) {
+      if (await CheckCode()) {
+        notify_error(STRINGS.codigoRepetido)
+        return textCodigo_tipoCuenta.value.focus()
+      } else SendData()
+    } else {
+      SendData()
     }
-
-    try {
-      await api.patch(STRINGS.urlApiTipoCuenta + '/' + _id.value, newItem) // POST /items
-      // Mostrar alerta positiva de éxito
-      notify_success(STRINGS.tipoCuenta_EditSuccess)
-
-      emit('ActualizarTabla', true)
-    } catch (error) {
-      console.error('Error al crear item:', error)
-      notify_error(STRINGS.tipoCuenta_EditError)
-
-      emit('ActualizarTabla', false)
-    }
-    Reset()
-  } else {
-    refDialogoEdit.value.show()
   }
 }
 
-/*Función que levanta el dialogo*/
-const getUpDialogEdit = (nombre, codigo, id) => {
+/**
+ * Envía los datos actualizados del tipo de cuenta al backend mediante PATCH
+ * Emite evento 'ActualizarTabla' para refrescar la lista
+ * Cierra el diálogo y resetea el formulario si la operación es exitosa
+ */
+const SendData = async () => {
+  const newItem = {
+    nombre: TextNombre_tipoCuenta.value,
+    codigo: TextCodigo_tipoCuenta.value,
+  }
+
+  try {
+    const { data, error } = await patchData(STRINGS.urlApiTipoCuenta + '/' + _id.value, newItem)
+
+    if (!data && error) return notify_error(`${STRINGS.errorEdit} ${STRINGS.type_of_account}`)
+
+    emit('ActualizarTabla', true)
+    notify_success(`${STRINGS.type_of_account} ${STRINGS.successEdit}`)
+    Reset()
+  } catch (error) {
+    console.error(`Error al actualizar item ${STRINGS.type_of_account}:`, error)
+    notify_error(`${STRINGS.errorEdit} ${STRINGS.type_of_account}`)
+  }
+}
+
+/**
+ * Abre el diálogo de edición y carga los datos del tipo de cuenta seleccionado
+ * Guarda copias de los valores originales para detectar cambios
+ * @param {Object} row - Objeto con los datos del tipo de cuenta
+ * @param {string} row.nombre - Nombre del tipo de cuenta
+ * @param {string} row.codigo - Código del tipo de cuenta
+ * @param {string} row._id - ID único del tipo de cuenta en la base de datos
+ */
+const getUpDialogEdit = (row) => {
   backdropFilter.value = list
   dialogEdit.value = true
 
-  TextNombre_tipoCuenta.value = nombre
-  TextCodigo_tipoCuenta.value = codigo
+  TextNombre_tipoCuenta.value = row.nombre
+  TextCodigo_tipoCuenta.value = row.codigo
+  _id.value = row._id
 
-  _id.value = id
-
-  //Copias de Seguridad
-  TextNombre_tipoCuenta_copy.value = nombre
-  TextCodigo_tipoCuenta_copy.value = codigo
+  // Guardar copias de seguridad para comparar cambios
+  TextNombre_tipoCuenta_copy.value = row.nombre
+  TextCodigo_tipoCuenta_copy.value = row.codigo
 }
 
+/**
+ * Valida que todos los campos obligatorios no estén vacíos
+ * @returns {boolean} true si ambos campos tienen contenido, false si alguno está vacío
+ */
 const InputEmpty = () => {
-  if (TextNombre_tipoCuenta.value.trim() === '' || TextCodigo_tipoCuenta.value === '') return true
-  else return false
+  return TextNombre_tipoCuenta.value.trim() !== '' && TextCodigo_tipoCuenta.value !== ''
 }
 
+/**
+ * Compara los valores actuales con las copias originales para detectar cambios
+ * @returns {boolean} true si al menos un campo fue modificado, false si son iguales
+ */
 const InputDifferent = () => {
-  const HaCambiado =
-    TextNombre_tipoCuenta.value !== TextNombre_tipoCuenta_copy.value ||
-    TextCodigo_tipoCuenta.value !== TextCodigo_tipoCuenta_copy.value
-  return HaCambiado
+  return !(
+    TextNombre_tipoCuenta.value === TextNombre_tipoCuenta_copy.value &&
+    TextCodigo_tipoCuenta.value === TextCodigo_tipoCuenta_copy.value
+  )
 }
 
+/**
+ * Valida que los campos cumplan con las expresiones regulares
+ * Código: solo mayúsculas | Nombre: solo texto
+ * @returns {boolean} true si ambos campos cumplen las regex, false en caso contrario
+ */
 const InputRegularExpressions = () => {
-  if (
+  return (
     expRegulares.onlyUppercase.test(TextCodigo_tipoCuenta.value) &&
     expRegulares.onlyText.test(TextNombre_tipoCuenta.value)
   )
-    return true
-  else return false
 }
 
+/**
+ * Verifica el estado completo del formulario y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando: campos no vacíos + regex válidas + hay cambios
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
 const checkStatusInputs = () => {
-  // Verifica si algún campo está vacío
-  const isEmpty = InputEmpty()
-  // Verifica si hay cambios respecto a las copias
-  const hasChanged = InputDifferent()
-
-  const isValid = InputRegularExpressions()
-
-  if (isEmpty || !hasChanged || !isValid) {
-    // Si algún campo está vacío o no hay cambios, deshabilitar
-    disabledBtnSaveEdit.value = STRINGS.desabilitar
-  } else {
-    // Si hay cambios y todos los campos llenos, habilitar
-    disabledBtnSaveEdit.value = ''
-  }
-  return disabledBtnSaveEdit.value
+  const isValid = InputEmpty() && InputRegularExpressions() && InputDifferent()
+  disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
+  return disabledBtnSave.value
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Limpia todos los campos del formulario y restablece el estado del botón
+ * Cierra el diálogo después de un submit exitoso
+ */
 const Reset = () => {
   dialogEdit.value = false
   TextNombre_tipoCuenta.value = ''
   TextCodigo_tipoCuenta.value = ''
-  disabledBtnSaveEdit.value = STRINGS.desabilitar
+  disabledBtnSave.value = STRINGS.desabilitar
 }
 
+/* =================================================== */
+/*  ===== VARIABLES REACTIVAS (REFS) ===== */
+/* =================================================== */
+
+// Configuración del diálogo
 const dialogEdit = ref(false)
 const backdropFilter = ref(null)
-const _id = ref('')
+const list = STRINGS.OpacityDialog
+const refDialogoEdit = ref(null)
 
-//V-model
+// Campos del formulario (v-model)
 const TextNombre_tipoCuenta = ref('')
 const TextCodigo_tipoCuenta = ref('')
+const _id = ref('')
 
-//Ref
+// Referencias a los inputs para focus programático
 const textNombre_tipoCuenta = ref(null)
 const textCodigo_tipoCuenta = ref(null)
 
-//V-model Copy
+// Copias de seguridad de los valores originales (para detectar cambios)
 const TextNombre_tipoCuenta_copy = ref('')
 const TextCodigo_tipoCuenta_copy = ref('')
 
-const disabledBtnSaveEdit = ref(STRINGS.desabilitar)
+// Estado del botón guardar
+const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogEdit,
 })
