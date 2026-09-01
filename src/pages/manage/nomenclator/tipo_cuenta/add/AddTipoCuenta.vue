@@ -25,7 +25,7 @@
                 v-model="TextNombre_tipoCuenta"
                 ref="textNombre_tipoCuenta"
                 color="green"
-                :rules="rulesAddNombre_tipoCuenta"
+                :rules="validaciones_generales.rulesOnlyText"
                 type="text"
                 :label="STRINGS.nombre_tipoCuenta"
                 @keyup="checkStatusInputs"
@@ -37,7 +37,7 @@
                 ref="textCodigo_tipoCuenta"
                 color="green"
                 type="text"
-                :rules="rulesAddCodigo_tipoCuenta"
+                :rules="validaciones_generales.rulesOnlyUppercase"
                 :label="STRINGS.codigo_tipoCuenta"
                 @keyup="checkStatusInputs"
               />
@@ -76,77 +76,83 @@
 <script setup>
 import { ref } from 'vue'
 import { STRINGS } from 'utils/string.js'
-import api from 'src/boot/api.js'
-import verificarCodigoExistente from 'utils/utils_axios/nomencladores/verificarCodigoExistenteTipoCuenta.js'
+import { useApi } from 'src/composables/useApi'
+import CheckField from 'utils/utils_axios/nomencladores/CheckField'
 import { expRegulares } from 'src/utils/expresiones_regulares.js'
 import { useNotify } from 'src/utils/notify/notify.js'
+import validaciones_generales from 'src/utils/validaciones_generales'
 
 /* =================================================== */
-/*  ===== DECLARACIONES ===== */
+/*  ===== DECLARACIONES Y COMPOSABLES ===== */
 /* =================================================== */
 const { notify_success, notify_error } = useNotify()
-
-const list = STRINGS.OpacityDialog
-const refDialogoAdd = ref(null)
-
-/*Validaciones*/
-const rulesAddNombre_tipoCuenta = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyText.test(val) || STRINGS.onlyText,
-]
-
-const rulesAddCodigo_tipoCuenta = [
-  (val) => val != '' || STRINGS.inputEmpty,
-  (val) => expRegulares.onlyUppercase.test(val) || STRINGS.onlyUppercase,
-]
-/*Validaciones*/
+const { postData, fetchData } = useApi()
 
 const emit = defineEmits(['ActualizarTabla'])
 
-/*Funcion de procesado de Datos*/
+/**
+ * Verifica si el código del tipo de cuenta ya existe en la base de datos
+ * @async
+ * @returns {Promise<boolean>} true si el código existe, false si está disponible
+ */
+const CheckCode = async () => {
+  const url = STRINGS.urlApiTipoCuenta
+  const result = await CheckField(
+    url,
+    STRINGS.codigoBD,
+    String(TextCodigo_tipoCuenta.value),
+    fetchData,
+  )
+  return result
+}
+
+/**
+ * Procesa y envía los datos del formulario al backend para crear un nuevo tipo de cuenta
+ * Valida duplicados antes de enviar y notifica al usuario del resultado
+ * Emite evento 'ActualizarTabla' para refrescar la lista tras operación exitosa
+ */
 const SendData = async () => {
   if (checkStatusInputs() != STRINGS.desabilitar) {
-    // Datos enviar, típicamente en formato JSON
-
-    // Verificar si el código ya existe
-    const existeCodigo = await verificarCodigoExistente(TextCodigo_tipoCuenta.value)
-    if (existeCodigo) {
-      // Mostrar mensaje de error o alertar al usuario
+    // Verificar si el código ya existe antes de crear
+    if (await CheckCode()) {
       notify_error(STRINGS.codigoRepetido)
       textCodigo_tipoCuenta.value.focus()
       return
-    } else {
-      const newItem = {
-        nombre: TextNombre_tipoCuenta.value,
-        codigo: TextCodigo_tipoCuenta.value,
-      }
+    }
 
-      try {
-        await api.post(STRINGS.urlApiTipoCuenta, newItem) // POST /items
+    const newItem = {
+      nombre: TextNombre_tipoCuenta.value,
+      codigo: TextCodigo_tipoCuenta.value,
+    }
 
-        // Mostrar alerta positiva de éxito
-        notify_success(STRINGS.tipoCuenta_AddSuccess)
+    try {
+      const { data, error } = await postData(STRINGS.urlApiTipoCuenta, newItem)
 
-        emit('ActualizarTabla', true)
-      } catch (error) {
-        console.error('Error al crear item:', error)
-        notify_error(STRINGS.tipoCuenta_AddError)
+      if (!data && error) return notify_error(`${STRINGS.errorAdd} ${STRINGS.type_of_account}`)
 
-        emit('ActualizarTabla', false)
-      }
-      refDialogoAdd.value.hide()
+      notify_success(`${STRINGS.type_of_account} ${STRINGS.successAdd}`)
+      emit('ActualizarTabla', true)
       Reset()
+    } catch (error) {
+      console.error(`Error al crear item ${STRINGS.type_of_account}:`, error)
+      notify_error(`${STRINGS.errorAdd} ${STRINGS.type_of_account}`)
     }
   }
 }
 
-/*Función que levanta el dialogo*/
+/**
+ * Abre el diálogo de agregar tipo de cuenta
+ * Configura el filtro de fondo y muestra el formulario
+ */
 const getUpDialogAdd = () => {
   backdropFilter.value = list
   dialog.value = true
 }
 
-/*Función para limpiar los campos del dialogo luego del submit*/
+/**
+ * Limpia todos los campos del formulario y cierra el diálogo
+ * Restablece el estado del botón guardar a deshabilitado
+ */
 const Reset = () => {
   dialog.value = false
   TextNombre_tipoCuenta.value = ''
@@ -154,41 +160,59 @@ const Reset = () => {
   disabledBtnSave.value = STRINGS.desabilitar
 }
 
+/**
+ * Valida que todos los campos obligatorios no estén vacíos
+ * @returns {boolean} true si ambos campos tienen contenido, false si alguno está vacío
+ */
 const InputEmpty = () => {
-  if (TextNombre_tipoCuenta.value.trim() !== '' && TextCodigo_tipoCuenta.value.trim() !== '')
-    return true
-  else return false
+  return TextNombre_tipoCuenta.value.trim() !== '' && TextCodigo_tipoCuenta.value.trim() !== ''
 }
 
+/**
+ * Valida que los campos cumplan con las expresiones regulares
+ * Código: solo mayúsculas | Nombre: solo texto
+ * @returns {boolean} true si ambos campos cumplen las regex, false en caso contrario
+ */
 const InputRegularExpressions = () => {
-  if (
+  return (
     expRegulares.onlyUppercase.test(TextCodigo_tipoCuenta.value) &&
     expRegulares.onlyText.test(TextNombre_tipoCuenta.value)
   )
-    return true
-  else return false
 }
 
+/**
+ * Verifica el estado completo del formulario y habilita/deshabilita el botón guardar
+ * El botón se habilita solo cuando: campos no vacíos + regex válidas
+ * @returns {string} cadena vacía si es válido, o STRINGS.desabilitar si no lo es
+ */
 const checkStatusInputs = () => {
   const isValid = InputEmpty() && InputRegularExpressions()
-  console.log('isValid:' + isValid)
   disabledBtnSave.value = isValid ? '' : STRINGS.desabilitar
   return disabledBtnSave.value
 }
 
+/* =================================================== */
+/*  ===== VARIABLES REACTIVAS (REFS) ===== */
+/* =================================================== */
+
+// Configuración del diálogo
 const dialog = ref(false)
 const backdropFilter = ref(null)
+const list = STRINGS.OpacityDialog
+const refDialogoAdd = ref(null)
 
-//V-model
+// Campos del formulario (v-model)
 const TextNombre_tipoCuenta = ref('')
 const TextCodigo_tipoCuenta = ref('')
 
-//Ref
+// Referencias a los inputs para focus programático
 const textNombre_tipoCuenta = ref(null)
 const textCodigo_tipoCuenta = ref(null)
 
+// Estado del botón guardar
 const disabledBtnSave = ref(STRINGS.desabilitar)
 
+/* Método para exponer funciones al componente Padre */
 defineExpose({
   getUpDialogAdd,
 })
