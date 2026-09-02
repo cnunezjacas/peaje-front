@@ -10,15 +10,11 @@ import DialogoAddTramitador from 'EntityAdd/dialog_add_tramitador.vue'
 
 //Dialogs Edit
 import UpdateCuenta from 'src/pages/manage/entity/cuenta/update/UpdateCuenta.vue'
-import DialogoEditEstacion from 'src/pages/manage/entity/estacion/update/dialog_edit_estacion.vue'
-
-import DialogoDetailsEstacion from 'EntityDetails/details_estaciones.vue'
-//Dialogs Delete
-//import DialogDeleteGeneric from 'GenericDelete/DeleteGeneric.vue'
+import UpdateEstacion from 'src/pages/manage/entity/estacion/update/UpdateEstacion.vue'
 
 //Tables
 import TableCuenta from 'src/pages/manage/entity/cuenta/table/TableCuenta.vue'
-import Table_Estacion from 'src/pages/manage/entity/estacion/table/table_estacion.vue'
+import TableEstacion from 'src/pages/manage/entity/estacion/table/TableEstacion.vue'
 import TableADT from 'EntityTables/table_ADT.vue'
 
 export {
@@ -30,10 +26,9 @@ export {
   DialogoAddOperador,
   DialogoAddCliente,
   DialogoAddTramitador,
-  DialogoEditEstacion,
+  UpdateEstacion,
   UpdateCuenta,
-  DialogoDetailsEstacion,
-  Table_Estacion,
+  TableEstacion,
   TableADT,
   TableCuenta,
 }
