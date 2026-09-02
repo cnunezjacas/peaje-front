@@ -1,6 +1,9 @@
 <template>
   <q-dialog v-model="dialog" persistent :backdrop-filter="backdropFilter">
-    <q-card class="my-dialog-card" :style="{ minWidth: currentConfig.minWidth || '250px', maxWidth: '35vw' }">
+    <q-card
+      class="my-dialog-card"
+      :style="{ minWidth: currentConfig.minWidth || '250px', maxWidth: '35vw' }"
+    >
       <!-- Header -->
       <q-card-section class="row items-center text-white q-pb-none text-h6 bg-green-5 q-pa-md">
         <q-icon :name="currentConfig.icon || 'receipt_long'" class="q-mr-sm" />
@@ -9,26 +12,36 @@
 
       <!-- Contenido: Lista vertical -->
       <q-card-section class="q-pa-md">
-        <div v-if="!currentData" class="text-center text-grey q-pa-lg">
-          Cargando...
-        </div>
+        <div v-if="!currentData" class="text-center text-grey q-pa-lg">Cargando...</div>
 
         <div v-else class="details-list">
-          <div v-for="field in currentConfig.fields" :key="field.key" class="detail-row row items-start q-py-sm">
-            <div class="col-12 col-sm-5 col-md-3 col-lg-3 text-weight-medium text-grey-9 q-pr-md">
+          <div
+            v-for="field in currentConfig.fields"
+            :key="field.key"
+            class="detail-row row items-start q-py-sm"
+          >
+            <div
+              class="col-12 col-sm-6 col-md-3 col-lg-4 col-xl-4 text-weight-medium text-grey-9 q-pr-md"
+            >
               {{ field.label || field.key }}:
             </div>
-            <div class="col-12 col-sm-7 col-md-9 col-lg-10 text-grey-8">
+            <div class="col-12 col-sm-6 col-md-9 col-lg-8 col-xl-8 text-grey-8">
               {{ getFieldValue(field, currentData) }}
             </div>
           </div>
         </div>
       </q-card-section>
 
-
       <!-- Footer -->
       <q-card-section class="flex justify-end q-pt-none">
-        <q-btn flat icon="close" :label="STRINGS.close || 'Cerrar'" color="dark" v-close-popup @click="onClose" />
+        <q-btn
+          flat
+          icon="close"
+          :label="STRINGS.close || 'Cerrar'"
+          color="dark"
+          v-close-popup
+          @click="onClose"
+        />
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -38,7 +51,6 @@
 import { ref, watch } from 'vue'
 import { STRINGS } from 'utils/string.js'
 
-// Props (igual que la versión que funcionaba)
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
   config: { type: Object, default: () => ({}) },
@@ -47,7 +59,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'close'])
 
-// Estado local
 const dialog = ref(false)
 const backdropFilter = ref(STRINGS.OpacityDialog || 'blur(5px)')
 const currentConfig = ref({
@@ -58,30 +69,77 @@ const currentConfig = ref({
 })
 const currentData = ref(null)
 
-// 🔥 WATCHERS para sincronizar con props (ESTO ES LO QUE HACÍA FUNCIONAR LA VERSIÓN ANTERIOR)
-watch(() => props.modelValue, (val) => dialog.value = val)
+watch(
+  () => props.modelValue,
+  (val) => (dialog.value = val),
+)
 
+watch(
+  () => props.config,
+  (val) => {
+    if (val && Object.keys(val).length > 0) {
+      currentConfig.value = { ...currentConfig.value, ...val }
+    }
+  },
+  { deep: true, immediate: true },
+)
 
-watch(() => props.config, (val) => {
-  if (val && Object.keys(val).length > 0) {
-    currentConfig.value = { ...currentConfig.value, ...val }
-    console.log('🔍 WATCH config:', currentConfig.value.title, 'fields:', val.fields?.length)
+watch(
+  () => props.data,
+  (val) => {
+    if (val) {
+      currentData.value = val
+    }
+  },
+  { deep: true, immediate: true },
+)
+
+/**
+ * Obtiene un valor de un objeto usando notación de punto (dot notation)
+ * Soporta paths anidados como 'provincia.nombre' o 'cuentaCuc.banco.codigo'
+ *
+ * @param {Object} obj - Objeto fuente
+ * @param {string} path - Ruta del campo (puede usar notación de punto)
+ * @returns {any} Valor encontrado o undefined
+ *
+ * @example
+ * getNestedValue({ provincia: { nombre: 'Granma' } }, 'provincia.nombre')
+ * // => 'Granma'
+ */
+const getNestedValue = (obj, path) => {
+  if (!obj || !path) return undefined
+
+  // Si no hay punto, acceso directo (caso simple)
+  if (!path.includes('.')) {
+    return obj[path]
   }
-}, { deep: true, immediate: true })
 
-watch(() => props.data, (val) => {
-  if (val) {
-    currentData.value = val
-    console.log('🔍 WATCH data:', val.nombre || val._id)
-  }
-}, { deep: true, immediate: true })
+  // Dividir el path por puntos y recorrer el objeto anidado
+  return path.split('.').reduce((current, key) => {
+    return current && current[key] !== undefined ? current[key] : undefined
+  }, obj)
+}
 
-// Obtener valor del campo (sin computed complejo)
+/**
+ * Obtiene el valor formateado de un campo para mostrar en el diálogo de detalles
+ * Soporta:
+ * - Campos simples: 'nombre', 'codigo'
+ * - Campos anidados: 'provincia.nombre', 'cuentaCuc.numero'
+ * - Funciones de formato personalizadas
+ * - Arrays (los une con comas)
+ * - Booleanos (los convierte a Sí/No)
+ *
+ * @param {Object} field - Configuración del campo { key, label, format }
+ * @param {Object} data - Datos completos de la fila seleccionada
+ * @returns {string} Valor formateado para mostrar
+ */
 const getFieldValue = (field, data) => {
   if (!data || !field.key) return '-'
 
-  const value = data[field.key]
+  // 🔥 Obtener valor (soporta notación de punto para campos anidados)
+  const value = getNestedValue(data, field.key)
 
+  // Aplicar función de formato si existe
   if (typeof field.format === 'function') {
     try {
       return field.format(value, data)
@@ -91,9 +149,11 @@ const getFieldValue = (field, data) => {
     }
   }
 
+  // Manejo de valores especiales
   if (value === null || value === undefined) return '-'
   if (Array.isArray(value)) return value.join(', ')
   if (typeof value === 'boolean') return value ? 'Sí' : 'No'
+  if (typeof value === 'object') return JSON.stringify(value) // Fallback para objetos
 
   return String(value)
 }
@@ -104,7 +164,6 @@ const onClose = () => {
   emit('update:modelValue', false)
 }
 
-// Método público (por si se usa sin props)
 const show = (data, config = {}) => {
   currentConfig.value = { ...currentConfig.value, ...config }
   currentData.value = data
@@ -117,7 +176,7 @@ defineExpose({
   close: () => {
     dialog.value = false
     emit('update:modelValue', false)
-  }
+  },
 })
 </script>
 
@@ -145,7 +204,7 @@ defineExpose({
     flex-direction: column;
   }
 
-  .detail-row>div:first-child {
+  .detail-row > div:first-child {
     margin-bottom: 4px;
     color: #666;
     font-size: 0.9rem;
