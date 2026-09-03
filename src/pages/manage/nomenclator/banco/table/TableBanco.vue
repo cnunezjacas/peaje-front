@@ -1,8 +1,19 @@
 <template>
-  <BaseTable :title="title" :Loading="isLoading" :filteredRows="filteredRows" :columns="columns" row-key="_id"
-    :no-data-label="STRINGS.no_data_available" :separator="separator" :rows-per-page-options="numberForPage"
-    :rows-per-page-label="STRINGS.number_of_page" searchTerm="props.TextSearch" @onBlockTabs="BlockTabs"
-    @seleccionado="DataSelected" ref="tableGeneric">
+  <BaseTable
+    :title="title"
+    :Loading="isLoading"
+    :filteredRows="filteredRows"
+    :columns="columns"
+    row-key="_id"
+    :no-data-label="STRINGS.no_data_available"
+    :separator="separator"
+    :rows-per-page-options="numberForPage"
+    :rows-per-page-label="STRINGS.number_of_page"
+    searchTerm="props.TextSearch"
+    @onBlockTabs="BlockTabs"
+    @seleccionado="DataSelected"
+    ref="tableGeneric"
+  >
   </BaseTable>
 </template>
 
@@ -10,16 +21,14 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import imports from 'src/utils/imports'
-import BaseTable from 'TableManage/tableGeneric.vue'
+import BaseTable from 'src/components/shared/table/TableGeneric.vue'
 import { useApi } from 'composables/useApi.js'
 import { useNotify } from 'src/utils/notify/notify.js'
-
 
 /* =================================================== */
 /*  ===== DECLARACIONES REF ===== */
 /* =================================================== */
 const { /*notify_success, notify_warning,*/ notify_error } = useNotify()
-
 
 // ******* Variables *******
 const title = ref(STRINGS.gestion + ' ' + STRINGS.bancoLowercase.toLowerCase())
@@ -32,7 +41,7 @@ const isLoading = ref(true)
 const props = defineProps({
   TextSearch: String,
 })
-const { fetchData/*, postData, putData, deleteData */ } = useApi()
+const { fetchData /*, postData, putData, deleteData */ } = useApi()
 
 /* Detalles de las columnas de la tabla, referencias de los nombres de las columnas de la tabla en BD */
 const columns = [
@@ -76,7 +85,7 @@ const InitDataTable = async () => {
     notify_error(STRINGS.loadingTablesError)
     setTimeout(async () => {
       await InitDataTable()
-    }, STRINGS.timeLoadTables);
+    }, STRINGS.timeLoadTables)
   } else {
     rows.value = data || []
   }

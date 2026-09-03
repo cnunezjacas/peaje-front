@@ -1,8 +1,19 @@
 <template>
-  <BaseTable :title="title" :Loading="isLoading" :filteredRows="filteredRows" :columns="columns" row-key="_id"
-    :no-data-label="STRINGS.no_data_available" :separator="separator" :rows-per-page-options="numberForPage"
-    :rows-per-page-label="STRINGS.number_of_page" searchTerm="props.TextSearch" @onBlockTabs="BlockTabs"
-    @seleccionado="DataSelected" ref="tableGeneric">
+  <BaseTable
+    :title="title"
+    :Loading="isLoading"
+    :filteredRows="filteredRows"
+    :columns="columns"
+    row-key="_id"
+    :no-data-label="STRINGS.no_data_available"
+    :separator="separator"
+    :rows-per-page-options="numberForPage"
+    :rows-per-page-label="STRINGS.number_of_page"
+    searchTerm="props.TextSearch"
+    @onBlockTabs="BlockTabs"
+    @seleccionado="DataSelected"
+    ref="tableGeneric"
+  >
   </BaseTable>
 </template>
 
@@ -11,7 +22,7 @@ import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { useApi } from 'src/composables/useApi'
 import imports from 'src/utils/imports.js'
-import BaseTable from 'TableManage/tableGeneric.vue'
+import BaseTable from 'src/components/shared/table/TableGeneric.vue'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 // ******* Variables *******
@@ -68,20 +79,17 @@ const columns = [
 const InitDataTable = async () => {
   isLoading.value = true
 
-  const { data: comprobante, error: error_compr } = await fetchData(STRINGS.urlApiComprobante);
+  const { data: comprobante, error: error_compr } = await fetchData(STRINGS.urlApiComprobante)
 
-  const { data: moneda, error: error_moned } = await fetchData(STRINGS.urlApiMoneda);
-
+  const { data: moneda, error: error_moned } = await fetchData(STRINGS.urlApiMoneda)
 
   if (error_compr || error_moned) {
     console.error(STRINGS.errorFetch, { error_compr, error_moned })
     notify_error(STRINGS.loadingTablesError)
     setTimeout(async () => {
       await InitDataTable()
-    }, STRINGS.timeLoadTables);
+    }, STRINGS.timeLoadTables)
   } else {
-
-
     comprobante.forEach((element) => {
       moneda.forEach((item) => {
         if (item['_id'] === element['moneda']) {

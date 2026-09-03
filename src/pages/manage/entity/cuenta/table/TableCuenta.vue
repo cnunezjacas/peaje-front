@@ -32,7 +32,7 @@ import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import { useApi } from 'composables/useApi.js'
 import imports from 'src/utils/imports.js'
-import BaseTable from 'TableManage/tableGeneric.vue'
+import BaseTable from 'src/components/shared/table/TableGeneric.vue'
 import { useNotify } from 'src/utils/notify/notify.js'
 
 /* =================================================== */

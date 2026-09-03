@@ -1,9 +1,21 @@
 <template>
-  <BaseTable :title="title" :Loading="isLoading" :filteredRows="filteredRows" :columns="columns" row-key="_id"
-    :no-data-label="STRINGS.no_data_available" :separator="separator" :rows-per-page-options="numberForPage"
-    :rows-per-page-label="STRINGS.number_of_page" searchTerm="props.TextSearch" @onBlockTabs="BlockTabs"
-    @seleccionado="DataSelected" :fatherBreadcrumbs="imports.capitalizeWords(STRINGS.gestionNomencladores, true)"
-    :SonBreadcrumbs="imports.capitalizeWords(STRINGS.organismoLowercase)" ref="tableGeneric">
+  <BaseTable
+    :title="title"
+    :Loading="isLoading"
+    :filteredRows="filteredRows"
+    :columns="columns"
+    row-key="_id"
+    :no-data-label="STRINGS.no_data_available"
+    :separator="separator"
+    :rows-per-page-options="numberForPage"
+    :rows-per-page-label="STRINGS.number_of_page"
+    searchTerm="props.TextSearch"
+    @onBlockTabs="BlockTabs"
+    @seleccionado="DataSelected"
+    :fatherBreadcrumbs="imports.capitalizeWords(STRINGS.gestionNomencladores, true)"
+    :SonBreadcrumbs="imports.capitalizeWords(STRINGS.organismoLowercase)"
+    ref="tableGeneric"
+  >
   </BaseTable>
 </template>
 
@@ -12,11 +24,9 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { STRINGS } from 'utils/string.js'
 import imports from 'src/utils/imports.js'
-import BaseTable from 'TableManage/tableGeneric.vue'
+import BaseTable from 'src/components/shared/table/TableGeneric.vue'
 import { useApi } from 'composables/useApi.js'
 import { useNotify } from 'src/utils/notify/notify.js'
-
-
 
 // ******* Variables *******
 const { /*notify_success, notify_warning,*/ notify_error } = useNotify()
@@ -26,7 +36,7 @@ const separator = ref('vertical')
 const numberForPage = imports.getNumberForPage()
 const tableGeneric = ref([])
 const isLoading = ref(true)
-const { fetchData/*, postData, putData, deleteData */ } = useApi()
+const { fetchData /*, postData, putData, deleteData */ } = useApi()
 // Props
 const props = defineProps({
   TextSearch: String,
@@ -64,7 +74,7 @@ const InitDataTable = async () => {
     notify_error(STRINGS.loadingTablesError)
     setTimeout(async () => {
       await InitDataTable()
-    }, STRINGS.timeLoadTables);
+    }, STRINGS.timeLoadTables)
   } else {
     rows.value = data || []
   }
