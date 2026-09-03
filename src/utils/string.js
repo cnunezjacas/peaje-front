@@ -129,7 +129,7 @@ export const STRINGS = {
   NIT_estacion: 'NIT',
   nit: 'Nit',
   banco_cuenta: 'Banco',
-  titular_de_la_cuenta: 'Titular cuenta',
+  titular: 'Titular',
   cuenta: 'Número de cuenta',
   registro_comercial: 'Registro Comercial',
   registro_mercantil: 'Registro mercantil',
@@ -393,5 +393,5 @@ export const STRINGS = {
   /* OpacityDialog: 'saturate(80%)', */
 
   year_project: '2026 - ',
-  iconSm: '20px',
+  iconSm: '22px',
 }

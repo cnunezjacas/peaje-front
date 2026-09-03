@@ -29,7 +29,7 @@
                 color="green"
                 type="text"
                 :rules="validaciones_generales.rulesOnlyText"
-                :label="STRINGS.titular_de_la_cuenta"
+                :label="STRINGS.titular"
                 @keyup="checkStatusInputs"
               />
             </div>
